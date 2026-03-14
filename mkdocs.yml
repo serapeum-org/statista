@@ -118,6 +118,9 @@ nav:
     - Extreme Value Analysis:
       - Extreme Value Analysis: notebook/extreme-value-analysis/extreme-value-analysis.ipynb
       - Rhine Catchment: notebook/extreme-value-analysis/rhine_discharge_analysis.ipynb
+  - Guides:
+    - Commitizen: guides/commitizen.md
+    - Mypy: guides/mypy.md
   - About:
     - Change-log: change-log.md
     - Code of Conduct: CODE_OF_CONDUCT.md
