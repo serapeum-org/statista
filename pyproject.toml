@@ -108,7 +108,6 @@ count = true
 
 
 [tool.black]
-profile = "flake8"
 line-length = 88
 skip-string-normalization = true
 
