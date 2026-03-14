@@ -24,7 +24,6 @@ from statista.descriptors import (
     wb,
 )
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -502,7 +501,9 @@ class TestNSE:
     def test_known_value_array(self, obs_array, sim_array):
         """NSE with numpy arrays should equal list result."""
         np.testing.assert_almost_equal(
-            nse(obs_array, sim_array), nse(obs_array.tolist(), sim_array.tolist()), decimal=10
+            nse(obs_array, sim_array),
+            nse(obs_array.tolist(), sim_array.tolist()),
+            decimal=10,
         )
 
     def test_reversed_gives_negative(self):

@@ -19,7 +19,6 @@ from statista.parameters import Lmoments
 from statista.plot import Plot
 from statista.utils import merge_small_bins
 
-
 ninf = 1e-5
 
 __all__ = [
@@ -582,7 +581,9 @@ class AbstractDistribution(ABC):
         expected_counts = expected_prob * len(self.data)
 
         # Pearson’s χ² test assumes each expected count is sufficiently large (at least about 5); otherwise the asymptotic χ² approximation is unreliable
-        merged_obs, merged_exp = merge_small_bins(obs_counts.tolist(), expected_counts.tolist())
+        merged_obs, merged_exp = merge_small_bins(
+            obs_counts.tolist(), expected_counts.tolist()
+        )
 
         test = chisquare(merged_obs, f_exp=merged_exp, ddof=len(self.parameters))
         return test.statistic, test.pvalue
@@ -1027,7 +1028,9 @@ class Gumbel(AbstractDistribution):
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
-    ) -> np.ndarray | tuple[np.ndarray, Figure, Axes]:  # pylint: disable=arguments-differ
+    ) -> (
+        np.ndarray | tuple[np.ndarray, Figure, Axes]
+    ):  # pylint: disable=arguments-differ
         """Calculate the cumulative distribution function (CDF) values for Gumbel distribution.
 
         This method calculates the CDF values for the given data using the specified
@@ -2135,7 +2138,9 @@ class GEV(AbstractDistribution):
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
-    ) -> tuple[np.ndarray, Figure, Axes] | np.ndarray:  # pylint: disable=arguments-differ
+    ) -> (
+        tuple[np.ndarray, Figure, Axes] | np.ndarray
+    ):  # pylint: disable=arguments-differ
         """cdf.
 
         cdf calculates the value of Gumbel's cdf with parameters loc and scale at x.
@@ -2330,7 +2335,11 @@ class GEV(AbstractDistribution):
         else:
             raise ValueError(f"The given: {method} does not exist")
 
-        param: dict[str, float] = {"loc": param_list[1], "scale": param_list[2], "shape": param_list[0]}
+        param: dict[str, float] = {
+            "loc": param_list[1],
+            "scale": param_list[2],
+            "shape": param_list[0],
+        }
         self.parameters = param
 
         if test:
@@ -2429,7 +2438,9 @@ class GEV(AbstractDistribution):
         n_samples: int = 100,
         method: str = "lmoments",
         **kwargs: Any,
-    ) -> tuple[np.ndarray, np.ndarray] | tuple[np.ndarray, np.ndarray, Figure, Axes]:  # pylint: disable=arguments-differ
+    ) -> (
+        tuple[np.ndarray, np.ndarray] | tuple[np.ndarray, np.ndarray, Figure, Axes]
+    ):  # pylint: disable=arguments-differ
         """confidence_interval.
 
         Args:
@@ -2891,7 +2902,9 @@ class Exponential(AbstractDistribution):
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
-    ) -> tuple[np.ndarray, Figure, Any] | np.ndarray:  # pylint: disable=arguments-differ
+    ) -> (
+        tuple[np.ndarray, Figure, Any] | np.ndarray
+    ):  # pylint: disable=arguments-differ
         """cdf.
 
         cdf calculates the value of Gumbel's cdf with parameters loc and scale at x.

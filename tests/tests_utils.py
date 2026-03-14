@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from statista.utils import merge_small_bins
 
 
@@ -58,7 +59,9 @@ class TestMergeSmallBins:
         # Order should be low -> high
         np.testing.assert_array_equal(merged_obs, np.array([10, 10]))
         # Before rescaling, expected would be [4, 6]; after rescaling they sum to 20
-        np.testing.assert_allclose(merged_exp, np.array([8.0, 12.0]), rtol=1e-12, atol=1e-12)
+        np.testing.assert_allclose(
+            merged_exp, np.array([8.0, 12.0]), rtol=1e-12, atol=1e-12
+        )
         assert merged_exp.sum() == merged_obs.sum() == 20
 
     @pytest.mark.unit
@@ -96,7 +99,9 @@ class TestMergeSmallBins:
         #   Right bin 5 (>=5) kept; then 3 (<5) accum; then 2 (<5) accum -> append 2+3 as 5
         # Final bins: observed [5, 15], expected before scaling [5, 5] -> after scaling both to sum 20 -> [10, 10]
         np.testing.assert_array_equal(merged_obs, np.array([5 + 5, 10]))
-        np.testing.assert_allclose(merged_exp, np.array([10.0, 10.0]), rtol=1e-12, atol=1e-12)
+        np.testing.assert_allclose(
+            merged_exp, np.array([10.0, 10.0]), rtol=1e-12, atol=1e-12
+        )
         assert merged_exp.sum() == merged_obs.sum() == sum(observed)
 
     @pytest.mark.unit

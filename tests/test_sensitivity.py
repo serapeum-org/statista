@@ -17,7 +17,6 @@ from matplotlib.figure import Figure
 
 from statista.sensitivity import Sensitivity
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -74,9 +73,7 @@ def two_return_function():
 @pytest.fixture()
 def three_param_df() -> pd.DataFrame:
     """DataFrame with three parameters."""
-    return pd.DataFrame(
-        {"value": [1.0, 2.0, 3.0]}, index=["alpha", "beta", "gamma"]
-    )
+    return pd.DataFrame({"value": [1.0, 2.0, 3.0]}, index=["alpha", "beta", "gamma"])
 
 
 @pytest.fixture()
@@ -115,7 +112,9 @@ def single_param_function():
 class TestInit:
     """Test Sensitivity.__init__ method."""
 
-    def test_init_default_positions(self, two_param_df, two_param_bounds, simple_function):
+    def test_init_default_positions(
+        self, two_param_df, two_param_bounds, simple_function
+    ):
         """
         Test initialization with default positions (all parameters analyzed).
 
@@ -138,7 +137,9 @@ class TestInit:
         assert sa.NoValues == 5
         assert sa.return_values == 1
 
-    def test_init_explicit_positions(self, two_param_df, two_param_bounds, simple_function):
+    def test_init_explicit_positions(
+        self, two_param_df, two_param_bounds, simple_function
+    ):
         """
         Test initialization with explicit positions subset.
 
@@ -154,7 +155,9 @@ class TestInit:
         assert sa.num_parameters == 1
         assert sa.positions == [1]
 
-    def test_init_custom_n_values(self, two_param_df, two_param_bounds, simple_function):
+    def test_init_custom_n_values(
+        self, two_param_df, two_param_bounds, simple_function
+    ):
         """
         Test initialization with a custom n_values.
 
@@ -168,7 +171,9 @@ class TestInit:
         sa = Sensitivity(two_param_df, lb, ub, simple_function, n_values=10)
         assert sa.NoValues == 10
 
-    def test_init_return_values_two(self, two_param_df, two_param_bounds, simple_function):
+    def test_init_return_values_two(
+        self, two_param_df, two_param_bounds, simple_function
+    ):
         """
         Test initialization with return_values=2.
 
@@ -219,7 +224,9 @@ class TestInit:
         with pytest.raises(AssertionError, match="callable"):
             Sensitivity(two_param_df, lb, ub, "not a function")
 
-    def test_init_stores_references(self, two_param_df, two_param_bounds, simple_function):
+    def test_init_stores_references(
+        self, two_param_df, two_param_bounds, simple_function
+    ):
         """
         Test that the constructor stores references to parameter, bounds, and function.
 
@@ -278,7 +285,10 @@ class TestMarkerStyle:
             Returns the last element of MarkerStyleList.
         """
         last_index = len(Sensitivity.MarkerStyleList) - 1
-        assert Sensitivity.marker_style(last_index) == Sensitivity.MarkerStyleList[last_index]
+        assert (
+            Sensitivity.marker_style(last_index)
+            == Sensitivity.MarkerStyleList[last_index]
+        )
 
     def test_wrapping_index(self):
         """
@@ -305,7 +315,9 @@ class TestMarkerStyle:
         """
         n = len(Sensitivity.MarkerStyleList)
         expected_index = 100 % n
-        assert Sensitivity.marker_style(100) == Sensitivity.MarkerStyleList[expected_index]
+        assert (
+            Sensitivity.marker_style(100) == Sensitivity.MarkerStyleList[expected_index]
+        )
 
     def test_all_markers_accessible(self):
         """
@@ -356,9 +368,9 @@ class TestOneAtATime:
         sa.one_at_a_time()
 
         for param_name in sa.sen:
-            assert len(sa.sen[param_name]) == 3, (
-                f"Expected 3 lists for return_values=1, got {len(sa.sen[param_name])}"
-            )
+            assert (
+                len(sa.sen[param_name]) == 3
+            ), f"Expected 3 lists for return_values=1, got {len(sa.sen[param_name])}"
 
     def test_number_of_evaluated_points(
         self, two_param_df, two_param_bounds, simple_function, capsys
@@ -444,13 +456,11 @@ class TestOneAtATime:
                 continue
             actual = sa.sen[param_name][2]
             for v in actual:
-                assert lb[i] - 1e-10 <= v <= ub[i] + 1e-10, (
-                    f"Value {v} for {param_name} is outside [{lb[i]}, {ub[i]}]"
-                )
+                assert (
+                    lb[i] - 1e-10 <= v <= ub[i] + 1e-10
+                ), f"Value {v} for {param_name} is outside [{lb[i]}, {ub[i]}]"
 
-    def test_metric_values_are_correct(
-        self, two_param_df, two_param_bounds, capsys
-    ):
+    def test_metric_values_are_correct(self, two_param_df, two_param_bounds, capsys):
         """
         Test that the metric values match the function applied to the varied parameter.
 
@@ -470,9 +480,7 @@ class TestOneAtATime:
         sa.one_at_a_time()
 
         # Verify param1 entries (param2 stays at 3.0)
-        for actual_val, metric_val in zip(
-            sa.sen["param1"][2], sa.sen["param1"][1]
-        ):
+        for actual_val, metric_val in zip(sa.sen["param1"][2], sa.sen["param1"][1]):
             expected_metric = round(actual_val + 3.0, 3)
             assert abs(metric_val - expected_metric) < 1e-6
 
@@ -487,15 +495,13 @@ class TestOneAtATime:
             The 4th list contains the calculated_values returned by the function.
         """
         lb, ub = two_param_bounds
-        sa = Sensitivity(
-            two_param_df, lb, ub, two_return_function, return_values=2
-        )
+        sa = Sensitivity(two_param_df, lb, ub, two_return_function, return_values=2)
         sa.one_at_a_time()
 
         for param_name in sa.sen:
-            assert len(sa.sen[param_name]) == 4, (
-                f"Expected 4 lists for return_values=2, got {len(sa.sen[param_name])}"
-            )
+            assert (
+                len(sa.sen[param_name]) == 4
+            ), f"Expected 4 lists for return_values=2, got {len(sa.sen[param_name])}"
             # The 4th list should have the same number of entries as the others
             assert len(sa.sen[param_name][3]) == len(sa.sen[param_name][1])
 
@@ -511,9 +517,7 @@ class TestOneAtATime:
             Each entry in sen[param][3] is a pandas Series of length 3.
         """
         lb, ub = two_param_bounds
-        sa = Sensitivity(
-            two_param_df, lb, ub, two_return_function, return_values=2
-        )
+        sa = Sensitivity(two_param_df, lb, ub, two_return_function, return_values=2)
         sa.one_at_a_time()
 
         for param_name in sa.sen:
@@ -543,13 +547,11 @@ class TestOneAtATime:
             for m1, m2 in zip(sa1.sen[param_name][1], sa2.sen[param_name][1]):
                 # The metrics are stored as round(value, 3), so 2*round(x,3) may
                 # differ from round(2*x,3) by up to 0.001 due to rounding.
-                assert abs(m2 - 2 * m1) < 0.002, (
-                    f"With multiplier=2 metric should be double: got {m2}, expected {2 * m1}"
-                )
+                assert (
+                    abs(m2 - 2 * m1) < 0.002
+                ), f"With multiplier=2 metric should be double: got {m2}, expected {2 * m1}"
 
-    def test_positions_subset(
-        self, three_param_df, three_param_bounds, capsys
-    ):
+    def test_positions_subset(self, three_param_df, three_param_bounds, capsys):
         """
         Test one_at_a_time with a positions subset.
 
@@ -569,9 +571,7 @@ class TestOneAtATime:
         assert list(sa.sen.keys()) == ["beta"]
         assert len(sa.sen["beta"][0]) == 5 + 1  # n_values + 1
 
-    def test_positions_multiple(
-        self, three_param_df, three_param_bounds, capsys
-    ):
+    def test_positions_multiple(self, three_param_df, three_param_bounds, capsys):
         """
         Test one_at_a_time with multiple positions (0 and 2).
 
@@ -606,7 +606,7 @@ class TestOneAtATime:
         assert list(sa.sen.keys()) == ["only_param"]
         # Verify metric values make sense: f(x) = x^2
         for actual, metric in zip(sa.sen["only_param"][2], sa.sen["only_param"][1]):
-            assert abs(metric - round(actual ** 2, 3)) < 1e-6
+            assert abs(metric - round(actual**2, 3)) < 1e-6
 
     def test_function_returning_non_roundable_raises(
         self, two_param_df, two_param_bounds
@@ -629,9 +629,7 @@ class TestOneAtATime:
         with pytest.raises(ValueError, match="returns more than one value"):
             sa.one_at_a_time()
 
-    def test_n_values_3(
-        self, two_param_df, two_param_bounds, simple_function, capsys
-    ):
+    def test_n_values_3(self, two_param_df, two_param_bounds, simple_function, capsys):
         """
         Test one_at_a_time with n_values=3.
 
@@ -702,9 +700,7 @@ class TestSobol:
         lb, ub = two_param_bounds
         sa = Sensitivity(two_param_df, lb, ub, simple_function)
         sa.one_at_a_time()
-        fig, ax = sa.sobol(
-            title="My Title", xlabel="X Label", ylabel="Y Label"
-        )
+        fig, ax = sa.sobol(title="My Title", xlabel="X Label", ylabel="Y Label")
 
         assert ax.get_title() == "My Title"
         assert ax.get_xlabel() == "X Label"
@@ -750,9 +746,7 @@ class TestSobol:
         assert "param2" in legend_texts
         plt.close(fig)
 
-    def test_sobol_with_positions(
-        self, three_param_df, three_param_bounds, capsys
-    ):
+    def test_sobol_with_positions(self, three_param_df, three_param_bounds, capsys):
         """
         Test sobol when only a subset of parameters was analyzed.
 
@@ -821,13 +815,9 @@ class TestSobol:
             Second element is a tuple of two Axes objects.
         """
         lb, ub = two_param_bounds
-        sa = Sensitivity(
-            two_param_df, lb, ub, two_return_function, return_values=2
-        )
+        sa = Sensitivity(two_param_df, lb, ub, two_return_function, return_values=2)
         sa.one_at_a_time()
-        fig, (ax1, ax2) = sa.sobol(
-            spaces=[0.1, 0.1, 0.9, 0.9, 0.2, 0.4]
-        )
+        fig, (ax1, ax2) = sa.sobol(spaces=[0.1, 0.1, 0.9, 0.9, 0.2, 0.4])
 
         assert isinstance(fig, Figure)
         assert hasattr(ax1, "plot")
@@ -845,9 +835,7 @@ class TestSobol:
             ax2 has title2/xlabel2/ylabel2.
         """
         lb, ub = two_param_bounds
-        sa = Sensitivity(
-            two_param_df, lb, ub, two_return_function, return_values=2
-        )
+        sa = Sensitivity(two_param_df, lb, ub, two_return_function, return_values=2)
         sa.one_at_a_time()
         fig, (ax1, ax2) = sa.sobol(
             title="Primary Title",
@@ -877,9 +865,7 @@ class TestSobol:
             The plot is generated without error and returns (Figure, (Axes, Axes)).
         """
         lb, ub = two_param_bounds
-        sa = Sensitivity(
-            two_param_df, lb, ub, two_return_function, return_values=2
-        )
+        sa = Sensitivity(two_param_df, lb, ub, two_return_function, return_values=2)
         sa.one_at_a_time()
         fig, (ax1, ax2) = sa.sobol(
             real_values=True,

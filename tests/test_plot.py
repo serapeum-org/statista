@@ -11,7 +11,6 @@ from matplotlib.figure import Figure
 
 from statista.plot import Plot
 
-
 # ---------------------------------------------------------------------------
 # Shared fixtures
 # ---------------------------------------------------------------------------
@@ -30,9 +29,7 @@ def pdf_inputs(seeded_data):
     data_sorted = np.sort(seeded_data)
     qx = np.linspace(data_sorted.min(), data_sorted.max(), 200)
     # simple gaussian pdf for plotting purposes
-    pdf_fitted = (1 / (2 * np.sqrt(2 * np.pi))) * np.exp(
-        -0.5 * ((qx - 10) / 2) ** 2
-    )
+    pdf_fitted = (1 / (2 * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((qx - 10) / 2) ** 2)
     return qx, pdf_fitted, data_sorted
 
 
@@ -55,9 +52,7 @@ def details_inputs(seeded_data):
     n = len(data_sorted)
     cdf_empirical = np.arange(1, n + 1) / (n + 1)
     qx = np.linspace(data_sorted.min(), data_sorted.max(), 200)
-    pdf_vals = (1 / (2 * np.sqrt(2 * np.pi))) * np.exp(
-        -0.5 * ((qx - 10) / 2) ** 2
-    )
+    pdf_vals = (1 / (2 * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((qx - 10) / 2) ** 2)
     cdf_fitted = (qx - qx.min()) / (qx.max() - qx.min())
     return qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical
 
@@ -185,9 +180,7 @@ class TestPlotCdf:
     def test_custom_fig_size(self, cdf_inputs):
         """Custom fig_size is reflected in the Figure."""
         qx, cdf_fitted, data_sorted, cdf_weibul = cdf_inputs
-        fig, _ = Plot.cdf(
-            qx, cdf_fitted, data_sorted, cdf_weibul, fig_size=(14, 7)
-        )
+        fig, _ = Plot.cdf(qx, cdf_fitted, data_sorted, cdf_weibul, fig_size=(14, 7))
         w, h = fig.get_size_inches()
         assert w == pytest.approx(14)
         assert h == pytest.approx(7)
@@ -195,9 +188,7 @@ class TestPlotCdf:
     def test_custom_fontsize(self, cdf_inputs):
         """Fontsize parameter is applied to axis labels."""
         qx, cdf_fitted, data_sorted, cdf_weibul = cdf_inputs
-        _, ax = Plot.cdf(
-            qx, cdf_fitted, data_sorted, cdf_weibul, fontsize=20
-        )
+        _, ax = Plot.cdf(qx, cdf_fitted, data_sorted, cdf_weibul, fontsize=20)
         assert ax.xaxis.label.get_fontsize() == 20
         assert ax.yaxis.label.get_fontsize() == 20
 
@@ -252,9 +243,7 @@ class TestPlotDetails:
     def test_two_subplots_exist(self, details_inputs):
         """The figure should contain exactly two axes (side-by-side)."""
         qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical = details_inputs
-        fig, _ = Plot.details(
-            qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical
-        )
+        fig, _ = Plot.details(qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical)
         assert len(fig.axes) == 2
 
     def test_default_labels(self, details_inputs):
@@ -333,18 +322,14 @@ class TestPlotDetails:
     def test_pdf_subplot_has_line_and_histogram(self, details_inputs):
         """ax1 (PDF side) must contain a Line2D and histogram patches."""
         qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical = details_inputs
-        _, (ax1, _) = Plot.details(
-            qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical
-        )
+        _, (ax1, _) = Plot.details(qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical)
         assert len(ax1.lines) >= 1
         assert len(ax1.patches) >= 1
 
     def test_cdf_subplot_has_line_and_scatter(self, details_inputs):
         """ax2 (CDF side) must contain a Line2D and scatter collection."""
         qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical = details_inputs
-        _, (_, ax2) = Plot.details(
-            qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical
-        )
+        _, (_, ax2) = Plot.details(qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical)
         assert len(ax2.lines) >= 1
         assert len(ax2.collections) >= 1
 
@@ -365,16 +350,16 @@ class TestPlotDetails:
         cdf_fitted = np.linspace(0, 1, 200)
 
         # Verify the array is NOT sorted before the call
-        assert not np.all(np.diff(original_order) >= 0), (
-            "Precondition: data should not already be sorted"
-        )
+        assert not np.all(
+            np.diff(original_order) >= 0
+        ), "Precondition: data should not already be sorted"
 
         Plot.details(qx, q_act, pdf_vals, cdf_fitted, cdf_empirical)
 
         # After the call, q_act has been sorted in-place (the bug)
-        assert np.all(np.diff(q_act) >= 0), (
-            "Bug: q_act should have been mutated to sorted order"
-        )
+        assert np.all(
+            np.diff(q_act) >= 0
+        ), "Bug: q_act should have been mutated to sorted order"
         # Confirm it no longer matches the original order
         assert not np.array_equal(q_act, original_order)
 
@@ -435,9 +420,7 @@ class TestPlotConfidenceLevel:
     def test_custom_fontsize(self, confidence_inputs):
         """Fontsize parameter is applied to axis labels."""
         qth, q_act, q_lower, q_upper = confidence_inputs
-        _, ax = Plot.confidence_level(
-            qth, q_act.copy(), q_lower, q_upper, fontsize=16
-        )
+        _, ax = Plot.confidence_level(qth, q_act.copy(), q_lower, q_upper, fontsize=16)
         assert ax.xaxis.label.get_fontsize() == 16
         assert ax.yaxis.label.get_fontsize() == 16
 
@@ -453,9 +436,7 @@ class TestPlotConfidenceLevel:
     def test_custom_alpha_legend_text(self, confidence_inputs):
         """alpha=0.1 should produce '90 % CI' in the legend labels."""
         qth, q_act, q_lower, q_upper = confidence_inputs
-        _, ax = Plot.confidence_level(
-            qth, q_act.copy(), q_lower, q_upper, alpha=0.1
-        )
+        _, ax = Plot.confidence_level(qth, q_act.copy(), q_lower, q_upper, alpha=0.1)
         legend = ax.get_legend()
         texts = [t.get_text() for t in legend.get_texts()]
         assert any("90 % CI" in t for t in texts)
@@ -463,9 +444,7 @@ class TestPlotConfidenceLevel:
     def test_legend_labels_content(self, confidence_inputs):
         """Legend must contain Theoretical Data, Lower limit, Upper limit, Actual Data."""
         qth, q_act, q_lower, q_upper = confidence_inputs
-        _, ax = Plot.confidence_level(
-            qth, q_act.copy(), q_lower, q_upper, alpha=0.05
-        )
+        _, ax = Plot.confidence_level(qth, q_act.copy(), q_lower, q_upper, alpha=0.05)
         legend = ax.get_legend()
         texts = [t.get_text() for t in legend.get_texts()]
         assert "Theoretical Data" in texts
@@ -509,16 +488,16 @@ class TestPlotConfidenceLevel:
         q_upper = qth + 0.5
 
         # Verify the array is NOT sorted before the call
-        assert not np.all(np.diff(original_order) >= 0), (
-            "Precondition: data should not already be sorted"
-        )
+        assert not np.all(
+            np.diff(original_order) >= 0
+        ), "Precondition: data should not already be sorted"
 
         Plot.confidence_level(qth, q_act, q_lower, q_upper)
 
         # After the call, q_act has been sorted in-place (the bug)
-        assert np.all(np.diff(q_act) >= 0), (
-            "Bug: q_act should have been mutated to sorted order"
-        )
+        assert np.all(
+            np.diff(q_act) >= 0
+        ), "Bug: q_act should have been mutated to sorted order"
         assert not np.array_equal(q_act, original_order)
 
     def test_small_data(self):
