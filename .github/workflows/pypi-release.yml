@@ -1,5 +1,4 @@
-# This workflows will upload a Python Package using Twine when a release is created
-# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+# Build and publish the Python package to PyPI using the Serapieum composite action.
 
 name: pypi-release
 
@@ -23,7 +22,6 @@ jobs:
       - name: Build and publish to PyPI
         uses: Serapieum-of-alex/github-actions/actions/release/pypi@pypi-release/v1
         with:
-          package: ${{ env.PACKAGE }}
           pypi-username: __token__
           pypi-password: ${{ secrets.PYPI_PUBLISH }}
           python-version: '3.12'
