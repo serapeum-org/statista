@@ -117,6 +117,6 @@ class ConfidenceInterval:
         params = OrderedDict()
         params["shape"] = (out[0, 0], out[1, 0])
         params["location"] = (out[0, 1], out[1, 1])
-        params["scale"] = (out[0, 2], out[1, 3])
+        params["scale"] = (out[0, 2], out[1, 2])
 
         return {"lb": lb, "ub": ub, "params": params}
