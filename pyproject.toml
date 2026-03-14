@@ -3,7 +3,7 @@ name = "statista"
 version = "0.6.3"
 description = "statistics package"
 readme = "README.md"
-license = {text = "GPL-3.0-or-later"}
+license = {text = "MIT"}
 authors = [
     {name = "Mostafa Farrag", email = "moah.farag@gmail.com"},
 ]
@@ -19,7 +19,7 @@ keywords = [
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
