@@ -1,9 +1,7 @@
 try:
-    from importlib.metadata import PackageNotFoundError  # type: ignore
-    from importlib.metadata import version
+    from importlib.metadata import PackageNotFoundError, version  # type: ignore
 except ImportError:  # pragma: no cover
-    from importlib_metadata import PackageNotFoundError  # type: ignore
-    from importlib_metadata import version
+    from importlib_metadata import PackageNotFoundError, version  # type: ignore[no-redef]
 
 
 try:

@@ -1,7 +1,9 @@
 """Confidence interval module."""
 
+from __future__ import annotations
+
 from collections import OrderedDict
-from typing import Union
+from typing import Callable
 
 import numpy as np
 from loguru import logger
@@ -12,7 +14,7 @@ class ConfidenceInterval:
     """ConfidenceInterval."""
 
     @staticmethod
-    def bs_indexes(data: Union[list, np.ndarray], n_samples=10000):
+    def bs_indexes(data: np.ndarray, n_samples: int = 10000):
         """bs_indexes.
 
             - generate random indeces to shuffle the data of the given array.
@@ -41,8 +43,8 @@ class ConfidenceInterval:
 
     @staticmethod
     def boot_strap(
-        data: Union[list, np.ndarray],
-        state_function: callable,
+        data: list | np.ndarray,
+        state_function: Callable,
         alpha: float = 0.05,
         n_samples: int = 100,
         **kwargs,

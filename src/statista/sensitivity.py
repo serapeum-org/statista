@@ -9,7 +9,9 @@ affect model outputs, which is crucial for model calibration, uncertainty analys
 and decision-making processes.
 """
 
-from typing import Any, Dict, List, Union
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -113,9 +115,9 @@ class Sensitivity:
     def __init__(
         self,
         parameter: DataFrame,
-        lower_bound: List[Union[int, float]],
-        upper_bound: List[Union[int, float]],
-        function: callable,
+        lower_bound: list[int | float],
+        upper_bound: list[int | float],
+        function: Callable[..., Any],
         positions=None,
         n_values=5,
         return_values=1,
@@ -252,7 +254,7 @@ class Sensitivity:
             style %= len(Sensitivity.MarkerStyleList)
         return Sensitivity.MarkerStyleList[style]
 
-    def one_at_a_time(self, *args, **kwargs: Dict[str, Any]):
+    def one_at_a_time(self, *args, **kwargs: dict[str, Any]):
         """Perform One-At-a-Time (OAT) sensitivity analysis.
 
         This method performs OAT sensitivity analysis by varying each parameter one at a time
@@ -343,7 +345,7 @@ class Sensitivity:
 
                 ```
         """
-        self.sen = {}
+        self.sen: dict[str, list[Any]] = {}
 
         for i in range(self.num_parameters):
             k = self.positions[i]

@@ -23,7 +23,7 @@ Available distributions:
 
 from __future__ import annotations
 
-from typing import Any, List, Union
+from typing import Any
 
 import numpy as np
 import scipy as sp
@@ -295,7 +295,7 @@ class Lmoments:
             return lmoments[0]
 
         # Setup comb table, where comb[i][x] refers to comb(x,i)
-        comb = []
+        comb: list[list[float | int]] = []
         for i in range(1, nmom):
             comb.append([])
             for j in range(n):
@@ -305,7 +305,7 @@ class Lmoments:
             coefl = 1.0 / mom * 1.0 / self._comb(n, mom)
             xtrans = []
             for i in range(0, n):
-                coef_temp = []
+                coef_temp: list[float | int] = []
                 for _ in range(0, mom):
                     coef_temp.append(1)
 
@@ -320,8 +320,8 @@ class Lmoments:
 
                 for j in range(0, int(0.5 * mom)):
                     coef_temp[j * 2 + 1] = -coef_temp[j * 2 + 1]
-                coef_temp = sum(coef_temp)
-                xtrans.append(x[i] * coef_temp)
+                coef_sum: Any = sum(coef_temp)
+                xtrans.append(x[i] * coef_sum)
 
             if mom > 2:
                 lmoments.append(coefl * sum(xtrans) / lmoments[1])
@@ -329,7 +329,7 @@ class Lmoments:
                 lmoments.append(coefl * sum(xtrans))
         return lmoments
 
-    def _samlmusmall(self, nmom: int = 5) -> list[ndarray | float | int | Any]:
+    def _samlmusmall(self, nmom: int = 5) -> list[ndarray | float | int | Any] | None:
         """Calculate L-moments for small samples or lower order moments.
 
         This method implements an optimized algorithm for calculating L-moments up to order 5.
@@ -400,7 +400,7 @@ class Lmoments:
         # comb3 = comb(i-1,2)
         # comb4 = comb3.reverse()
         comb3 = []
-        comb4 = []
+        comb4: list[float | int] = []
         for i in range(0, n):
             comb_temp = self._comb(i, 2)
             comb3.append(comb_temp)
@@ -419,7 +419,7 @@ class Lmoments:
 
         # Calculate Fourth order
         comb5 = []
-        comb6 = []
+        comb6: list[float | int] = []
         for i in range(0, n):
             comb_temp = self._comb(i, 3)
             comb5.append(comb_temp)
@@ -440,7 +440,7 @@ class Lmoments:
 
         # Calculate Fifth order
         comb7 = []
-        comb8 = []
+        comb8: list[float | int] = []
         for i in range(0, n):
             comb_temp = self._comb(i, 4)
             comb7.append(comb_temp)
@@ -465,7 +465,7 @@ class Lmoments:
         return None
 
     @staticmethod
-    def gev(lmoments: List[Union[float, int]]) -> List[Union[float, int]]:
+    def gev(lmoments: list[float | int]) -> list[float | int]:
         """Estimate parameters for the Generalized Extreme Value (GEV) distribution.
 
         The Generalized Extreme Value distribution combines the Gumbel, Fréchet, and Weibull
@@ -612,7 +612,7 @@ class Lmoments:
             return para
 
     @staticmethod
-    def gumbel(lmoments: List[Union[float, int]]) -> List[Union[float, int]]:
+    def gumbel(lmoments: list[float | int]) -> list[float | int]:
         """Estimate parameters for the Gumbel distribution.
 
         The Gumbel distribution (also known as the Type I Extreme Value distribution) is
@@ -689,7 +689,7 @@ class Lmoments:
             return para
 
     @staticmethod
-    def exponential(lmoments: List[Union[float, int]]) -> List[Union[float, int]]:
+    def exponential(lmoments: list[float | int]) -> list[float | int] | None:
         """Estimate parameters for the Exponential distribution.
 
         The Exponential distribution is used to model the time between events in a Poisson process.
@@ -766,7 +766,7 @@ class Lmoments:
         return para
 
     @staticmethod
-    def gamma(lmoments: List[Union[float, int]]) -> List[Union[float, int]]:
+    def gamma(lmoments: list[float | int]) -> list[float | int] | None:
         """Estimate parameters for the Gamma distribution.
 
         The Gamma distribution is a two-parameter family of continuous probability distributions
@@ -864,8 +864,8 @@ class Lmoments:
 
     @staticmethod
     def generalized_logistic(
-        lmoments: List[Union[float, int]],
-    ) -> List[Union[float, int]]:
+        lmoments: list[float | int],
+    ) -> list[float | int] | None:
         """Estimate parameters for the Generalized Logistic distribution.
 
         The Generalized Logistic distribution is a flexible three-parameter distribution
@@ -961,8 +961,8 @@ class Lmoments:
 
     @staticmethod
     def generalized_normal(
-        lmoments: List[Union[float, int]] | None,
-    ) -> List[Union[float, int]] | None:
+        lmoments: list[float | int] | None,
+    ) -> list[float | int] | None:
         """Estimate parameters for the Generalized Normal distribution.
 
         The Generalized Normal distribution (also known as the Generalized Error Distribution)
@@ -1050,13 +1050,16 @@ class Lmoments:
         b2 = 0.12420401e01
         b3 = -0.21741801e00
 
+        if lmoments is None:
+            return None
+
         t3 = lmoments[2]
         if lmoments[1] <= 0 or abs(t3) >= 1:
             print(LMOMENTS_INVALID_ERROR)
             return None
 
         if abs(t3) >= 0.95:
-            para = [0, -1, 0]
+            para: list[float | int] = [0, -1, 0]
             return para
 
         tt = t3**2
@@ -1073,7 +1076,7 @@ class Lmoments:
 
     @staticmethod
     def generalized_pareto(
-        lmoments: List[Union[float, int]],
+        lmoments: list[float | int],
     ) -> list[float] | None:
         """Estimate parameters for the Generalized Pareto distribution.
 
@@ -1172,7 +1175,7 @@ class Lmoments:
         return para
 
     @staticmethod
-    def normal(lmoments: List[Union[float, int]]) -> List[Union[float, int]] | None:
+    def normal(lmoments: list[float | int]) -> list[float | int] | None:
         """Estimate parameters for the Normal (Gaussian) distribution.
 
         The Normal distribution is a symmetric, bell-shaped distribution that is
@@ -1252,7 +1255,7 @@ class Lmoments:
             return para
 
     @staticmethod
-    def pearson_3(lmoments: List[Union[float, int]]) -> List[Union[float, int]]:
+    def pearson_3(lmoments: list[float | int]) -> list[float | int]:
         """Estimate parameters for the Pearson Type III (PE3) distribution.
 
         The Pearson Type III distribution, also known as the three-parameter Gamma distribution,
@@ -1347,7 +1350,7 @@ class Lmoments:
 
         t3 = abs(lmoments[2])
         if lmoments[1] <= 0 or t3 >= 1:
-            para = [0] * 3
+            para: list[float | int] = [0] * 3
             print(LMOMENTS_INVALID_ERROR)
             return para
 
@@ -1375,7 +1378,7 @@ class Lmoments:
         return para
 
     @staticmethod
-    def wakeby(lmoments: List[Union[float, int]]) -> List[Union[float, int]] | None:
+    def wakeby(lmoments: list[float | int]) -> list[float | int] | None:
         """Estimate parameters for the Wakeby distribution.
 
         The Wakeby distribution is a flexible five-parameter distribution that can model

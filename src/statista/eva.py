@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Extreme value analysis.
 
 Annual Maximum Series (AMS) Analysis is a statistical method commonly used in fields like hydrology, meteorology, and
@@ -32,7 +34,7 @@ Common Applications:
 """
 
 from pathlib import Path
-from typing import Tuple, Union
+from typing import Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -48,14 +50,14 @@ def ams_analysis(
     ams: bool = False,
     ams_start: str = "YE-OCT",
     save_plots: bool = False,
-    save_to: str = None,
-    filter_out: Union[float, int] = None,
+    save_to: str | None = None,
+    filter_out: float | int | None = None,
     distribution: str = "GEV",
     method: str = "lmoments",
-    obj_func: callable = None,
+    obj_func: Callable | None = None,
     quartile: float = 0,
     alpha: float = 0.1,
-) -> Tuple[DataFrame, DataFrame]:
+) -> tuple[DataFrame, DataFrame]:
     """Annual Maximum Series analysis.
 
     ams analysis method reads resamples all the time series in the given dataframe to annual maximum, then fits
@@ -265,17 +267,17 @@ def ams_analysis(
     )
     distribution_properties.index.name = "id"
     # required return periods
-    return_period = [1.5, 2, 5, 10, 25, 50, 50, 100, 200, 500, 1000]
-    return_period = np.array(return_period)
+    return_period_list = [1.5, 2, 5, 10, 25, 50, 50, 100, 200, 500, 1000]
+    return_period = np.array(return_period_list)
     # these values are the Non Exceedance probability (F) of the chosen
     # return periods non_exceed_prop = 1 - (1/return_period)
     # Non Exceedance probabilities
     # non_exceed_prop = [1/3, 0.5, 0.8, 0.9, 0.96, 0.98, 0.99, 0.995, 0.998]
     non_exceed_prop = 1 - (1 / return_period)
-    save_to = Path(save_to)
+    save_path = Path(save_to) if save_to is not None else Path(".")
     # Iteration over all the gauge numbers.
     if save_plots:
-        rpath = save_to.joinpath("figures")
+        rpath = save_path.joinpath("figures")
         if not rpath.exists():
             rpath.mkdir(parents=True, exist_ok=True)
 
@@ -335,10 +337,10 @@ def ams_analysis(
                 method=method, plot_figure=True, alpha=alpha
             )
 
-            fig.savefig(f"{save_to}/figures/{i}.png", format="png")
+            fig.savefig(f"{save_path}/figures/{i}.png", format="png")
             plt.close()
 
-            fig2.savefig(f"{save_to}/figures/f-{i}.png", format="png")
+            fig2.savefig(f"{save_path}/figures/f-{i}.png", format="png")
             plt.close()
 
         quantiles = np.quantile(ams_arr, [0.05, 0.25, 0.50, 0.75, 0.95])
