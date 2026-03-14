@@ -16,29 +16,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-        - uses: actions/checkout@v4
-        - name: Set up Python
-          uses: actions/setup-python@v4
-          with:
-              python-version: "3.x"
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
-        - name: Install uv
-          uses: astral-sh/setup-uv@v4
-          with:
-            enable-cache: true
-            cache-dependency-glob: uv.lock
-
-        - name: Install Dependencies
-          run: uv sync --frozen --group dev
-
-        - name: Install tools
-          run: |
-              uv pip install twine
-
-        - name: Build and publish
-          run: |
-              uv build
-              twine upload dist/*
-          env:
-              TWINE_USERNAME: ${{ secrets.PYPI_USERS }}
-              TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      - name: Build and publish to PyPI
+        uses: Serapieum-of-alex/github-actions/actions/release/pypi@pypi-release/v1
+        with:
+          package: ${{ env.PACKAGE }}
+          pypi-username: __token__
+          pypi-password: ${{ secrets.PYPI_PUBLISH }}
+          python-version: '3.12'
+          package-manager: 'uv'
+          install-groups: "groups: dev"
+          verify-lock: 'false'
+          # pypi-repository-url: 'https://test.pypi.org/legacy/'
