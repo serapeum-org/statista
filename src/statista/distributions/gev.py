@@ -30,49 +30,50 @@ class GEV(AbstractDistribution):
     - The Generalized Extreme Value (GEV) distribution is used to model the largest or smallest value among a large
         set of independent, identically distributed random values.
     - The GEV distribution encompasses three types of distributions: Gumbel, Fréchet, and Weibull, which are
-        distinguished by a shape parameter (:math:`\\xi` (xi)).
+        distinguished by a shape parameter (\(\\xi\) (xi)).
 
     - The probability density function (PDF) of the Generalized-extreme-value distribution is:
 
-        .. math::
-            f(x; \\zeta, \\delta, \\xi)=\\frac{1}{\\delta}\\mathrm{*}{\\mathrm{Q(x)}}^{\\xi+1}\\mathrm{
-            *} e^{\\mathrm{-Q(x)}}
+        $$
+        f(x; \\zeta, \\delta, \\xi)=\\frac{1}{\\delta}\\mathrm{*}{\\mathrm{Q(x)}}^{\\xi+1}\\mathrm{
+        *} e^{\\mathrm{-Q(x)}}
+        $$
 
-        .. math::
-            Q(x; \\zeta, \\delta, \\xi)=
-            \\begin{cases}
-                \\left(1+ \\xi \\left(\\frac{x-\\zeta}{\\delta} \\right) \\right)^\\frac{-1}{\\xi} &
-                \\quad\\land\\xi\\neq 0 \\\\
-                e^{- \\left(\\frac{x-\\zeta}{\\delta} \\right)} & \\quad \\land \\xi=0
-            \\end{cases}
-          :label: gev-pdf
+        $$
+        Q(x; \\zeta, \\delta, \\xi)=
+        \\begin{cases}
+            \\left(1+ \\xi \\left(\\frac{x-\\zeta}{\\delta} \\right) \\right)^\\frac{-1}{\\xi} &
+            \\quad\\land\\xi\\neq 0 \\\\
+            e^{- \\left(\\frac{x-\\zeta}{\\delta} \\right)} & \\quad \\land \\xi=0
+        \\end{cases}
+        $$
 
-        Where the :math:`\\delta` (delta) is the scale parameter, :math:`\\zeta` (zeta) is the location parameter,
-        and :math:`\\xi` (xi) is the shape parameter.
+        Where the \(\\delta\) (delta) is the scale parameter, \(\\zeta\) (zeta) is the location parameter,
+        and \(\\xi\) (xi) is the shape parameter.
 
-    - The location parameter :math:`\\zeta` shifts the distribution along the x-axis. It essentially determines the mode
+    - The location parameter \(\\zeta\) shifts the distribution along the x-axis. It essentially determines the mode
         (peak) of the distribution and its location. Changing the location parameter moves the distribution left or
         right without altering its shape. The location parameter ranges from negative infinity to positive infinity.
-    - The scale parameter :math:`\\delta` controls the spread or dispersion of the distribution. A larger scale parameter
+    - The scale parameter \(\\delta\) controls the spread or dispersion of the distribution. A larger scale parameter
         results in a wider distribution, while a smaller scale parameter results in a narrower distribution. It must
         always be positive.
-    - The shape parameter :math:`\\xi` (xi) determines the shape of the distribution. The shape parameter can be positive,
-        negative, or zero. The shape parameter is used to classify the GEV distribution into three types: :math:`\\xi = 0`
-        Gumbel (Type I), :math:`\\xi > 0` Fréchet (Type II), and :math:`\\xi < 0` Weibull (Type III). The shape
+    - The shape parameter \(\\xi\) (xi) determines the shape of the distribution. The shape parameter can be positive,
+        negative, or zero. The shape parameter is used to classify the GEV distribution into three types: \(\\xi = 0\)
+        Gumbel (Type I), \(\\xi > 0\) Fréchet (Type II), and \(\\xi < 0\) Weibull (Type III). The shape
         parameter determines the tail behavior of the distribution.
 
-        In hydrology, the distribution is reparametrized with :math:`k=-\\xi` (xi) (El Adlouni et al., 2008).
+        In hydrology, the distribution is reparametrized with \(k=-\\xi\) (xi) (El Adlouni et al., 2008).
 
     - The cumulative distribution function (CDF) is:
 
-        .. math::
-            F(x; \\zeta, \\delta, \\xi)=
-            \\begin{cases}
-                \\exp\\left(- \\left(1+ \\xi \\left(\\frac{x-\\zeta}{\\delta} \\right) \\right)^\\frac{-1}{\\xi} \\right) &
-                \\quad\\land\\xi\\neq 0 \\land 1 + \\xi \\left( \\frac{x-\\zeta}{\\delta}\\right) > 0 \\\\
-                \\exp\\left(- \\exp\\left(- \\frac{x-\\zeta}{\\delta} \\right) \\right) & \\quad \\land \\xi=0
-            \\end{cases}
-          :label: gev-cdf
+        $$
+        F(x; \\zeta, \\delta, \\xi)=
+        \\begin{cases}
+            \\exp\\left(- \\left(1+ \\xi \\left(\\frac{x-\\zeta}{\\delta} \\right) \\right)^\\frac{-1}{\\xi} \\right) &
+            \\quad\\land\\xi\\neq 0 \\land 1 + \\xi \\left( \\frac{x-\\zeta}{\\delta}\\right) > 0 \\\\
+            \\exp\\left(- \\exp\\left(- \\frac{x-\\zeta}{\\delta} \\right) \\right) & \\quad \\land \\xi=0
+        \\end{cases}
+        $$
 
     """
 

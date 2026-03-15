@@ -27,32 +27,32 @@ class Exponential(AbstractDistribution):
 
     - The probability density function (PDF) of the Exponential distribution is:
 
-        .. math::
-            f(x; \\delta, \\beta) =
-            \\begin{cases}
-                \\frac{1}{\\beta} e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq \\delta \\\\
-                0 & \\quad x < \\delta
-            \\end{cases}
-          :label: exp-equation
+        $$
+        f(x; \\delta, \\beta) =
+        \\begin{cases}
+            \\frac{1}{\\beta} e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq \\delta \\\\
+            0 & \\quad x < \\delta
+        \\end{cases}
+        $$
 
-    - The probability density function above uses the location parameter :math:`\\delta` and the scale parameter
-        :math:`\\beta` to define the distribution in a standardized form.
-    - A common parameterization for the exponential distribution is in terms of the rate parameter :math:`\\lambda`,
-        such that :math:`\\lambda = 1 / \\beta`.
-    - The Location Parameter (:math:`\\delta`): This shifts the starting point of the distribution. The distribution is
-        defined for :math:`x \\geq \\delta`.
-    - Scale Parameter (:math:`\\beta`): This determines the spread of the distribution. The rate parameter
-        :math:`\\lambda` is the inverse of the scale parameter, so :math:`\\lambda = \\frac{1}{\\beta}`.
+    - The probability density function above uses the location parameter \\(\\delta\\) and the scale parameter
+        \\(\\beta\\) to define the distribution in a standardized form.
+    - A common parameterization for the exponential distribution is in terms of the rate parameter \\(\\lambda\\),
+        such that \\(\\lambda = 1 / \\beta\\).
+    - The Location Parameter (\\(\\delta\\)): This shifts the starting point of the distribution. The distribution is
+        defined for \\(x \\geq \\delta\\).
+    - Scale Parameter (\\(\\beta\\)): This determines the spread of the distribution. The rate parameter
+        \\(\\lambda\\) is the inverse of the scale parameter, so \\(\\lambda = \\frac{1}{\\beta}\\).
 
     - The cumulative distribution functions.
 
-        .. math::
-            F(x; \\delta, \\beta) =
-            \\begin{cases}
-                1 - e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq \\delta \\\\
-                0 & \\quad x < \\delta
-            \\end{cases}
-          :label: exp-cdf
+        $$
+        F(x; \\delta, \\beta) =
+        \\begin{cases}
+            1 - e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq \\delta \\\\
+            0 & \\quad x < \\delta
+        \\end{cases}
+        $$
 
     """
 

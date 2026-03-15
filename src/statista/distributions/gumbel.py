@@ -40,24 +40,24 @@ class Gumbel(AbstractDistribution):
 
     - The probability density function (PDF) of the Gumbel distribution is:
 
-        .. math::
-            f(x; \\zeta, \\delta) = \\frac{1}{\\delta}
-            \\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)
-            \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)
-          :label: gumbel-pdf
+        $$
+        f(x; \\zeta, \\delta) = \\frac{1}{\\delta}
+        \\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)
+        \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)
+        $$
 
-        Where :math:`\\zeta` (zeta) is the location parameter and :math:`\\delta` (delta)
+        Where \\(\\zeta\\) (zeta) is the location parameter and \\(\\delta\\) (delta)
         is the scale parameter.
 
     - The cumulative distribution function (CDF) is:
 
-        .. math::
-            F(x; \\zeta, \\delta) = \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)
-          :label: gumbel-cdf
+        $$
+        F(x; \\zeta, \\delta) = \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)
+        $$
 
-    - The location parameter :math:`\\zeta` shifts the distribution along the x-axis, determining
+    - The location parameter \\(\\zeta\\) shifts the distribution along the x-axis, determining
       the mode (peak) of the distribution. It can range from negative to positive infinity.
-    - The scale parameter :math:`\\delta` controls the spread of the distribution. A larger scale
+    - The scale parameter \\(\\delta\\) controls the spread of the distribution. A larger scale
       parameter results in a wider distribution. It must always be positive.
     """
 

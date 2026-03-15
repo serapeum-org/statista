@@ -25,20 +25,20 @@ class Normal(AbstractDistribution):
 
     - The probability density function (PDF) of the Normal distribution is:
 
-        .. math::
-            f(x; \\mu, \\sigma) = \\frac{1}{\\sigma \\sqrt{2\\pi}}
-            \\exp\\left(-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right)
-          :label: normal-equation
+        $$
+        f(x; \\mu, \\sigma) = \\frac{1}{\\sigma \\sqrt{2\\pi}}
+        \\exp\\left(-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right)
+        $$
 
-        Where :math:`\\mu` is the location (mean) parameter and :math:`\\sigma` is the scale
+        Where \\(\\mu\\) is the location (mean) parameter and \\(\\sigma\\) is the scale
         (standard deviation) parameter.
 
     - The cumulative distribution function (CDF) is:
 
-        .. math::
-            F(x; \\mu, \\sigma) = \\frac{1}{2}\\left[1 + \\mathrm{erf}
-            \\left(\\frac{x - \\mu}{\\sigma \\sqrt{2}}\\right)\\right]
-          :label: normal-cdf
+        $$
+        F(x; \\mu, \\sigma) = \\frac{1}{2}\\left[1 + \\mathrm{erf}
+        \\left(\\frac{x - \\mu}{\\sigma \\sqrt{2}}\\right)\\right]
+        $$
     """
 
     def __init__(
