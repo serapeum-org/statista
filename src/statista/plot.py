@@ -372,7 +372,7 @@ class Plot:
         q_act = np.sort(q_act)
         ax2.scatter(q_act, cdf, color="#DC143C", facecolors="none")
         ax2.set_xlabel(xlabel, fontsize=fontsize)
-        ax2.set_ylabel(ylabel, fontsize=15)
+        ax2.set_ylabel(ylabel, fontsize=fontsize)
         plt.show()
         return fig, (ax1, ax2)
 
