@@ -267,7 +267,7 @@ def ams_analysis(
     )
     distribution_properties.index.name = "id"
     # required return periods
-    return_period_list = [1.5, 2, 5, 10, 25, 50, 50, 100, 200, 500, 1000]
+    return_period_list = [1.5, 2, 5, 10, 25, 50, 100, 200, 500, 1000]
     return_period = np.array(return_period_list)
     # these values are the Non Exceedance probability (F) of the chosen
     # return periods non_exceed_prop = 1 - (1/return_period)
