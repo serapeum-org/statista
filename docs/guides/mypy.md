@@ -10,10 +10,10 @@ Run mypy against the entire package:
 uv run --active mypy src/statista
 ```
 
-Check a single module:
+Check a single module or subpackage:
 
 ```bash
-uv run --active mypy src/statista/distributions.py
+uv run --active mypy src/statista/distributions/
 ```
 
 ## Configuration
