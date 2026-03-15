@@ -134,7 +134,7 @@ def rmse_hf(
     # Input values
     if not (1 <= ws_type <= 4):
         raise ValueError(
-            f"Weighting scheme should be an integer number between 1 and 4 you have enters {ws_type}"
+            f"Weighting scheme should be an integer number between 1 and 4 you have entered {ws_type}"
         )
 
     if n < 0:
@@ -251,7 +251,7 @@ def rmse_lf(
     # Input values
     if not 1 <= ws_type <= 4:
         raise ValueError(
-            f"Weighting scheme should be an integer number between 1 and 4 you have enters {ws_type}"
+            f"Weighting scheme should be an integer number between 1 and 4 you have entered {ws_type}"
         )
 
     if n < 0:
