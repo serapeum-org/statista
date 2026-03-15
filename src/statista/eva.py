@@ -274,6 +274,11 @@ def ams_analysis(
     # Non Exceedance probabilities
     # non_exceed_prop = [1/3, 0.5, 0.8, 0.9, 0.96, 0.98, 0.99, 0.995, 0.998]
     non_exceed_prop = 1 - (1 / return_period)
+    if save_plots and save_to is None:
+        raise ValueError(
+            "save_to must be provided when save_plots is True"
+        )
+
     save_path = Path(save_to) if save_to is not None else Path(".")
     # Iteration over all the gauge numbers.
     if save_plots:
