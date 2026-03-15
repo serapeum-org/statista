@@ -384,7 +384,7 @@ class Plot:
         q_upper: np.ndarray | list,
         fig_size: tuple[float, float] = (6, 6),
         fontsize: int = 11,
-        alpha: float | None = None,
+        alpha: float = 0.05,
         marker_size: int = 10,
     ) -> tuple[Figure, Axes]:
         """Create a confidence interval plot for distribution quantiles.
@@ -482,9 +482,6 @@ class Plot:
             - Plot.details: For plotting PDF and CDF together
         """
         q_act = np.sort(q_act)
-
-        if alpha is None:
-            alpha = 0.05
 
         fig = plt.figure(figsize=fig_size)
         ax = fig.add_subplot()
