@@ -581,9 +581,9 @@ class AbstractDistribution(ABC):
         expected_counts = expected_prob * len(self.data)
 
         # Pearson’s χ² test assumes each expected count is sufficiently large (at least about 5); otherwise the asymptotic χ² approximation is unreliable
-        obs_list: list[float] = obs_counts.tolist()
-        exp_list: list[float] = expected_counts.tolist()
-        merged_obs, merged_exp = merge_small_bins(obs_list, exp_list)
+        merged_obs, merged_exp = merge_small_bins(
+            obs_counts.tolist(), expected_counts.tolist()  # type: ignore[arg-type]
+        )
 
         test = chisquare(merged_obs, f_exp=merged_exp, ddof=len(self.parameters))
         return test.statistic, test.pvalue
