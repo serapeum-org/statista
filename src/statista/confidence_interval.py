@@ -27,8 +27,8 @@ class ConfidenceInterval:
         list(bootstrap_indexes(data))) as well.
 
         Returns:
-            np.ndarray
-                array with the same length as the input data, containing integer indeces.
+            np.ndarray:
+                array with the same length as the input data, containing integer indices.
 
         Examples:
             ```python
@@ -67,7 +67,7 @@ class ConfidenceInterval:
                 number of samples to be generated. Default is 100.
             alpha (numeric, optional):
                 alpha or SignificanceLevel is a value of the confidence interval. Default is 0.05
-            kwargs:
+            **kwargs:
                 gevfit (list):
                     Three parameters of the GEV distribution [shape, loc, scale]
                 F (list):
