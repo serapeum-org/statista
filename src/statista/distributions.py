@@ -1501,10 +1501,10 @@ class Gumbel(AbstractDistribution):
         if parameters is None:
             parameters = self.parameters
 
-        if any(cdf) <= 0 or any(cdf) > 1:  # type: ignore[arg-type]
+        cdf = np.array(cdf)
+        if np.any(cdf < 0) or np.any(cdf > 1):
             raise ValueError(CDF_INVALID_VALUE_ERROR)
 
-        cdf = np.array(cdf)
         qth = self._inv_cdf(cdf, parameters)  # type: ignore[arg-type]
 
         return qth
@@ -2388,7 +2388,8 @@ class GEV(AbstractDistribution):
         if parameters is None:
             parameters = self.parameters
 
-        if any(cdf) < 0 or any(cdf) > 1:  # type: ignore[arg-type]
+        cdf = np.array(cdf)
+        if np.any(cdf < 0) or np.any(cdf > 1):
             raise ValueError(CDF_INVALID_VALUE_ERROR)
 
         q_th = self._inv_cdf(cdf, parameters)  # type: ignore[arg-type]
@@ -3120,7 +3121,8 @@ class Exponential(AbstractDistribution):
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
-        if any(cdf) < 0 or any(cdf) > 1:  # type: ignore[arg-type]
+        cdf = np.array(cdf)
+        if np.any(cdf < 0) or np.any(cdf > 1):
             raise ValueError(CDF_INVALID_VALUE_ERROR)
 
         # the main equation from scipy
@@ -3421,7 +3423,8 @@ class Normal(AbstractDistribution):
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
-        if any(cdf) < 0 or any(cdf) > 1:  # type: ignore[arg-type]
+        cdf = np.array(cdf)
+        if np.any(cdf < 0) or np.any(cdf > 1):
             raise ValueError(CDF_INVALID_VALUE_ERROR)
 
         # the main equation from scipy

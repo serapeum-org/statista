@@ -43,23 +43,38 @@ class TestGumbelClass:
         with pytest.raises(ValueError, match="Scale parameter is negative"):
             gumbel.cdf(parameters={"loc": 0, "scale": -1})
 
-    def test_cdf_invalid_values(self):
-        """Test that invalid CDF values result in NaN or inf values."""
+    def test_cdf_out_of_range_raises(self):
+        """Test that out-of-range CDF values raise ValueError."""
         gumbel = Gumbel(parameters={"loc": 0, "scale": 1})
-        result = gumbel.inverse_cdf(cdf=[0, 0.5, 2])
-        assert np.isneginf(result[0])  # -inf for cdf=0
-        assert np.isnan(result[2])  # nan for cdf=2
+        with pytest.raises(ValueError):
+            gumbel.inverse_cdf(cdf=[0.5, 2])
+        with pytest.raises(ValueError):
+            gumbel.inverse_cdf(cdf=[-0.1, 0.5])
+
+    def test_cdf_boundary_values(self):
+        """Test that boundary CDF values (0 and 1) are accepted."""
+        gumbel = Gumbel(parameters={"loc": 0, "scale": 1})
+        result = gumbel.inverse_cdf(cdf=[0, 0.5, 1])
+        assert np.isneginf(result[0])
+        assert np.isposinf(result[2])
 
 
 class TestGEVClass:
     """Tests for uncovered lines in the GEV class."""
 
-    def test_cdf_invalid_values(self):
-        """Test that invalid CDF values result in NaN or inf values."""
+    def test_cdf_out_of_range_raises(self):
+        """Test that out-of-range CDF values raise ValueError."""
         gev = GEV(parameters={"loc": 0, "scale": 1, "shape": 0.1})
-        result = gev.inverse_cdf(cdf=[0, 0.5, 2])
-        assert np.isneginf(result[0])  # -inf for cdf=0
-        assert np.isnan(result[2])  # nan for cdf=2
+        with pytest.raises(ValueError):
+            gev.inverse_cdf(cdf=[0.5, 2])
+        with pytest.raises(ValueError):
+            gev.inverse_cdf(cdf=[-0.1, 0.5])
+
+    def test_cdf_boundary_values(self):
+        """Test that boundary CDF values (0 and 1) are accepted."""
+        gev = GEV(parameters={"loc": 0, "scale": 1, "shape": 0.1})
+        result = gev.inverse_cdf(cdf=[0, 0.5, 1])
+        assert np.isneginf(result[0])
 
     def test_invalid_method_in_fit_model(self):
         """Test that an error is raised when an invalid method is provided to fit_model."""
@@ -86,12 +101,19 @@ class TestExponentialClass:
         with pytest.raises(ValueError, match="Scale parameter is negative"):
             exp.cdf(parameters={"loc": 0, "scale": -1})
 
-    def test_cdf_invalid_values(self):
-        """Test that invalid CDF values result in NaN or inf values."""
+    def test_cdf_out_of_range_raises(self):
+        """Test that out-of-range CDF values raise ValueError."""
         exp = Exponential(parameters={"loc": 0, "scale": 1})
-        result = exp.inverse_cdf(cdf=[0, 0.5, 2])
-        assert result[0] == 0.0  # 0 for cdf=0
-        assert np.isnan(result[2])  # nan for cdf=2
+        with pytest.raises(ValueError):
+            exp.inverse_cdf(cdf=[0.5, 2])
+        with pytest.raises(ValueError):
+            exp.inverse_cdf(cdf=[-0.1, 0.5])
+
+    def test_cdf_boundary_values(self):
+        """Test that boundary CDF values (0 and 1) are accepted."""
+        exp = Exponential(parameters={"loc": 0, "scale": 1})
+        result = exp.inverse_cdf(cdf=[0, 0.5, 1])
+        assert result[0] == 0.0
 
 
 class TestNormalClass:
@@ -109,12 +131,20 @@ class TestNormalClass:
         with pytest.raises(ValueError, match="Scale parameter is negative"):
             norm.cdf(parameters={"loc": 0, "scale": -1})
 
-    def test_cdf_invalid_values(self):
-        """Test that invalid CDF values result in NaN or inf values."""
+    def test_cdf_out_of_range_raises(self):
+        """Test that out-of-range CDF values raise ValueError."""
         norm = Normal(parameters={"loc": 1, "scale": 1})
-        result = norm.inverse_cdf(cdf=[0, 0.5, 2])
-        assert np.isneginf(result[0])  # -inf for cdf=0
-        assert np.isnan(result[2])  # nan for cdf=2
+        with pytest.raises(ValueError):
+            norm.inverse_cdf(cdf=[0.5, 2])
+        with pytest.raises(ValueError):
+            norm.inverse_cdf(cdf=[-0.1, 0.5])
+
+    def test_cdf_boundary_values(self):
+        """Test that boundary CDF values (0 and 1) are accepted."""
+        norm = Normal(parameters={"loc": 1, "scale": 1})
+        result = norm.inverse_cdf(cdf=[0, 0.5, 1])
+        assert np.isneginf(result[0])
+        assert np.isposinf(result[2])
 
     def test_invalid_method_in_fit_model(self):
         """Test that an error is raised when an invalid method is provided to fit_model."""
