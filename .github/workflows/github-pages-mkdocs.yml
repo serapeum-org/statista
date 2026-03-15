@@ -14,6 +14,9 @@ on:
   release:
       types:
         - published
+  workflow_run:
+    workflows: ['github-release']
+    types: [completed]
 
 jobs:
   deploy-pr:
@@ -48,7 +51,7 @@ jobs:
         deploy-token: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
 
   deploy-release:
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
