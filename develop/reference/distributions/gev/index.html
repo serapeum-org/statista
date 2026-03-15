@@ -2217,49 +2217,49 @@
     set of independent, identically distributed random values.</li>
 <li>
 <p>The GEV distribution encompasses three types of distributions: Gumbel, Fréchet, and Weibull, which are
-    distinguished by a shape parameter (<span class="arithmatex">\(\xi\)</span> (xi)).</p>
+    distinguished by a shape parameter (<span class="arithmatex">\(\\xi\)</span> (xi)).</p>
 </li>
 <li>
 <p>The probability density function (PDF) of the Generalized-extreme-value distribution is:</p>
 <div class="arithmatex">\[
-f(x; \zeta, \delta, \xi)=\frac{1}{\delta}\mathrm{*}{\mathrm{Q(x)}}^{\xi+1}\mathrm{
-*} e^{\mathrm{-Q(x)}}
+f(x; \\zeta, \\delta, \\xi)=\\frac{1}{\\delta}\\mathrm{*}{\\mathrm{Q(x)}}^{\\xi+1}\\mathrm{
+*} e^{\\mathrm{-Q(x)}}
 \]</div>
 <div class="arithmatex">\[
-Q(x; \zeta, \delta, \xi)=
-\begin{cases}
-    \left(1+ \xi \left(\frac{x-\zeta}{\delta} \right) \right)^\frac{-1}{\xi} &amp;
-    \quad\land\xi\neq 0 \\
-    e^{- \left(\frac{x-\zeta}{\delta} \right)} &amp; \quad \land \xi=0
-\end{cases}
+Q(x; \\zeta, \\delta, \\xi)=
+\\begin{cases}
+    \\left(1+ \\xi \\left(\\frac{x-\\zeta}{\\delta} \\right) \\right)^\\frac{-1}{\\xi} &amp;
+    \\quad\\land\\xi\\neq 0 \\\\
+    e^{- \\left(\\frac{x-\\zeta}{\\delta} \\right)} &amp; \\quad \\land \\xi=0
+\\end{cases}
 \]</div>
-<p>Where the <span class="arithmatex">\(\delta\)</span> (delta) is the scale parameter, <span class="arithmatex">\(\zeta\)</span> (zeta) is the location parameter,
-and <span class="arithmatex">\(\xi\)</span> (xi) is the shape parameter.</p>
+<p>Where the <span class="arithmatex">\(\\delta\)</span> (delta) is the scale parameter, <span class="arithmatex">\(\\zeta\)</span> (zeta) is the location parameter,
+and <span class="arithmatex">\(\\xi\)</span> (xi) is the shape parameter.</p>
 </li>
 <li>
-<p>The location parameter <span class="arithmatex">\(\zeta\)</span> shifts the distribution along the x-axis. It essentially determines the mode
+<p>The location parameter <span class="arithmatex">\(\\zeta\)</span> shifts the distribution along the x-axis. It essentially determines the mode
     (peak) of the distribution and its location. Changing the location parameter moves the distribution left or
     right without altering its shape. The location parameter ranges from negative infinity to positive infinity.</p>
 </li>
-<li>The scale parameter <span class="arithmatex">\(\delta\)</span> controls the spread or dispersion of the distribution. A larger scale parameter
+<li>The scale parameter <span class="arithmatex">\(\\delta\)</span> controls the spread or dispersion of the distribution. A larger scale parameter
     results in a wider distribution, while a smaller scale parameter results in a narrower distribution. It must
     always be positive.</li>
 <li>
-<p>The shape parameter <span class="arithmatex">\(\xi\)</span> (xi) determines the shape of the distribution. The shape parameter can be positive,
-    negative, or zero. The shape parameter is used to classify the GEV distribution into three types: <span class="arithmatex">\(\xi = 0\)</span>
-    Gumbel (Type I), <span class="arithmatex">\(\xi &gt; 0\)</span> Fréchet (Type II), and <span class="arithmatex">\(\xi &lt; 0\)</span> Weibull (Type III). The shape
+<p>The shape parameter <span class="arithmatex">\(\\xi\)</span> (xi) determines the shape of the distribution. The shape parameter can be positive,
+    negative, or zero. The shape parameter is used to classify the GEV distribution into three types: <span class="arithmatex">\(\\xi = 0\)</span>
+    Gumbel (Type I), <span class="arithmatex">\(\\xi &gt; 0\)</span> Fréchet (Type II), and <span class="arithmatex">\(\\xi &lt; 0\)</span> Weibull (Type III). The shape
     parameter determines the tail behavior of the distribution.</p>
-<p>In hydrology, the distribution is reparametrized with <span class="arithmatex">\(k=-\xi\)</span> (xi) (El Adlouni et al., 2008).</p>
+<p>In hydrology, the distribution is reparametrized with <span class="arithmatex">\(k=-\\xi\)</span> (xi) (El Adlouni et al., 2008).</p>
 </li>
 <li>
 <p>The cumulative distribution function (CDF) is:</p>
 <div class="arithmatex">\[
-F(x; \zeta, \delta, \xi)=
-\begin{cases}
-    \exp\left(- \left(1+ \xi \left(\frac{x-\zeta}{\delta} \right) \right)^\frac{-1}{\xi} \right) &amp;
-    \quad\land\xi\neq 0 \land 1 + \xi \left( \frac{x-\zeta}{\delta}\right) &gt; 0 \\
-    \exp\left(- \exp\left(- \frac{x-\zeta}{\delta} \right) \right) &amp; \quad \land \xi=0
-\end{cases}
+F(x; \\zeta, \\delta, \\xi)=
+\\begin{cases}
+    \\exp\\left(- \\left(1+ \\xi \\left(\\frac{x-\\zeta}{\\delta} \\right) \\right)^\\frac{-1}{\\xi} \\right) &amp;
+    \\quad\\land\\xi\\neq 0 \\land 1 + \\xi \\left( \\frac{x-\\zeta}{\\delta}\\right) &gt; 0 \\\\
+    \\exp\\left(- \\exp\\left(- \\frac{x-\\zeta}{\\delta} \\right) \\right) &amp; \\quad \\land \\xi=0
+\\end{cases}
 \]</div>
 </li>
 </ul>
@@ -3086,7 +3086,7 @@ F(x; \zeta, \delta, \xi)=
 <span class="normal"><a href="#__codelineno-0-837">837</a></span>
 <span class="normal"><a href="#__codelineno-0-838">838</a></span>
 <span class="normal"><a href="#__codelineno-0-839">839</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="k">class</span><span class="w"> </span><span class="nc">GEV</span><span class="p">(</span><span class="n">AbstractDistribution</span><span class="p">):</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;GEV (Generalized Extreme value statistics)</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;GEV (Generalized Extreme value statistics)</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a>
 <a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">    - The Generalized Extreme Value (GEV) distribution is used to model the largest or smallest value among a large</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">        set of independent, identically distributed random values.</span>
