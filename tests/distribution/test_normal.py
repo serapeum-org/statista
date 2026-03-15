@@ -1,6 +1,7 @@
-import pytest
 import numpy as np
+import pytest
 from matplotlib.figure import Figure
+
 from statista.distributions import Normal
 
 
@@ -75,6 +76,7 @@ class TestNormal:
         qth = norm_dist.inverse_cdf(generated_cdf)
         assert isinstance(qth, np.ndarray)
         np.testing.assert_almost_equal(normal_inverse_cdf, qth)
+
 
 class TestNormalClassInvalid:
     """Tests for uncovered lines in the Normal class."""

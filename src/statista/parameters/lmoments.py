@@ -11,23 +11,16 @@ from typing import Any
 import numpy as np
 from numpy import ndarray
 
-from statista.parameters.extreme_value import (
-    ConvergenceError,
-    gev as _gev,
-    gumbel as _gumbel,
-    generalized_pareto as _generalized_pareto,
-)
-from statista.parameters.normal_family import (
-    normal as _normal,
-    generalized_normal as _generalized_normal,
-    pearson_3 as _pearson_3,
-)
-from statista.parameters.other import (
-    exponential as _exponential,
-    gamma as _gamma,
-    generalized_logistic as _generalized_logistic,
-    wakeby as _wakeby,
-)
+from statista.parameters.extreme_value import generalized_pareto as _generalized_pareto
+from statista.parameters.extreme_value import gev as _gev
+from statista.parameters.extreme_value import gumbel as _gumbel
+from statista.parameters.normal_family import generalized_normal as _generalized_normal
+from statista.parameters.normal_family import normal as _normal
+from statista.parameters.normal_family import pearson_3 as _pearson_3
+from statista.parameters.other import exponential as _exponential
+from statista.parameters.other import gamma as _gamma
+from statista.parameters.other import generalized_logistic as _generalized_logistic
+from statista.parameters.other import wakeby as _wakeby
 
 
 class Lmoments:
@@ -481,7 +474,9 @@ class Lmoments:
         return _generalized_logistic(lmoments)
 
     @staticmethod
-    def generalized_normal(lmoments: list[float | int] | None) -> list[float | int] | None:
+    def generalized_normal(
+        lmoments: list[float | int] | None,
+    ) -> list[float | int] | None:
         """Estimate parameters for the Generalized Normal distribution. See normal_family.generalized_normal for details."""
         return _generalized_normal(lmoments)
 

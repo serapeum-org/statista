@@ -1,6 +1,7 @@
-import pytest
 import numpy as np
+import pytest
 from matplotlib.figure import Figure
+
 from statista.distributions import Exponential
 
 
@@ -75,6 +76,7 @@ class TestExponential:
         qth = expo_dist.inverse_cdf(generated_cdf)
         assert isinstance(qth, np.ndarray)
         np.testing.assert_almost_equal(exp_inverse_cdf, qth)
+
 
 class TestExponentialClassInvalid:
     """Tests for uncovered lines in the Exponential class."""

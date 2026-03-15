@@ -6,18 +6,16 @@ from typing import Any
 
 import numpy as np
 import scipy.optimize as so
-from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from scipy.stats import norm
 
-from statista.parameters import Lmoments
 from statista.distributions.base import (
-    AbstractDistribution,
-    SCALE_PARAMETER_ERROR,
     CDF_INVALID_VALUE_ERROR,
     OBJ_FUNCTION_THRESHOLD_ERROR,
-    PDF_XAXIS_LABEL,
+    SCALE_PARAMETER_ERROR,
+    AbstractDistribution,
 )
+from statista.parameters import Lmoments
 
 
 class Normal(AbstractDistribution):

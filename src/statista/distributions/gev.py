@@ -11,21 +11,21 @@ from matplotlib.figure import Figure
 from scipy.stats import genextreme
 
 from statista.confidence_interval import ConfidenceInterval
-from statista.parameters import Lmoments
-from statista.plot import Plot
 from statista.distributions.base import (
-    AbstractDistribution,
-    PlottingPosition,
-    SCALE_PARAMETER_ERROR,
     CDF_INVALID_VALUE_ERROR,
     OBJ_FUNCTION_THRESHOLD_ERROR,
-    PROB_NON_EXCEEDENCE_ERROR,
     PDF_XAXIS_LABEL,
+    PROB_NON_EXCEEDENCE_ERROR,
+    SCALE_PARAMETER_ERROR,
+    AbstractDistribution,
+    PlottingPosition,
 )
+from statista.parameters import Lmoments
+from statista.plot import Plot
 
 
 class GEV(AbstractDistribution):
-    """GEV (Generalized Extreme value statistics)
+    r"""GEV (Generalized Extreme value statistics)
 
     - The Generalized Extreme Value (GEV) distribution is used to model the largest or smallest value among a large
         set of independent, identically distributed random values.

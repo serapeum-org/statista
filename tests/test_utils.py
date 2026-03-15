@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
+from numpy.testing import assert_allclose, assert_array_equal
 
 from statista.utils import merge_small_bins
-from numpy.testing import assert_array_equal, assert_allclose
 
 
 class TestMergeSmallBins:
@@ -100,9 +100,7 @@ class TestMergeSmallBins:
         #   Right bin 5 (>=5) kept; then 3 (<5) accum; then 2 (<5) accum -> append 2+3 as 5
         # Final bins: observed [5, 15], expected before scaling [5, 5] -> after scaling both to sum 20 -> [10, 10]
         assert_array_equal(merged_obs, np.array([5 + 5, 10]))
-        assert_allclose(
-            merged_exp, np.array([10.0, 10.0]), rtol=1e-12, atol=1e-12
-        )
+        assert_allclose(merged_exp, np.array([10.0, 10.0]), rtol=1e-12, atol=1e-12)
         assert merged_exp.sum() == merged_obs.sum() == sum(observed)
 
     @pytest.mark.unit
