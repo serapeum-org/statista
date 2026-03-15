@@ -49,6 +49,10 @@
          <lastmod>2026-03-15</lastmod>
     </url>
     <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/confidence-interval/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
          <loc>https://serapieum-of-alex.github.io/statista/develop/reference/descriptors-module/</loc>
          <lastmod>2026-03-15</lastmod>
     </url>
@@ -74,6 +78,46 @@
     </url>
     <url>
          <loc>https://serapieum-of-alex.github.io/statista/develop/reference/utils-module/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/distributions/exponential/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/distributions/facade/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/distributions/gev/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/distributions/gumbel/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/distributions/normal/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/distributions/plotting-position/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/parameters/extreme-value/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/parameters/lmoments/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/parameters/normal-family/</loc>
+         <lastmod>2026-03-15</lastmod>
+    </url>
+    <url>
+         <loc>https://serapieum-of-alex.github.io/statista/develop/reference/parameters/other/</loc>
          <lastmod>2026-03-15</lastmod>
     </url>
 </urlset>
