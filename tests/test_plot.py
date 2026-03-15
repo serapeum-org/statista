@@ -300,6 +300,7 @@ class TestPlotDetails:
 
     def test_custom_fontsize_on_ax1(self, details_inputs):
         """Fontsize is applied to ax1 labels."""
+        fontsize = 14
         qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical = details_inputs
         _, (ax1, _) = Plot.details(
             qx,
@@ -307,13 +308,14 @@ class TestPlotDetails:
             pdf_vals,
             cdf_fitted,
             cdf_empirical,
-            fontsize=14,
+            fontsize=fontsize,
         )
-        assert ax1.xaxis.label.get_fontsize() == 14
-        assert ax1.yaxis.label.get_fontsize() == 14
+        assert ax1.xaxis.label.get_fontsize() == fontsize
+        assert ax1.yaxis.label.get_fontsize() == fontsize
 
     def test_custom_fontsize_on_ax2_xlabel(self, details_inputs):
         """Fontsize is applied to ax2 xlabel (ax2 ylabel uses hardcoded 15)."""
+        fontsize = 14
         qx, data_sorted, pdf_vals, cdf_fitted, cdf_empirical = details_inputs
         _, (_, ax2) = Plot.details(
             qx,
@@ -321,11 +323,10 @@ class TestPlotDetails:
             pdf_vals,
             cdf_fitted,
             cdf_empirical,
-            fontsize=14,
+            fontsize=fontsize,
         )
-        assert ax2.xaxis.label.get_fontsize() == 15
-        # KNOWN: ax2 ylabel fontsize is hardcoded to 15 (line 375), not fontsize
-        assert ax2.yaxis.label.get_fontsize() == 15
+        assert ax2.xaxis.label.get_fontsize() == fontsize
+        assert ax2.yaxis.label.get_fontsize() == fontsize
 
     def test_pdf_subplot_has_line_and_histogram(self, details_inputs):
         """ax1 (PDF side) must contain a Line2D and histogram patches."""
