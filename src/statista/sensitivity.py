@@ -358,10 +358,10 @@ class Sensitivity:
                 self.lower_bound[k], self.upper_bound[k], self.NoValues
             )
             # add the value of the calibrated parameter and sort the values
-            rand_value = np.sort(np.append(rand_value, self.parameter["value"][k]))
+            rand_value = np.sort(np.append(rand_value, self.parameter["value"].iloc[k]))
             # store the relative values of the parameters in the first list in the dict
             self.sen[self.parameter.index[k]][0] = [
-                (h / self.parameter["value"][k]) for h in rand_value
+                (h / self.parameter["value"].iloc[k]) for h in rand_value
             ]
 
             random_param = self.parameter["value"].tolist()
