@@ -2600,7 +2600,7 @@ analysis and visualization of results through Sobol plots.</p>
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="nd">@staticmethod</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">marker_style</span><span class="p">(</span><span class="n">style</span><span class="p">):</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">marker_style</span><span class="p">(</span><span class="n">style</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a marker style for plotting sensitivity analysis results.</span>
 <a id="__codelineno-0-213" name="__codelineno-0-213"></a>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">        This static method returns a marker style string from a predefined list of styles.</span>
@@ -2662,8 +2662,8 @@ analysis and visualization of results through Sobol plots.</p>
 <a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">        4. Additional calculated values (if return_values=2)</span>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a>
 <a id="__codelineno-0-272" name="__codelineno-0-272"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">            *args: Variable length argument list passed to the model function.</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">            **kwargs (Dict[str, Any]): Arbitrary keyword arguments passed to the model function.</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">            *args (Any): Variable length argument list passed to the model function.</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">            **kwargs (dict[str, Any]): Arbitrary keyword arguments passed to the model function.</span>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>
 <a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">            ValueError: If the function returns more than one value when return_values=1,</span>
@@ -2794,7 +2794,7 @@ analysis and visualization of results through Sobol plots.</p>
 <a id="__codelineno-0-402" name="__codelineno-0-402"></a>        <span class="n">xlabel2</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;xlabel2&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-403" name="__codelineno-0-403"></a>        <span class="n">ylabel2</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ylabel2&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-404" name="__codelineno-0-404"></a>        <span class="n">spaces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-405" name="__codelineno-0-405"></a>    <span class="p">):</span>
+<a id="__codelineno-0-405" name="__codelineno-0-405"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
 <a id="__codelineno-0-406" name="__codelineno-0-406"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot sensitivity analysis results using Sobol-style visualization.</span>
 <a id="__codelineno-0-407" name="__codelineno-0-407"></a>
 <a id="__codelineno-0-408" name="__codelineno-0-408"></a><span class="sd">        This method creates plots to visualize the results of sensitivity analysis.</span>
@@ -3506,6 +3506,7 @@ If the style index exceeds the list length, it wraps around using modulo operati
       <tbody>
           <tr class="doc-section-item">
 <td><code>str</code></td>            <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3588,7 +3589,7 @@ If the style index exceeds the list length, it wraps around using modulo operati
 <span class="normal"><a href="#__codelineno-0-253">253</a></span>
 <span class="normal"><a href="#__codelineno-0-254">254</a></span>
 <span class="normal"><a href="#__codelineno-0-255">255</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="nd">@staticmethod</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="k">def</span><span class="w"> </span><span class="nf">marker_style</span><span class="p">(</span><span class="n">style</span><span class="p">):</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="k">def</span><span class="w"> </span><span class="nf">marker_style</span><span class="p">(</span><span class="n">style</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a marker style for plotting sensitivity analysis results.</span>
 <a id="__codelineno-0-213" name="__codelineno-0-213"></a>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    This static method returns a marker style string from a predefined list of styles.</span>
@@ -3679,6 +3680,7 @@ names as keys. Each value is a list containing:
                 <code>*args</code>
             </td>
             <td>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3694,7 +3696,7 @@ names as keys. Each value is a list containing:
                 <code>**kwargs</code>
             </td>
             <td>
-                  <code><span title="Dict">Dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -3939,8 +3941,8 @@ or doesn't return the expected format when return_values=2.</p>
 <a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">    4. Additional calculated values (if return_values=2)</span>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a>
 <a id="__codelineno-0-272" name="__codelineno-0-272"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">        *args: Variable length argument list passed to the model function.</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">        **kwargs (Dict[str, Any]): Arbitrary keyword arguments passed to the model function.</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">        *args (Any): Variable length argument list passed to the model function.</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">        **kwargs (dict[str, Any]): Arbitrary keyword arguments passed to the model function.</span>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>
 <a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">        ValueError: If the function returns more than one value when return_values=1,</span>
@@ -4285,6 +4287,7 @@ Defaults to "".</p>
       <tbody>
           <tr class="doc-section-item">
 <td><code>tuple</code></td>            <td>
+                  <code><span title="tuple">tuple</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -4641,7 +4644,7 @@ ax1 is the main plot axis and ax2 is the calculated values plot axis.</p>
 <a id="__codelineno-0-402" name="__codelineno-0-402"></a>    <span class="n">xlabel2</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;xlabel2&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-403" name="__codelineno-0-403"></a>    <span class="n">ylabel2</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ylabel2&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-404" name="__codelineno-0-404"></a>    <span class="n">spaces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-405" name="__codelineno-0-405"></a><span class="p">):</span>
+<a id="__codelineno-0-405" name="__codelineno-0-405"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
 <a id="__codelineno-0-406" name="__codelineno-0-406"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot sensitivity analysis results using Sobol-style visualization.</span>
 <a id="__codelineno-0-407" name="__codelineno-0-407"></a>
 <a id="__codelineno-0-408" name="__codelineno-0-408"></a><span class="sd">    This method creates plots to visualize the results of sensitivity analysis.</span>
