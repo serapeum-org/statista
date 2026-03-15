@@ -12,7 +12,6 @@ theme:
     - navigation.tracking
     - navigation.indexes
     - navigation.footer
-    - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.top
