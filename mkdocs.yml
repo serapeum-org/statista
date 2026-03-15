@@ -105,13 +105,25 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Reference:
-    - Distributions: reference/distributions-class.md
+    - Distributions:
+      - Facade: reference/distributions/facade.md
+      - Plotting Position: reference/distributions/plotting-position.md
+      - Gumbel: reference/distributions/gumbel.md
+      - GEV: reference/distributions/gev.md
+      - Exponential: reference/distributions/exponential.md
+      - Normal: reference/distributions/normal.md
+    - Parameters:
+      - L-moments: reference/parameters/lmoments.md
+      - Extreme Value: reference/parameters/extreme-value.md
+      - Normal Family: reference/parameters/normal-family.md
+      - Other: reference/parameters/other.md
     - Extreme Value Analysis: reference/eva-class.md
+    - Confidence Interval: reference/confidence-interval.md
     - Descriptors: reference/descriptors-module.md
     - Plot: reference/plot-class.md
     - Sensitivity Analysis: reference/sensitivity-class.md
     - Tools: reference/tools-module.md
-    - utils: reference/utils-module.md
+    - Utils: reference/utils-module.md
   - Examples:
     - sensitivity-analysis:
       - Sensitivity Analysis: notebook/sensitivity-analysis/scs-cn.ipynb
