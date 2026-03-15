@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from numbers import Number
+from typing import Any
 
 import numpy as np
 
+from statista.distributions.base import AbstractDistribution
 from statista.distributions.exponential import Exponential
 from statista.distributions.gev import GEV
 from statista.distributions.gumbel import Gumbel
@@ -15,7 +16,7 @@ from statista.distributions.normal import Normal
 class Distributions:
     """Distributions."""
 
-    available_distributions = {
+    available_distributions: dict[str, type[AbstractDistribution]] = {
         "GEV": GEV,
         "Gumbel": Gumbel,
         "Exponential": Exponential,
@@ -26,12 +27,13 @@ class Distributions:
         self,
         distribution: str,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, Number] = None,
+        parameters: dict[str, Any] | None = None,
     ):
-        if distribution not in self.available_distributions.keys():
+        if distribution not in self.available_distributions:
             raise ValueError(f"{distribution} not supported")
 
-        self.distribution = self.available_distributions[distribution](data, parameters)  # type: ignore[abstract, arg-type]
+        dist_class = self.available_distributions[distribution]
+        self.distribution = dist_class(data, parameters)
 
     def __getattr__(self, name: str):
         """Delegate method calls to the subclass"""
