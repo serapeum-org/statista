@@ -139,18 +139,14 @@ repos:
 #         types: [python]
 #         pass_filenames: false
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
+  - repo: local
     hooks:
       - id: mypy
         name: "[py   - check] mypy"
-        args: [--config-file=pyproject.toml]
-        additional_dependencies:
-          - numpy>=2.0.0
-          - pandas-stubs
-          - types-PyYAML>=6.0.12
-        pass_filenames: false
         entry: mypy src/statista
+        language: system
+        pass_filenames: false
+        always_run: true
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: v4.8.3
