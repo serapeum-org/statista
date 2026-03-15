@@ -333,12 +333,8 @@ class TestPlotDetails:
         assert len(ax2.lines) >= 1
         assert len(ax2.collections) >= 1
 
-    def test_input_mutation_bug_q_act_sorted_in_place(self):
-        """KNOWN BUG (line 372): q_act.sort() mutates the input array in-place.
-
-        This test documents the bug: after calling Plot.details, the original
-        unsorted array has been modified.
-        """
+    def test_input_not_mutated(self):
+        """Plot.details should not mutate the input q_act array."""
         np.random.seed(42)
         q_act = np.random.normal(loc=10, scale=2, size=50)
         original_order = q_act.copy()
@@ -349,19 +345,9 @@ class TestPlotDetails:
         pdf_vals = np.ones_like(qx) * 0.05
         cdf_fitted = np.linspace(0, 1, 200)
 
-        # Verify the array is NOT sorted before the call
-        assert not np.all(
-            np.diff(original_order) >= 0
-        ), "Precondition: data should not already be sorted"
-
         Plot.details(qx, q_act, pdf_vals, cdf_fitted, cdf_empirical)
 
-        # After the call, q_act has been sorted in-place (the bug)
-        assert np.all(
-            np.diff(q_act) >= 0
-        ), "Bug: q_act should have been mutated to sorted order"
-        # Confirm it no longer matches the original order
-        assert not np.array_equal(q_act, original_order)
+        np.testing.assert_array_equal(q_act, original_order)
 
     def test_small_data(self):
         """Plot.details handles a very small array without error."""
@@ -473,12 +459,8 @@ class TestPlotConfidenceLevel:
         assert lower_line.get_markersize() == 20
         assert upper_line.get_markersize() == 20
 
-    def test_input_mutation_bug_q_act_sorted_in_place(self):
-        """KNOWN BUG (line 484): q_act.sort() mutates the input array in-place.
-
-        This test documents the bug: after calling Plot.confidence_level,
-        the original unsorted array has been modified.
-        """
+    def test_input_not_mutated(self):
+        """Plot.confidence_level should not mutate the input q_act array."""
         np.random.seed(42)
         q_act = np.random.normal(loc=10, scale=2, size=30)
         original_order = q_act.copy()
@@ -487,18 +469,9 @@ class TestPlotConfidenceLevel:
         q_lower = qth - 0.5
         q_upper = qth + 0.5
 
-        # Verify the array is NOT sorted before the call
-        assert not np.all(
-            np.diff(original_order) >= 0
-        ), "Precondition: data should not already be sorted"
-
         Plot.confidence_level(qth, q_act, q_lower, q_upper)
 
-        # After the call, q_act has been sorted in-place (the bug)
-        assert np.all(
-            np.diff(q_act) >= 0
-        ), "Bug: q_act should have been mutated to sorted order"
-        assert not np.array_equal(q_act, original_order)
+        np.testing.assert_array_equal(q_act, original_order)
 
     def test_small_data(self):
         """Plot.confidence_level handles a very small array without error."""
