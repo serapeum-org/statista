@@ -117,7 +117,7 @@ class AbstractDistribution(ABC):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] = None,
+        parameters: dict[str, float] | None = None,
     ):
         """Initialize the distribution with data or parameters.
 
