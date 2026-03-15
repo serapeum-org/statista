@@ -3,7 +3,9 @@ from __future__ import annotations
 import numpy as np
 
 
-def merge_small_bins(bin_count_observed: list[float], bin_count_fitted_data: list[float]):
+def merge_small_bins(
+    bin_count_observed: list[float], bin_count_fitted_data: list[float]
+):
     """Merge small bins for goodness-of-fit tests (e.g., chi-square).
 
     This utility merges adjacent "small" bins (those whose expected count is < 5)
@@ -82,7 +84,9 @@ def merge_small_bins(bin_count_observed: list[float], bin_count_fitted_data: lis
             ```
     """
     if len(bin_count_observed) != len(bin_count_fitted_data):
-        raise ValueError("bin_count_observed and bin_count_fitted_data must have the same length.")
+        raise ValueError(
+            "bin_count_observed and bin_count_fitted_data must have the same length."
+        )
 
     # Merge tail bins whose expected counts are < 5
     merged_obs: list[float] = []
@@ -92,7 +96,9 @@ def merge_small_bins(bin_count_observed: list[float], bin_count_fitted_data: lis
 
     # Work from the rightmost bin backwards, accumulating bins until the combined
     # expected count is ≥ 5
-    for observed, expected in reversed(list(zip(bin_count_observed, bin_count_fitted_data))):
+    for observed, expected in reversed(
+        list(zip(bin_count_observed, bin_count_fitted_data))
+    ):
         if expected < 5:
             accum_obs += observed
             accum_exp += expected
