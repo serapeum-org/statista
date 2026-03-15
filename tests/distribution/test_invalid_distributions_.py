@@ -109,14 +109,6 @@ class TestNormalClass:
         with pytest.raises(ValueError, match="Scale parameter is negative"):
             norm.cdf(parameters={"loc": 0, "scale": -1})
 
-    def test_loc_parameter_error_in_cdf(self):
-        """Test that an error is raised when loc parameter is <= 0 in cdf."""
-        norm = Normal(data=[1, 2, 3, 4, 5])
-        with pytest.raises(
-            ValueError, match="Threshold parameter should be greater than zero"
-        ):
-            norm.cdf(parameters={"loc": 0, "scale": 1})
-
     def test_cdf_invalid_values(self):
         """Test that invalid CDF values result in NaN or inf values."""
         norm = Normal(parameters={"loc": 1, "scale": 1})

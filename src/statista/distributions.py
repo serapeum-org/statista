@@ -3259,8 +3259,6 @@ class Normal(AbstractDistribution):
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
-        if loc is None or loc <= 0:
-            raise ValueError("Threshold parameter should be greater than zero")
 
         cdf = norm.cdf(data, loc=loc, scale=scale)
         return cdf
