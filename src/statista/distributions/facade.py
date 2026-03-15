@@ -36,24 +36,9 @@ class Distributions:
         self.distribution = dist_class(data, parameters)
 
     def __getattr__(self, name: str):
-        """Delegate method calls to the subclass"""
-        # Retrieve the attribute or method from the distribution object
+        """Delegate attribute access to the underlying distribution instance."""
         try:
-            # Retrieve the attribute or method from the subclasses
-            attribute = getattr(self.distribution, name)
-
-            # If the attribute is a method, return a callable function
-            if callable(attribute):
-
-                def method(*args, **kwargs):
-                    """A callable function that simply calls the attribute if it is a method"""
-                    return attribute(*args, **kwargs)
-
-                return method
-
-            # If it's a regular attribute, return its value
-            return attribute
-
+            return getattr(self.distribution, name)
         except AttributeError:
             raise AttributeError(
                 f"'{type(self).__name__}' object has no attribute '{name}'"
