@@ -622,7 +622,7 @@ class Sensitivity:
                 )
 
             except ValueError:
-                assert ValueError(
+                raise ValueError(
                     "To plot calculated values, you should choose return_values==2 in the sensitivity object"
                 )
 
