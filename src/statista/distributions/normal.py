@@ -26,13 +26,18 @@ class Normal(AbstractDistribution):
     - The probability density function (PDF) of the Normal distribution is:
 
         .. math::
-            f(x: threshold, scale) = (1/scale) e **(- (x-threshold)/scale)
+            f(x; \\mu, \\sigma) = \\frac{1}{\\sigma \\sqrt{2\\pi}}
+            \\exp\\left(-\\frac{(x - \\mu)^2}{2\\sigma^2}\\right)
           :label: normal-equation
 
-    - The cumulative distribution functions.
+        Where :math:`\\mu` is the location (mean) parameter and :math:`\\sigma` is the scale
+        (standard deviation) parameter.
+
+    - The cumulative distribution function (CDF) is:
 
         .. math::
-            F(x: threshold, scale) = 1 - e **(- (x-threshold)/scale)
+            F(x; \\mu, \\sigma) = \\frac{1}{2}\\left[1 + \\mathrm{erf}
+            \\left(\\frac{x - \\mu}{\\sigma \\sqrt{2}}\\right)\\right]
           :label: normal-cdf
     """
 
@@ -41,16 +46,16 @@ class Normal(AbstractDistribution):
         data: list | np.ndarray | None = None,
         parameters: dict[str, float] | None = None,
     ):
-        """Gumbel.
+        """Normal.
 
-        Ars:
+        Args:
             data (list):
                 data time series.
-            parameters (dict[str, str]):
+            parameters (dict[str, float]):
                 - loc: [numeric]
-                    location parameter of the exponential distribution.
+                    location (mean) parameter of the Normal distribution.
                 - scale: [numeric]
-                    scale parameter of the exponential distribution.
+                    scale (standard deviation) parameter of the Normal distribution.
                 ```python
                 {"loc": val, "scale": val}
                 ```
