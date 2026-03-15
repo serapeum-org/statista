@@ -2152,35 +2152,35 @@
 </li>
 <li>
 <p>The probability density function (PDF) of the Exponential distribution is:</p>
-<p>.. math::
-    f(x; \delta, \beta) =
-    \begin{cases}
-        \frac{1}{\beta} e^{-\frac{x - \delta}{\beta}} &amp; \quad x \geq \delta \
-        0 &amp; \quad x &lt; \delta
-    \end{cases}
-  <img alt="🏷" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f3f7.svg" title=":label:" /> exp-equation</p>
+<div class="arithmatex">\[
+f(x; \delta, \beta) =
+\begin{cases}
+    \frac{1}{\beta} e^{-\frac{x - \delta}{\beta}} &amp; \quad x \geq \delta \\
+    0 &amp; \quad x &lt; \delta
+\end{cases}
+\]</div>
 </li>
 <li>
-<p>The probability density function above uses the location parameter :math:<code>\delta</code> and the scale parameter
-    :math:<code>\beta</code> to define the distribution in a standardized form.</p>
+<p>The probability density function above uses the location parameter <span class="arithmatex">\(\delta\)</span> and the scale parameter
+    <span class="arithmatex">\(\beta\)</span> to define the distribution in a standardized form.</p>
 </li>
-<li>A common parameterization for the exponential distribution is in terms of the rate parameter :math:<code>\lambda</code>,
-    such that :math:<code>\lambda = 1 / \beta</code>.</li>
-<li>The Location Parameter (:math:<code>\delta</code>): This shifts the starting point of the distribution. The distribution is
-    defined for :math:<code>x \geq \delta</code>.</li>
+<li>A common parameterization for the exponential distribution is in terms of the rate parameter <span class="arithmatex">\(\lambda\)</span>,
+    such that <span class="arithmatex">\(\lambda = 1 / \beta\)</span>.</li>
+<li>The Location Parameter (<span class="arithmatex">\(\delta\)</span>): This shifts the starting point of the distribution. The distribution is
+    defined for <span class="arithmatex">\(x \geq \delta\)</span>.</li>
 <li>
-<p>Scale Parameter (:math:<code>\beta</code>): This determines the spread of the distribution. The rate parameter
-    :math:<code>\lambda</code> is the inverse of the scale parameter, so :math:<code>\lambda = \frac{1}{\beta}</code>.</p>
+<p>Scale Parameter (<span class="arithmatex">\(\beta\)</span>): This determines the spread of the distribution. The rate parameter
+    <span class="arithmatex">\(\lambda\)</span> is the inverse of the scale parameter, so <span class="arithmatex">\(\lambda = \frac{1}{\beta}\)</span>.</p>
 </li>
 <li>
 <p>The cumulative distribution functions.</p>
-<p>.. math::
-    F(x; \delta, \beta) =
-    \begin{cases}
-        1 - e^{-\frac{x - \delta}{\beta}} &amp; \quad x \geq \delta \
-        0 &amp; \quad x &lt; \delta
-    \end{cases}
-  <img alt="🏷" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f3f7.svg" title=":label:" /> exp-cdf</p>
+<div class="arithmatex">\[
+F(x; \delta, \beta) =
+\begin{cases}
+    1 - e^{-\frac{x - \delta}{\beta}} &amp; \quad x \geq \delta \\
+    0 &amp; \quad x &lt; \delta
+\end{cases}
+\]</div>
 </li>
 </ul>
 
@@ -2670,32 +2670,32 @@
 <a id="__codelineno-0-27" name="__codelineno-0-27"></a>
 <a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="sd">    - The probability density function (PDF) of the Exponential distribution is:</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">        .. math::</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">            f(x; \\delta, \\beta) =</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">            \\begin{cases}</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">                \\frac{1}{\\beta} e^{-\\frac{x - \\delta}{\\beta}} &amp; \\quad x \\geq \\delta \\\\</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">                0 &amp; \\quad x &lt; \\delta</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">            \\end{cases}</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">          :label: exp-equation</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">        $$</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="sd">        f(x; \\delta, \\beta) =</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">        \\begin{cases}</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">            \\frac{1}{\\beta} e^{-\\frac{x - \\delta}{\\beta}} &amp; \\quad x \\geq \\delta \\\\</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">            0 &amp; \\quad x &lt; \\delta</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">        \\end{cases}</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">        $$</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    - The probability density function above uses the location parameter :math:`\\delta` and the scale parameter</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        :math:`\\beta` to define the distribution in a standardized form.</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    - A common parameterization for the exponential distribution is in terms of the rate parameter :math:`\\lambda`,</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        such that :math:`\\lambda = 1 / \\beta`.</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">    - The Location Parameter (:math:`\\delta`): This shifts the starting point of the distribution. The distribution is</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        defined for :math:`x \\geq \\delta`.</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    - Scale Parameter (:math:`\\beta`): This determines the spread of the distribution. The rate parameter</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        :math:`\\lambda` is the inverse of the scale parameter, so :math:`\\lambda = \\frac{1}{\\beta}`.</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    - The probability density function above uses the location parameter \\(\\delta\\) and the scale parameter</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        \\(\\beta\\) to define the distribution in a standardized form.</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    - A common parameterization for the exponential distribution is in terms of the rate parameter \\(\\lambda\\),</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        such that \\(\\lambda = 1 / \\beta\\).</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">    - The Location Parameter (\\(\\delta\\)): This shifts the starting point of the distribution. The distribution is</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        defined for \\(x \\geq \\delta\\).</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">    - Scale Parameter (\\(\\beta\\)): This determines the spread of the distribution. The rate parameter</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        \\(\\lambda\\) is the inverse of the scale parameter, so \\(\\lambda = \\frac{1}{\\beta}\\).</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">    - The cumulative distribution functions.</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        .. math::</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">            F(x; \\delta, \\beta) =</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">            \\begin{cases}</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">                1 - e^{-\\frac{x - \\delta}{\\beta}} &amp; \\quad x \\geq \\delta \\\\</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">                0 &amp; \\quad x &lt; \\delta</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">            \\end{cases}</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">          :label: exp-cdf</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        $$</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        F(x; \\delta, \\beta) =</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">        \\begin{cases}</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">            1 - e^{-\\frac{x - \\delta}{\\beta}} &amp; \\quad x \\geq \\delta \\\\</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">            0 &amp; \\quad x &lt; \\delta</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        \\end{cases}</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        $$</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>
@@ -4937,6 +4937,10 @@ IF Pvalue &lt; significance level ------ reject</p>
     
     
       <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>

@@ -2278,25 +2278,25 @@ distribution with shape parameter ξ = 0.</p>
         <ul>
 <li>
 <p>The probability density function (PDF) of the Gumbel distribution is:</p>
-<p>.. math::
-    f(x; \zeta, \delta) = \frac{1}{\delta}
-    \exp\left(-\frac{x - \zeta}{\delta}\right)
-    \exp\left(-\exp\left(-\frac{x - \zeta}{\delta}\right)\right)
-  <img alt="🏷" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f3f7.svg" title=":label:" /> gumbel-pdf</p>
-<p>Where :math:<code>\zeta</code> (zeta) is the location parameter and :math:<code>\delta</code> (delta)
+<div class="arithmatex">\[
+f(x; \zeta, \delta) = \frac{1}{\delta}
+\exp\left(-\frac{x - \zeta}{\delta}\right)
+\exp\left(-\exp\left(-\frac{x - \zeta}{\delta}\right)\right)
+\]</div>
+<p>Where <span class="arithmatex">\(\zeta\)</span> (zeta) is the location parameter and <span class="arithmatex">\(\delta\)</span> (delta)
 is the scale parameter.</p>
 </li>
 <li>
 <p>The cumulative distribution function (CDF) is:</p>
-<p>.. math::
-    F(x; \zeta, \delta) = \exp\left(-\exp\left(-\frac{x - \zeta}{\delta}\right)\right)
-  <img alt="🏷" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f3f7.svg" title=":label:" /> gumbel-cdf</p>
+<div class="arithmatex">\[
+F(x; \zeta, \delta) = \exp\left(-\exp\left(-\frac{x - \zeta}{\delta}\right)\right)
+\]</div>
 </li>
 <li>
-<p>The location parameter :math:<code>\zeta</code> shifts the distribution along the x-axis, determining
+<p>The location parameter <span class="arithmatex">\(\zeta\)</span> shifts the distribution along the x-axis, determining
   the mode (peak) of the distribution. It can range from negative to positive infinity.</p>
 </li>
-<li>The scale parameter :math:<code>\delta</code> controls the spread of the distribution. A larger scale
+<li>The scale parameter <span class="arithmatex">\(\delta\)</span> controls the spread of the distribution. A larger scale
   parameter results in a wider distribution. It must always be positive.</li>
 </ul>
 
@@ -3536,24 +3536,24 @@ is the scale parameter.</p>
 <a id="__codelineno-0-40" name="__codelineno-0-40"></a>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">    - The probability density function (PDF) of the Gumbel distribution is:</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        .. math::</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">            f(x; \\zeta, \\delta) = \\frac{1}{\\delta}</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">            \\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">            \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">          :label: gumbel-pdf</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        $$</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        f(x; \\zeta, \\delta) = \\frac{1}{\\delta}</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        \\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        $$</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        Where :math:`\\zeta` (zeta) is the location parameter and :math:`\\delta` (delta)</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        Where \\(\\zeta\\) (zeta) is the location parameter and \\(\\delta\\) (delta)</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        is the scale parameter.</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    - The cumulative distribution function (CDF) is:</span>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        .. math::</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">            F(x; \\zeta, \\delta) = \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">          :label: gumbel-cdf</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        $$</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        F(x; \\zeta, \\delta) = \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        $$</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">    - The location parameter :math:`\\zeta` shifts the distribution along the x-axis, determining</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">    - The location parameter \\(\\zeta\\) shifts the distribution along the x-axis, determining</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="sd">      the mode (peak) of the distribution. It can range from negative to positive infinity.</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    - The scale parameter :math:`\\delta` controls the spread of the distribution. A larger scale</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    - The scale parameter \\(\\delta\\) controls the spread of the distribution. A larger scale</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">      parameter results in a wider distribution. It must always be positive.</span>
 <a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    &quot;&quot;&quot;</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>
@@ -9009,6 +9009,10 @@ matplotlib plot axes</p>
     
     
       <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>
