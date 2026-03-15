@@ -18,7 +18,7 @@ from statista.distributions.base import (
     PlottingPosition,
     SCALE_PARAMETER_ERROR,
     CDF_INVALID_VALUE_ERROR,
-    OBJ_FUNCTION_THRESHOULD_ERROR,
+    OBJ_FUNCTION_THRESHOLD_ERROR,
     PROB_NON_EXCEEDENCE_ERROR,
     PDF_XAXIS_LABEL,
 )
@@ -154,7 +154,7 @@ class GEV(AbstractDistribution):
                     scale parameter of the GEV distribution.
                 - shape: [numeric]
                     shape parameter of the GEV distribution.
-            data : np.ndarray, default is None.
+            data: np.ndarray, default is None.
                 array if you want to calculate the pdf for different data than the time series given to the constructor
                 method.
             plot_figure: [bool]
@@ -307,7 +307,7 @@ class GEV(AbstractDistribution):
                     location parameter of the gumbel distribution.
                 - scale: [numeric]
                     scale parameter of the gumbel distribution.
-            data : np.ndarray, default is None.
+            data: np.ndarray, default is None.
                 array if you want to calculate the cdf for different data than the time series given to the constructor
                 method.
             plot_figure: [bool]
@@ -353,9 +353,9 @@ class GEV(AbstractDistribution):
     def return_period(
         self,
         *,
-        data: np.ndarray = None,
-        parameters: dict[str, Any] = None,
-    ):
+        data: np.ndarray | None = None,
+        parameters: dict[str, Any] | None = None,
+    ) -> np.ndarray:
         """return_period.
 
             calculate return period calculates the return period for a list/array of values or a single value.
@@ -410,13 +410,13 @@ class GEV(AbstractDistribution):
         value C will be exceeded (1-F(C)).
 
         Args:
-            obj_func : [function]
+            obj_func (Callable | None):
                 function to be used to get the distribution parameters.
-            threshold : [numeric]
+            threshold (int | float | None):
                 Value you want to consider only the greater values.
-            method : [string]
+            method (str):
                 'mle', 'mm', 'lmoments', optimization
-            test: bool
+            test (bool):
                 Default is True
 
         Returns:
@@ -484,7 +484,7 @@ class GEV(AbstractDistribution):
             param_list = Lmoments.gev(lmu)
         elif method == "optimization":
             if obj_func is None or threshold is None:
-                raise TypeError(OBJ_FUNCTION_THRESHOULD_ERROR)
+                raise TypeError(OBJ_FUNCTION_THRESHOLD_ERROR)
 
             param_list = genextreme.fit(self.data, method="mle")
             # then we use the result as starting value for your truncated Gumbel fit
@@ -617,9 +617,9 @@ class GEV(AbstractDistribution):
                     location parameter of the gumbel distribution.
                 - scale: [numeric]
                     scale parameter of the gumbel distribution.
-            prob_non_exceed : [list]
+            prob_non_exceed: [list]
                 Non-Exceedance probability
-            alpha : [numeric]
+            alpha: [numeric]
                 alpha or SignificanceLevel is a value of the confidence interval.
             state_function: callable, Default is GEV.ci_func
                 function to calculate the confidence interval.

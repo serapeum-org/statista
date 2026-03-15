@@ -13,7 +13,7 @@ from scipy.stats import expon
 from statista.distributions.base import (
     AbstractDistribution,
     CDF_INVALID_VALUE_ERROR,
-    OBJ_FUNCTION_THRESHOULD_ERROR,
+    OBJ_FUNCTION_THRESHOLD_ERROR,
     PDF_XAXIS_LABEL,
     SCALE_PARAMETER_ERROR,
 )
@@ -390,7 +390,7 @@ class Exponential(AbstractDistribution):
             param_list = Lmoments.exponential(lmu)
         elif method == "optimization":
             if obj_func is None or threshold is None:
-                raise TypeError(OBJ_FUNCTION_THRESHOULD_ERROR)
+                raise TypeError(OBJ_FUNCTION_THRESHOLD_ERROR)
 
             param_list = expon.fit(self.data, method="mle")
             # then we use the result as starting value for your truncated Gumbel fit

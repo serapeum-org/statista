@@ -18,7 +18,7 @@ from statista.distributions.base import (
     PlottingPosition,
     SCALE_PARAMETER_ERROR,
     CDF_INVALID_VALUE_ERROR,
-    OBJ_FUNCTION_THRESHOULD_ERROR,
+    OBJ_FUNCTION_THRESHOLD_ERROR,
     PROB_NON_EXCEEDENCE_ERROR,
     PDF_XAXIS_LABEL,
 )

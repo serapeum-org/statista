@@ -15,7 +15,7 @@ from statista.distributions.base import (
     AbstractDistribution,
     SCALE_PARAMETER_ERROR,
     CDF_INVALID_VALUE_ERROR,
-    OBJ_FUNCTION_THRESHOULD_ERROR,
+    OBJ_FUNCTION_THRESHOLD_ERROR,
     PDF_XAXIS_LABEL,
 )
 
@@ -39,7 +39,7 @@ class Normal(AbstractDistribution):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] = None,
+        parameters: dict[str, float] | None = None,
     ):
         """Gumbel.
 
@@ -72,7 +72,7 @@ class Normal(AbstractDistribution):
     def pdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float] = None,
+        parameters: dict[str, float] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -140,7 +140,7 @@ class Normal(AbstractDistribution):
     def cdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float | Any] = None,
+        parameters: dict[str, float | Any] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -238,7 +238,7 @@ class Normal(AbstractDistribution):
             param_list = Lmoments.normal(lmu)
         elif method == "optimization":
             if obj_func is None or threshold is None:
-                raise TypeError(OBJ_FUNCTION_THRESHOULD_ERROR)
+                raise TypeError(OBJ_FUNCTION_THRESHOLD_ERROR)
 
             param_list = norm.fit(self.data, method="mle")
             # then we use the result as starting value for your truncated Gumbel fit

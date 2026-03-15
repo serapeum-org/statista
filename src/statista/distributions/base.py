@@ -19,7 +19,7 @@ ninf = 1e-5
 
 SCALE_PARAMETER_ERROR = "Scale parameter is negative"
 CDF_INVALID_VALUE_ERROR = "cdf Value Invalid"
-OBJ_FUNCTION_THRESHOULD_ERROR = "obj_func and threshold should be numeric value"
+OBJ_FUNCTION_THRESHOLD_ERROR = "obj_func and threshold should be numeric value"
 PROB_NON_EXCEEDENCE_ERROR = """
 Length of prob_non_exceed does not match the length of data, use the `PlottingPosition.weibul(data)`
 to the get the non-exceedance probability
@@ -117,7 +117,7 @@ class AbstractDistribution(ABC):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] = None,
+        parameters: dict[str, float] | None = None,
     ):
         """Initialize the distribution with data or parameters.
 

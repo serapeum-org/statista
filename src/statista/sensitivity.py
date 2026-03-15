@@ -208,7 +208,7 @@ class Sensitivity:
             self.positions = positions
 
     @staticmethod
-    def marker_style(style):
+    def marker_style(style: int) -> str:
         """Get a marker style for plotting sensitivity analysis results.
 
         This static method returns a marker style string from a predefined list of styles.
@@ -270,8 +270,8 @@ class Sensitivity:
         4. Additional calculated values (if return_values=2)
 
         Args:
-            *args: Variable length argument list passed to the model function.
-            **kwargs (Dict[str, Any]): Arbitrary keyword arguments passed to the model function.
+            *args (Any): Variable length argument list passed to the model function.
+            **kwargs (dict[str, Any]): Arbitrary keyword arguments passed to the model function.
 
         Raises:
             ValueError: If the function returns more than one value when return_values=1,
@@ -402,7 +402,7 @@ class Sensitivity:
         xlabel2: str = "xlabel2",
         ylabel2: str = "ylabel2",
         spaces=None,
-    ):
+    ) -> tuple:
         """Plot sensitivity analysis results using Sobol-style visualization.
 
         This method creates plots to visualize the results of sensitivity analysis.
