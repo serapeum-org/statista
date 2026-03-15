@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Extreme value analysis.
 
 Annual Maximum Series (AMS) Analysis is a statistical method commonly used in fields like hydrology, meteorology, and
@@ -32,6 +30,8 @@ Common Applications:
     - Rainfall Analysis: Used to assess the risk of extreme rainfall events for urban drainage design.
     - Temperature Extremes: AMS can be used to evaluate the risk of extremely high or low temperatures.
 """
+
+from __future__ import annotations
 
 from pathlib import Path
 from typing import Callable
