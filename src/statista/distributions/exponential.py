@@ -145,7 +145,7 @@ class Exponential(AbstractDistribution):
             >>> _ = expo_dist.pdf(plot_figure=True)
 
             ```
-            ![exponential-pdf](./../_images/distributions/exponential-pdf-2.png)
+            ![exponential-pdf](./../../_images/distributions/exponential-pdf-2.png)
         """
         result = super().pdf(
             parameters=parameters,
@@ -195,13 +195,13 @@ class Exponential(AbstractDistribution):
                 >>> _ = expon_dist.pdf(data=random_data, plot_figure=True, xlabel="Random data")
 
                 ```
-                ![exponential-pdf](./../_images/distributions/exponential-pdf.png)
+                ![exponential-pdf](./../../_images/distributions/exponential-pdf.png)
 
                 ```python
                 >>> _ = expon_dist.cdf(data=random_data, plot_figure=True, xlabel="Random data")
 
                 ```
-                ![exponential-cdf](./../_images/distributions/exponential-cdf.png)
+                ![exponential-cdf](./../../_images/distributions/exponential-cdf.png)
         """
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
@@ -298,7 +298,7 @@ class Exponential(AbstractDistribution):
             >>> _ = expo_dist.cdf(plot_figure=True)
 
             ```
-            ![gamma-pdf](./../_images/distributions/expo-random-cdf.png)
+            ![gamma-pdf](./../../_images/distributions/expo-random-cdf.png)
         """
         result = super().cdf(
             parameters=parameters,

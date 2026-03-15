@@ -241,7 +241,7 @@ class Gumbel(AbstractDistribution):
                 ... ) # doctest: +SKIP
 
                 ```
-                ![gamma-pdf](./../_images/distributions/gamma-pdf-1.png)
+                ![gamma-pdf](./../../_images/distributions/gamma-pdf-1.png)
 
             - Calculate PDF with custom parameters:
                 ```python
@@ -311,14 +311,14 @@ class Gumbel(AbstractDistribution):
                 >>> _ = gumbel_dist.pdf(data=random_data, plot_figure=True, xlabel="Random data")
 
                 ```
-                ![gamma-pdf](./../_images/distributions/gamma-random-1.png)
+                ![gamma-pdf](./../../_images/distributions/gamma-random-1.png)
 
                 - Plot the CDF of the random data:
                     ```python
                     >>> _ = gumbel_dist.cdf(data=random_data, plot_figure=True, xlabel="Random data")
 
                     ```
-                    ![gamma-cdf](./../_images/distributions/gamma-cdf-1.png)
+                    ![gamma-cdf](./../../_images/distributions/gamma-cdf-1.png)
 
             - Verify the parameters by fitting the model to the random data
                 ```python
@@ -467,7 +467,7 @@ class Gumbel(AbstractDistribution):
                 ... ) # doctest: +SKIP
 
                 ```
-                ![gamma-cdf](./../_images/distributions/gamma-cdf-2.png)
+                ![gamma-cdf](./../../_images/distributions/gamma-cdf-2.png)
 
             -  Calculate CDF with custom parameters:
                 ```python
@@ -1102,7 +1102,7 @@ class Gumbel(AbstractDistribution):
                 >>> plt.show()
 
                 ```
-            ![image](./../_images/distributions/gumbel-confidence-interval.png)
+            ![image](./../../_images/distributions/gumbel-confidence-interval.png)
         """
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
@@ -1196,7 +1196,7 @@ class Gumbel(AbstractDistribution):
             (<Axes: xlabel='Actual data', ylabel='pdf'>, <Axes: xlabel='Actual data', ylabel='cdf'>)
 
             ```
-            ![gumbel-plot](./../_images/gumbel-plot.png)
+            ![gumbel-plot](./../../_images/gumbel-plot.png)
         """
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:

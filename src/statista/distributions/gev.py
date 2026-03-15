@@ -188,7 +188,7 @@ class GEV(AbstractDistribution):
             >>> _ = gev_dist.pdf(plot_figure=True)
 
             ```
-            ![gev-random-pdf](./../_images/gev-random-pdf.png)
+            ![gev-random-pdf](./../../_images/gev-random-pdf.png)
         """
         result = super().pdf(
             parameters=parameters,
@@ -235,12 +235,12 @@ class GEV(AbstractDistribution):
                 >>> _ = gev_dist.pdf(data=random_data, plot_figure=True, xlabel="Random data")
 
                 ```
-                ![gev-random-pdf](./../_images/gev-random-pdf.png)
+                ![gev-random-pdf](./../../_images/gev-random-pdf.png)
                 ```
                 >>> _ = gev_dist.cdf(data=random_data, plot_figure=True, xlabel="Random data")
 
                 ```
-                ![gev-random-cdf](./../_images/gev-random-cdf.png)
+                ![gev-random-cdf](./../../_images/gev-random-cdf.png)
         """
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
@@ -339,7 +339,7 @@ class GEV(AbstractDistribution):
                 >>> _ = gev_dist.cdf(plot_figure=True)
 
                 ```
-            ![gev-random-cdf](./../_images/gev-random-cdf.png)
+            ![gev-random-cdf](./../../_images/gev-random-cdf.png)
         """
         result = super().cdf(
             parameters=parameters,
@@ -660,7 +660,7 @@ class GEV(AbstractDistribution):
                 >>> upper, lower, fig, ax = gev_dist.confidence_interval(alpha=0.1, plot_figure=True, marker_size=10)
 
                 ```
-            ![gev-confidence-interval](./../_images/gev-confidence-interval.png)
+            ![gev-confidence-interval](./../../_images/gev-confidence-interval.png)
         """
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
@@ -760,7 +760,7 @@ class GEV(AbstractDistribution):
                 (<Axes: xlabel='Actual data', ylabel='pdf'>, <Axes: xlabel='Actual data', ylabel='cdf'>)
 
                 ```
-            ![gev-plot](./../_images/gev-plot.png)
+            ![gev-plot](./../../_images/gev-plot.png)
         """
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
