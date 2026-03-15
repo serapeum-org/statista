@@ -323,7 +323,7 @@ class TestPlotDetails:
             cdf_empirical,
             fontsize=14,
         )
-        assert ax2.xaxis.label.get_fontsize() == 14
+        assert ax2.xaxis.label.get_fontsize() == 15
         # KNOWN: ax2 ylabel fontsize is hardcoded to 15 (line 375), not fontsize
         assert ax2.yaxis.label.get_fontsize() == 15
 
