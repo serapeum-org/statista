@@ -1,6 +1,7 @@
 """Comprehensive tests for statista.plot.Plot static methods."""
 
 import matplotlib
+import matplotlib.pyplot as plt
 
 matplotlib.use("Agg")
 
@@ -10,6 +11,13 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from statista.plot import Plot
+
+
+@pytest.fixture(autouse=True)
+def _close_figures():
+    """Close all matplotlib figures after each test to prevent memory accumulation."""
+    yield
+    plt.close("all")
 
 # ---------------------------------------------------------------------------
 # Shared fixtures
