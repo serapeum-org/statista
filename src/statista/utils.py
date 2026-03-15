@@ -5,7 +5,7 @@ import numpy as np
 
 def merge_small_bins(
     bin_count_observed: list[float], bin_count_fitted_data: list[float]
-):
+) -> tuple[np.ndarray, np.ndarray]:
     """Merge small bins for goodness-of-fit tests (e.g., chi-square).
 
     This utility merges adjacent "small" bins (those whose expected count is < 5)
