@@ -39,7 +39,7 @@ class Normal(AbstractDistribution):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] = None,
+        parameters: dict[str, float] | None = None,
     ):
         """Gumbel.
 
@@ -72,7 +72,7 @@ class Normal(AbstractDistribution):
     def pdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float] = None,
+        parameters: dict[str, float] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -140,7 +140,7 @@ class Normal(AbstractDistribution):
     def cdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float | Any] = None,
+        parameters: dict[str, float | Any] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
