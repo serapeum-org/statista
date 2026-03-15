@@ -38,20 +38,27 @@ class Gumbel(AbstractDistribution):
         _data (np.ndarray): The data array used for distribution calculations.
         _parameters (dict[str, float]): Distribution parameters (loc and scale).
 
-    Mathematical Details:
-        - Probability Density Function (PDF):
-          f(x; ζ, δ) = (1/δ) * exp(-(x-ζ)/δ) * exp(-exp(-(x-ζ)/δ))
+    - The probability density function (PDF) of the Gumbel distribution is:
 
-          where ζ (zeta) is the location parameter, and δ (delta) is the scale parameter.
+        .. math::
+            f(x; \\zeta, \\delta) = \\frac{1}{\\delta}
+            \\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)
+            \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)
+          :label: gumbel-pdf
 
-        - Cumulative Distribution Function (CDF):
-          F(x; ζ, δ) = exp(-exp(-(x-ζ)/δ))
+        Where :math:`\\zeta` (zeta) is the location parameter and :math:`\\delta` (delta)
+        is the scale parameter.
 
-        - The location parameter ζ shifts the distribution along the x-axis, determining
-          the mode (peak) of the distribution. It can range from negative to positive infinity.
+    - The cumulative distribution function (CDF) is:
 
-        - The scale parameter δ controls the spread of the distribution. A larger scale
-          parameter results in a wider distribution. It must always be positive.
+        .. math::
+            F(x; \\zeta, \\delta) = \\exp\\left(-\\exp\\left(-\\frac{x - \\zeta}{\\delta}\\right)\\right)
+          :label: gumbel-cdf
+
+    - The location parameter :math:`\\zeta` shifts the distribution along the x-axis, determining
+      the mode (peak) of the distribution. It can range from negative to positive infinity.
+    - The scale parameter :math:`\\delta` controls the spread of the distribution. A larger scale
+      parameter results in a wider distribution. It must always be positive.
     """
 
     def __init__(

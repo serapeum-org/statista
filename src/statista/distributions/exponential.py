@@ -30,8 +30,8 @@ class Exponential(AbstractDistribution):
         .. math::
             f(x; \\delta, \\beta) =
             \\begin{cases}
-                f(x; \\delta, \\beta) = \\frac{1}{\\beta} e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq 0 \\\\
-                0 & \\quad x < 0
+                \\frac{1}{\\beta} e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq \\delta \\\\
+                0 & \\quad x < \\delta
             \\end{cases}
           :label: exp-equation
 
@@ -49,8 +49,8 @@ class Exponential(AbstractDistribution):
         .. math::
             F(x; \\delta, \\beta) =
             \\begin{cases}
-                F(x; \\delta, \\beta) = 1 - e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq 0 \\\\
-                0 & \\quad x < 0
+                1 - e^{-\\frac{x - \\delta}{\\beta}} & \\quad x \\geq \\delta \\\\
+                0 & \\quad x < \\delta
             \\end{cases}
           :label: exp-cdf
 

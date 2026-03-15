@@ -61,16 +61,15 @@ class GEV(AbstractDistribution):
         Gumbel (Type I), :math:`\\xi > 0` Fréchet (Type II), and :math:`\\xi < 0` Weibull (Type III). The shape
         parameter determines the tail behavior of the distribution.
 
-        In hydrology, the distribution is reparametrized with :math:`k=-\\xi` (xi) (El Adlouni et al., 2008)
-        The cumulative distribution functions.
+        In hydrology, the distribution is reparametrized with :math:`k=-\\xi` (xi) (El Adlouni et al., 2008).
 
-    - The cumulative distribution functions.
+    - The cumulative distribution function (CDF) is:
 
         .. math::
             F(x; \\zeta, \\delta, \\xi)=
             \\begin{cases}
                 \\exp\\left(- \\left(1+ \\xi \\left(\\frac{x-\\zeta}{\\delta} \\right) \\right)^\\frac{-1}{\\xi} \\right) &
-                \\quad\\land\\xi\\neq 0 and 1 + \\xi \\left( \\frac{x-\\zeta}{\\delta}\\right) \\\\
+                \\quad\\land\\xi\\neq 0 \\land 1 + \\xi \\left( \\frac{x-\\zeta}{\\delta}\\right) > 0 \\\\
                 \\exp\\left(- \\exp\\left(- \\frac{x-\\zeta}{\\delta} \\right) \\right) & \\quad \\land \\xi=0
             \\end{cases}
           :label: gev-cdf
