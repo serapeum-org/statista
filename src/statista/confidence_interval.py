@@ -1,7 +1,9 @@
 """Confidence interval module."""
 
+from __future__ import annotations
+
 from collections import OrderedDict
-from typing import Union
+from typing import Callable
 
 import numpy as np
 from loguru import logger
@@ -12,7 +14,7 @@ class ConfidenceInterval:
     """ConfidenceInterval."""
 
     @staticmethod
-    def bs_indexes(data: Union[list, np.ndarray], n_samples=10000):
+    def bs_indexes(data: np.ndarray, n_samples: int = 10000):
         """bs_indexes.
 
             - generate random indeces to shuffle the data of the given array.
@@ -25,8 +27,8 @@ class ConfidenceInterval:
         list(bootstrap_indexes(data))) as well.
 
         Returns:
-            np.ndarray
-                array with the same length as the input data, containing integer indeces.
+            np.ndarray:
+                array with the same length as the input data, containing integer indices.
 
         Examples:
             ```python
@@ -41,8 +43,8 @@ class ConfidenceInterval:
 
     @staticmethod
     def boot_strap(
-        data: Union[list, np.ndarray],
-        state_function: callable,
+        data: list | np.ndarray,
+        state_function: Callable,
         alpha: float = 0.05,
         n_samples: int = 100,
         **kwargs,
@@ -65,7 +67,7 @@ class ConfidenceInterval:
                 number of samples to be generated. Default is 100.
             alpha (numeric, optional):
                 alpha or SignificanceLevel is a value of the confidence interval. Default is 0.05
-            kwargs:
+            **kwargs:
                 gevfit (list):
                     Three parameters of the GEV distribution [shape, loc, scale]
                 F (list):
@@ -117,6 +119,6 @@ class ConfidenceInterval:
         params = OrderedDict()
         params["shape"] = (out[0, 0], out[1, 0])
         params["location"] = (out[0, 1], out[1, 1])
-        params["scale"] = (out[0, 2], out[1, 3])
+        params["scale"] = (out[0, 2], out[1, 2])
 
         return {"lb": lb, "ub": ub, "params": params}

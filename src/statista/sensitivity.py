@@ -9,7 +9,9 @@ affect model outputs, which is crucial for model calibration, uncertainty analys
 and decision-making processes.
 """
 
-from typing import Any, Dict, List, Union
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -113,9 +115,9 @@ class Sensitivity:
     def __init__(
         self,
         parameter: DataFrame,
-        lower_bound: List[Union[int, float]],
-        upper_bound: List[Union[int, float]],
-        function: callable,
+        lower_bound: list[int | float],
+        upper_bound: list[int | float],
+        function: Callable[..., Any],
         positions=None,
         n_values=5,
         return_values=1,
@@ -206,7 +208,7 @@ class Sensitivity:
             self.positions = positions
 
     @staticmethod
-    def marker_style(style):
+    def marker_style(style: int) -> str:
         """Get a marker style for plotting sensitivity analysis results.
 
         This static method returns a marker style string from a predefined list of styles.
@@ -252,7 +254,7 @@ class Sensitivity:
             style %= len(Sensitivity.MarkerStyleList)
         return Sensitivity.MarkerStyleList[style]
 
-    def one_at_a_time(self, *args, **kwargs: Dict[str, Any]):
+    def one_at_a_time(self, *args, **kwargs: dict[str, Any]):
         """Perform One-At-a-Time (OAT) sensitivity analysis.
 
         This method performs OAT sensitivity analysis by varying each parameter one at a time
@@ -268,8 +270,8 @@ class Sensitivity:
         4. Additional calculated values (if return_values=2)
 
         Args:
-            *args: Variable length argument list passed to the model function.
-            **kwargs (Dict[str, Any]): Arbitrary keyword arguments passed to the model function.
+            *args (Any): Variable length argument list passed to the model function.
+            **kwargs (dict[str, Any]): Arbitrary keyword arguments passed to the model function.
 
         Raises:
             ValueError: If the function returns more than one value when return_values=1,
@@ -343,7 +345,7 @@ class Sensitivity:
 
                 ```
         """
-        self.sen = {}
+        self.sen: dict[str, list[Any]] = {}
 
         for i in range(self.num_parameters):
             k = self.positions[i]
@@ -356,10 +358,10 @@ class Sensitivity:
                 self.lower_bound[k], self.upper_bound[k], self.NoValues
             )
             # add the value of the calibrated parameter and sort the values
-            rand_value = np.sort(np.append(rand_value, self.parameter["value"][k]))
+            rand_value = np.sort(np.append(rand_value, self.parameter["value"].iloc[k]))
             # store the relative values of the parameters in the first list in the dict
             self.sen[self.parameter.index[k]][0] = [
-                (h / self.parameter["value"][k]) for h in rand_value
+                (h / self.parameter["value"].iloc[k]) for h in rand_value
             ]
 
             random_param = self.parameter["value"].tolist()
@@ -400,7 +402,7 @@ class Sensitivity:
         xlabel2: str = "xlabel2",
         ylabel2: str = "ylabel2",
         spaces=None,
-    ):
+    ) -> tuple:
         """Plot sensitivity analysis results using Sobol-style visualization.
 
         This method creates plots to visualize the results of sensitivity analysis.
@@ -620,7 +622,7 @@ class Sensitivity:
                 )
 
             except ValueError:
-                assert ValueError(
+                raise ValueError(
                     "To plot calculated values, you should choose return_values==2 in the sensitivity object"
                 )
 

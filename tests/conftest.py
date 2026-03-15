@@ -569,7 +569,8 @@ def confidence_interval_alpha() -> float:
 
 @pytest.fixture(scope="module")
 def parameter_estimation_optimization_threshold() -> int:
-    return 800  # 17
+    """Threshold for truncated distribution fitting on time_series2."""
+    return 800
 
 
 @pytest.fixture(scope="module")

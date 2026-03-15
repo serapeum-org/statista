@@ -1,7 +1,6 @@
 """Plotting functions for statista package."""
 
-from numbers import Number
-from typing import Tuple, Union
+from __future__ import annotations
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -59,13 +58,13 @@ class Plot:
     @staticmethod
     def pdf(
         qx: np.ndarray,
-        pdf_fitted: Union[np.ndarray, list],
+        pdf_fitted: np.ndarray | list,
         data_sorted: np.ndarray,
-        fig_size: Tuple = (6, 5),
+        fig_size: tuple = (6, 5),
         xlabel: str = "Actual data",
         ylabel: str = "pdf",
         fontsize: int = 11,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Create a probability density function (PDF) plot.
 
         Generates a plot showing both the fitted probability density function curve
@@ -158,11 +157,11 @@ class Plot:
         cdf_fitted: np.ndarray,
         data_sorted: np.ndarray,
         cdf_weibul: np.ndarray,
-        fig_size: Tuple[float, float] = (6, 5),
+        fig_size: tuple[float, float] = (6, 5),
         xlabel: str = "Actual data",
         ylabel: str = "cdf",
         fontsize: int = 11,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Create a cumulative distribution function (CDF) plot.
 
         Generates a plot showing both the fitted cumulative distribution function curve
@@ -258,16 +257,16 @@ class Plot:
 
     @staticmethod
     def details(
-        qx: Union[np.ndarray, list],
-        q_act: Union[np.ndarray, list],
-        pdf: Union[np.ndarray, list],
-        cdf_fitted: Union[np.ndarray, list],
-        cdf: Union[np.ndarray, list],
-        fig_size: Tuple[float, float] = (10, 5),
+        qx: np.ndarray | list,
+        q_act: np.ndarray | list,
+        pdf: np.ndarray | list,
+        cdf_fitted: np.ndarray | list,
+        cdf: np.ndarray | list,
+        fig_size: tuple[float, float] = (10, 5),
         xlabel: str = "Actual data",
         ylabel: str = "cdf",
         fontsize: int = 11,
-    ) -> Tuple[Figure, Tuple[Axes, Axes]]:
+    ) -> tuple[Figure, tuple[Axes, Axes]]:
         """Create a detailed distribution plot with both PDF and CDF.
 
         Generates a side-by-side plot showing both the probability density function (PDF)
@@ -370,24 +369,24 @@ class Plot:
         ax2 = fig.add_subplot(gs[0, 1])
         ax2.plot(qx, cdf_fitted, "-", color="#27408B", linewidth=2)
 
-        q_act.sort()
+        q_act = np.sort(q_act)
         ax2.scatter(q_act, cdf, color="#DC143C", facecolors="none")
         ax2.set_xlabel(xlabel, fontsize=fontsize)
-        ax2.set_ylabel(ylabel, fontsize=15)
+        ax2.set_ylabel(ylabel, fontsize=fontsize)
         plt.show()
         return fig, (ax1, ax2)
 
     @staticmethod
     def confidence_level(
-        qth: Union[np.ndarray, list],
-        q_act: Union[np.ndarray, list],
-        q_lower: Union[np.ndarray, list],
-        q_upper: Union[np.ndarray, list],
-        fig_size: Tuple[float, float] = (6, 6),
+        qth: np.ndarray | list,
+        q_act: np.ndarray | list,
+        q_lower: np.ndarray | list,
+        q_upper: np.ndarray | list,
+        fig_size: tuple[float, float] = (6, 6),
         fontsize: int = 11,
-        alpha: Number = None,
+        alpha: float = 0.05,
         marker_size: int = 10,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Create a confidence interval plot for distribution quantiles.
 
         Generates a plot showing the theoretical quantiles, actual data points, and
@@ -482,7 +481,7 @@ class Plot:
         See Also:
             - Plot.details: For plotting PDF and CDF together
         """
-        q_act.sort()
+        q_act = np.sort(q_act)
 
         fig = plt.figure(figsize=fig_size)
         ax = fig.add_subplot()
