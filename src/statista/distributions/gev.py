@@ -350,7 +350,12 @@ class GEV(AbstractDistribution):
         )  # type: ignore[misc]
         return result
 
-    def return_period(self, parameters: dict[str, Any], data: np.ndarray):
+    def return_period(
+        self,
+        *,
+        data: np.ndarray = None,
+        parameters: dict[str, Any] = None,
+    ):
         """return_period.
 
             calculate return period calculates the return period for a list/array of values or a single value.
@@ -372,6 +377,12 @@ class GEV(AbstractDistribution):
             float:
                 return period
         """
+        if data is None:
+            data = self.data
+
+        if parameters is None:
+            parameters = self.parameters
+
         cdf: Any = self.cdf(parameters=parameters, data=data)
 
         rp = 1 / (1 - cdf)

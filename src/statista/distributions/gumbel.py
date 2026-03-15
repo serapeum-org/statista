@@ -486,6 +486,7 @@ class Gumbel(AbstractDistribution):
 
     def return_period(
         self,
+        *,
         data: bool | list[float] | None = None,
         parameters: dict[str, float | Any] = None,
     ) -> np.ndarray:
