@@ -3,13 +3,11 @@
 import matplotlib
 
 matplotlib.use("Agg")
-from typing import Dict, List
 
 import numpy as np
 import pytest
 
 from statista.distributions import (
-    GEV,
     Distributions,
     Gumbel,
     PlottingPosition,
@@ -65,7 +63,7 @@ class TestDistribution:
     def test_getter_method(
         self,
         time_series2: list,
-        dist_estimation_parameters: List[str],
+        dist_estimation_parameters: list[str],
     ):
         dist = Distributions("Gumbel", data=time_series2)
         for i in range(len(dist_estimation_parameters)):
