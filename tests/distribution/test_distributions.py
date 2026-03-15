@@ -74,3 +74,21 @@ class TestDistribution:
             assert all(i in param.keys() for i in ["loc", "scale"])
             assert dist.parameters.get("loc") is not None
             assert dist.parameters.get("scale") is not None
+
+
+class TestDistributionsClassInvalid:
+    """Tests for the Distributions class."""
+
+    def test_invalid_distribution(self):
+        """Test that an error is raised when an invalid distribution is provided."""
+        with pytest.raises(ValueError, match="InvalidDist not supported"):
+            Distributions("InvalidDist", data=[1, 2, 3, 4, 5])
+
+    def test_invalid_attribute(self):
+        """Test that an error is raised when accessing a non-existent attribute."""
+        dist = Distributions("Gumbel", data=[1, 2, 3, 4, 5])
+        with pytest.raises(
+            AttributeError,
+            match="'Distributions' object has no attribute 'invalid_method'",
+        ):
+            dist.invalid_method()
