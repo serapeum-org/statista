@@ -26,7 +26,7 @@ class Distributions:
         self,
         distribution: str,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, Number] = None,
+        parameters: dict[str, Number] | None = None,
     ):
         if distribution not in self.available_distributions.keys():
             raise ValueError(f"{distribution} not supported")
