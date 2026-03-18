@@ -127,14 +127,26 @@ class Distributions:
                 )
             dist_class = self.available_distributions[distribution]
             self.distribution = dist_class(data, parameters)
+            self.__data = None
         else:
             if data is None:
                 raise ValueError(
                     "Either distribution or data must be provided"
                 )
             self.distribution = None
+            self.__data = np.array(data)
 
-        self._data = np.array(data) if data is not None else None
+    @property
+    def _data(self) -> np.ndarray | None:
+        """Return the raw data array.
+
+        In single-distribution mode, delegates to the underlying
+        distribution's data to avoid storing a redundant copy. In
+        multi-distribution mode, returns the locally stored array.
+        """
+        if self.distribution is not None:
+            return self.distribution.data
+        return self.__data
 
     def __getattr__(self, name: str):
         """Delegate attribute access to the underlying distribution instance.
