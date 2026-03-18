@@ -138,6 +138,19 @@ class TestDistributionsInit:
         with pytest.raises(ValueError, match="InvalidDist not supported"):
             Distributions("InvalidDist", data=[1, 2, 3, 4, 5])
 
+    def test_distribution_without_data_or_parameters(self):
+        """Test that specifying a distribution without data or parameters raises.
+
+        Test scenario:
+            A distribution name alone has no data to wrap or parameters
+            to store — the facade should reject this with its own message.
+        """
+        with pytest.raises(
+            ValueError,
+            match="data or parameters must be provided when specifying a distribution",
+        ):
+            Distributions("Gumbel")
+
     @pytest.mark.parametrize("name", ["GEV", "Gumbel", "Exponential", "Normal"])
     def test_all_distribution_names_accepted(self, name: str, time_series2: list):
         """Test that all registered distribution names are accepted.
@@ -378,6 +391,28 @@ class TestFitAll:
         params2 = results2["Gumbel"]["parameters"]
         assert params1 == params2, (
             f"Parameters should be identical across calls: {params1} != {params2}"
+        )
+
+    def test_fit_all_method_affects_parameters(self, time_series2: list):
+        """Test that different fitting methods produce different parameters.
+
+        Test scenario:
+            MLE and L-moments are different estimators, so they should
+            yield different parameter values for the same data. This
+            confirms the method parameter is actually passed through.
+        """
+        dist = Distributions(data=time_series2)
+        mle_results = dist.fit_all(
+            method="mle", distributions=["Gumbel"]
+        )
+        lmom_results = dist.fit_all(
+            method="lmoments", distributions=["Gumbel"]
+        )
+        mle_params = mle_results["Gumbel"]["parameters"]
+        lmom_params = lmom_results["Gumbel"]["parameters"]
+        assert mle_params != lmom_params, (
+            "MLE and L-moments should produce different parameter "
+            f"estimates, both returned: {mle_params}"
         )
 
 
