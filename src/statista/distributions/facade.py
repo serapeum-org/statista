@@ -120,6 +120,11 @@ class Distributions:
         if distribution is not None:
             if distribution not in self.available_distributions:
                 raise ValueError(f"{distribution} not supported")
+            if data is None and parameters is None:
+                raise ValueError(
+                    "data or parameters must be provided when"
+                    " specifying a distribution"
+                )
             dist_class = self.available_distributions[distribution]
             self.distribution = dist_class(data, parameters)
         else:
