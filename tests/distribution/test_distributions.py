@@ -279,6 +279,17 @@ class TestFitAll:
         with pytest.raises(ValueError, match="InvalidDist not supported"):
             dist.fit_all(distributions=["InvalidDist"])
 
+    def test_fit_all_invalid_method(self, time_series2: list):
+        """Test fit_all raises ValueError for invalid fitting method.
+
+        Test scenario:
+            An unsupported method name should be rejected at the facade
+            level with a clear error message listing valid options.
+        """
+        dist = Distributions(data=time_series2)
+        with pytest.raises(ValueError, match="method must be one of"):
+            dist.fit_all(method="invalid")
+
     def test_fit_all_handles_nan(self):
         """Test fit_all removes NaN values before fitting."""
         data = [100, 200, 300, np.nan, 400, 500, 600, 700, 800, 900]
