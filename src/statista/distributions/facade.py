@@ -245,6 +245,12 @@ class Distributions:
                 one.
 
         """
+        valid_methods = ("mle", "mm", "lmoments", "optimization")
+        if method not in valid_methods:
+            raise ValueError(
+                f"method must be one of {valid_methods}, got '{method}'"
+            )
+
         data = np.array(self._data)
         data = data[~np.isnan(data)]
         data = np.sort(data)
