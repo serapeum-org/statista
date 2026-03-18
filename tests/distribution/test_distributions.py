@@ -290,6 +290,17 @@ class TestFitAll:
         with pytest.raises(ValueError, match="method must be one of"):
             dist.fit_all(method="invalid")
 
+    def test_fit_all_empty_distributions_list(self, time_series2: list):
+        """Test fit_all raises ValueError for empty distributions list.
+
+        Test scenario:
+            An empty list means no distributions to fit, which should
+            fail early rather than return an empty dict.
+        """
+        dist = Distributions(data=time_series2)
+        with pytest.raises(ValueError, match="distributions list must not be empty"):
+            dist.fit_all(distributions=[])
+
     def test_fit_all_handles_nan(self):
         """Test fit_all removes NaN values before fitting."""
         data = [100, 200, 300, np.nan, 400, 500, 600, 700, 800, 900]

@@ -261,6 +261,9 @@ class Distributions:
             else list(self.available_distributions.keys())
         )
 
+        if not dist_names:
+            raise ValueError("distributions list must not be empty")
+
         results: dict[str, dict[str, Any]] = {}
         for name in dist_names:
             if name not in self.available_distributions:
@@ -399,4 +402,4 @@ class Distributions:
                 best_pvalue = pvalue
                 best_name = name
 
-        return best_name, fit_results[best_name]  # type: ignore[index]
+        return best_name, fit_results[best_name]
