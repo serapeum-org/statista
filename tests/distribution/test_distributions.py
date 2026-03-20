@@ -439,9 +439,7 @@ class TestBestFit:
         """
         dist = Distributions(data=time_series2)
         results = dist.fit()
-        best_name, best_info = dist.best_fit(
-            fit_results=results, criterion="ks"
-        )
+        best_name, best_info = dist.best_fit(criterion="ks")
         assert best_name in results, f"'{best_name}' not in results"
         best_pvalue = best_info["ks"][1]
         for name, info in results.items():
@@ -458,9 +456,7 @@ class TestBestFit:
         """
         dist = Distributions(data=time_series2)
         results = dist.fit()
-        best_name, best_info = dist.best_fit(
-            fit_results=results, criterion="chisquare"
-        )
+        best_name, best_info = dist.best_fit(criterion="chisquare")
         best_pvalue = best_info["chisquare"][1]
         for name, info in results.items():
             assert info["chisquare"][1] <= best_pvalue, (
@@ -475,16 +471,6 @@ class TestBestFit:
         ks_name, _ = dist.best_fit(criterion="ks")
         assert default_name == ks_name, (
             f"Default ({default_name}) should equal KS ({ks_name})"
-        )
-
-    def test_best_fit_with_precomputed_results(self, time_series2: list):
-        """Test best_fit reuses pre-computed fit results without refitting."""
-        dist = Distributions(data=time_series2)
-        results = dist.fit()
-        best_name, best_info = dist.best_fit(fit_results=results)
-        assert best_name in results, f"'{best_name}' not in results"
-        assert best_info is results[best_name], (
-            "best_info should be the exact same object from results, not a copy"
         )
 
     def test_best_fit_selected_distributions(self, time_series2: list):
@@ -511,41 +497,6 @@ class TestBestFit:
         dist = Distributions(data=time_series2)
         with pytest.raises(ValueError, match="criterion must be"):
             dist.best_fit(criterion="invalid")
-
-    def test_best_fit_fit_results_ignores_method_and_distributions(
-        self, time_series2: list
-    ):
-        """Test that method and distributions params are ignored when fit_results is provided.
-
-        Test scenario:
-            Passing fit_results with only Gumbel, but distributions=["Normal"]
-            should still return Gumbel since fit_results takes precedence.
-        """
-        dist = Distributions(data=time_series2)
-        results = dist.fit(distributions=["Gumbel"])
-        best_name, _ = dist.best_fit(
-            distributions=["Normal"],
-            method="mle",
-            fit_results=results,
-        )
-        assert best_name == "Gumbel", (
-            f"fit_results should take precedence, expected 'Gumbel', got '{best_name}'"
-        )
-
-    def test_best_fit_single_entry_fit_results(self, time_series2: list):
-        """Test best_fit with a single-entry fit_results dict.
-
-        Test scenario:
-            A pre-computed result with exactly one distribution should return it.
-        """
-        dist = Distributions(data=time_series2)
-        results = dist.fit(distributions=["Exponential"])
-        best_name, best_info = dist.best_fit(fit_results=results)
-        assert best_name == "Exponential", (
-            f"Expected 'Exponential', got '{best_name}'"
-        )
-        assert best_info is results["Exponential"], "Should return the same object"
-
 
 class TestDistributionsIntegration:
     """Integration tests for the full Distributions workflow."""
@@ -574,8 +525,7 @@ class TestDistributionsIntegration:
             instance that can compute CDF and inverse CDF.
         """
         dist = Distributions(data=time_series2)
-        results = dist.fit()
-        best_name, best_info = dist.best_fit(fit_results=results)
+        best_name, best_info = dist.best_fit()
 
         fitted_dist = best_info["distribution"]
         params = best_info["parameters"]

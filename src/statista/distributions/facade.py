@@ -308,28 +308,21 @@ class Distributions:
         method: str = "lmoments",
         distributions: list[str] | None = None,
         criterion: str = "ks",
-        fit_results: dict[str, dict[str, Any]] | None = None,
     ) -> tuple[str, dict[str, Any]]:
         """Find the best-fitting distribution for the data.
 
-        Fits all (or selected) distributions and returns the one with the
-        highest goodness-of-fit p-value. Can also accept pre-computed
-        ``fit`` results to avoid re-fitting.
+        Fits all (or selected) distributions and returns the one with
+        the highest goodness-of-fit p-value.
 
         Args:
             method: Fitting method ('mle', 'mm', 'lmoments', or
-                'optimization'). Default is 'lmoments'. Ignored when
-                ``fit_results`` is provided.
+                'optimization'). Default is 'lmoments'.
             distributions: List of distribution names to fit. If None,
-                fits all available distributions. Ignored when
-                ``fit_results`` is provided.
+                fits all available distributions.
             criterion: Goodness-of-fit criterion for selection.
                 'ks' selects by highest Kolmogorov-Smirnov p-value.
                 'chisquare' selects by highest Chi-square p-value.
                 Default is 'ks'.
-            fit_results: Pre-computed results from ``fit``. When
-                provided, ``method`` and ``distributions`` are ignored
-                and no refitting occurs.
 
         Returns:
             Tuple of (distribution_name, result_dict) for the best fit.
@@ -374,28 +367,6 @@ class Distributions:
                 True
 
                 ```
-            - Reuse pre-computed fit results (no refitting):
-                ```python
-                >>> import numpy as np
-                >>> from statista.distributions import Distributions
-                >>> data = np.loadtxt("examples/data/time_series2.txt")
-                >>> dist = Distributions(data=data)
-                >>> results = dist.fit(
-                ...     distributions=["Gumbel"]
-                ... ) # doctest: +ELLIPSIS
-                -----KS Test--------
-                ...
-                >>> best_name, best_info = dist.best_fit(
-                ...     fit_results=results
-                ... )
-                >>> best_name
-                'Gumbel'
-                >>> len(best_info["distribution"].cdf(
-                ...     parameters=best_info["parameters"]
-                ... )) > 0
-                True
-
-                ```
 
         See Also:
             fit: Fit multiple distributions and return all results.
@@ -406,17 +377,14 @@ class Distributions:
                 f"criterion must be 'ks' or 'chisquare', got '{criterion}'"
             )
 
-        if fit_results is None:
-            fit_results = self.fit(
-                method=method, distributions=distributions
-            )
+        results = self.fit(method=method, distributions=distributions)
 
         best_name = None
-        best_pvalue = -1.0
-        for name, info in fit_results.items():
-            pvalue = info[criterion][1]
-            if pvalue > best_pvalue:
-                best_pvalue = pvalue
+        best_p_value = -1.0
+        for name, info in results.items():
+            p_value = info[criterion][1]
+            if p_value > best_p_value:
+                best_p_value = p_value
                 best_name = name
 
-        return best_name, fit_results[best_name]
+        return best_name, results[best_name]
