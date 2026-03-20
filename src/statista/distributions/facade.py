@@ -27,13 +27,13 @@ class Distributions:
     1. **Single-distribution mode**: pass a distribution name to wrap a
        specific distribution and delegate all method calls to it.
     2. **Multi-distribution mode**: pass only data (no distribution name)
-       and use ``fit_all`` / ``best_fit`` to compare all distributions.
+       and use ``fit`` / ``best_fit`` to compare all distributions.
 
     Args:
         distribution: Name of the distribution to use. Must be one of the
             keys in ``available_distributions`` ('GEV', 'Gumbel',
             'Exponential', 'Normal'). If None, no single distribution is
-            wrapped — use ``fit_all`` or ``best_fit`` instead.
+            wrapped — use ``fit`` or ``best_fit`` instead.
         data: Data time series as a list or numpy array.
         parameters: Dictionary of distribution parameters.
             ```python
@@ -176,7 +176,7 @@ class Distributions:
             f"'{type(self).__name__}' object has no attribute '{name}'"
         )
 
-    def fit_all(
+    def fit(
         self,
         method: str = "lmoments",
         distributions: list[str] | None = None,
@@ -217,7 +217,7 @@ class Distributions:
                 >>> from statista.distributions import Distributions
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
                 >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all() # doctest: +ELLIPSIS
+                >>> results = dist.fit() # doctest: +ELLIPSIS
                 -----KS Test--------
                 ...
                 >>> sorted(results.keys())
@@ -230,7 +230,7 @@ class Distributions:
                 >>> from statista.distributions import Distributions
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
                 >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all(
+                >>> results = dist.fit(
                 ...     distributions=["Gumbel", "GEV"]
                 ... ) # doctest: +ELLIPSIS
                 -----KS Test--------
@@ -245,7 +245,7 @@ class Distributions:
                 >>> from statista.distributions import Distributions
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
                 >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all(
+                >>> results = dist.fit(
                 ...     distributions=["Gumbel"]
                 ... ) # doctest: +ELLIPSIS
                 -----KS Test--------
@@ -314,7 +314,7 @@ class Distributions:
 
         Fits all (or selected) distributions and returns the one with the
         highest goodness-of-fit p-value. Can also accept pre-computed
-        ``fit_all`` results to avoid re-fitting.
+        ``fit`` results to avoid re-fitting.
 
         Args:
             method: Fitting method ('mle', 'mm', 'lmoments', or
@@ -327,7 +327,7 @@ class Distributions:
                 'ks' selects by highest Kolmogorov-Smirnov p-value.
                 'chisquare' selects by highest Chi-square p-value.
                 Default is 'ks'.
-            fit_results: Pre-computed results from ``fit_all``. When
+            fit_results: Pre-computed results from ``fit``. When
                 provided, ``method`` and ``distributions`` are ignored
                 and no refitting occurs.
 
@@ -374,13 +374,13 @@ class Distributions:
                 True
 
                 ```
-            - Reuse pre-computed fit_all results (no refitting):
+            - Reuse pre-computed fit results (no refitting):
                 ```python
                 >>> import numpy as np
                 >>> from statista.distributions import Distributions
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
                 >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all(
+                >>> results = dist.fit(
                 ...     distributions=["Gumbel"]
                 ... ) # doctest: +ELLIPSIS
                 -----KS Test--------
@@ -398,7 +398,7 @@ class Distributions:
                 ```
 
         See Also:
-            fit_all: Fit multiple distributions and return all results.
+            fit: Fit multiple distributions and return all results.
 
         """
         if criterion not in ("ks", "chisquare"):
@@ -407,7 +407,7 @@ class Distributions:
             )
 
         if fit_results is None:
-            fit_results = self.fit_all(
+            fit_results = self.fit(
                 method=method, distributions=distributions
             )
 
