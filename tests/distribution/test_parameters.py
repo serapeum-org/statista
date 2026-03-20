@@ -69,6 +69,31 @@ class TestParametersInit:
         p = Parameters(loc=-100.0, scale=1.0)
         assert p.loc == -100.0, f"Expected loc=-100.0, got {p.loc}"
 
+    def test_immutable(self):
+        """Test that Parameters fields cannot be mutated after creation.
+
+        Test scenario:
+            Assigning to any field should raise FrozenInstanceError,
+            preventing bypass of scale validation.
+        """
+        p = Parameters(loc=100.0, scale=50.0)
+        with pytest.raises(AttributeError, match="cannot assign to field"):
+            p.scale = -999.0
+        with pytest.raises(AttributeError, match="cannot assign to field"):
+            p.loc = 0.0
+
+    def test_hashable(self):
+        """Test that frozen Parameters are hashable and usable in sets.
+
+        Test scenario:
+            frozen=True gives a free __hash__, so Parameters can be
+            used as dict keys or set members.
+        """
+        p1 = Parameters(loc=1.0, scale=2.0)
+        p2 = Parameters(loc=1.0, scale=2.0)
+        assert hash(p1) == hash(p2), "Equal Parameters should have equal hashes"
+        assert len({p1, p2}) == 1, "Equal Parameters should deduplicate in sets"
+
     def test_shape_zero_accepted(self):
         """Test that shape=0.0 is accepted and treated as 3-param.
 

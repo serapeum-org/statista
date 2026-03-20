@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Iterator
 
 
-@dataclass
+@dataclass(frozen=True)
 class Parameters:
     """Distribution parameters with named fields and dict compatibility.
 
