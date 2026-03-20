@@ -47,7 +47,7 @@ class TestGumbel:
         for method in dist_estimation_parameters:
             param = dist.fit_model(method=method, test=False)
             assert isinstance(param, Parameters)
-            assert all(i in param.keys() for i in ["loc", "scale"])
+            assert "loc" in param and "scale" in param
             assert dist.parameters.loc is not None
             assert dist.parameters.scale is not None
             assert param == gum_dist_parameters[method]
@@ -65,7 +65,7 @@ class TestGumbel:
             threshold=parameter_estimation_optimization_threshold,
         )
         assert isinstance(param, Parameters)
-        assert all(i in param.keys() for i in ["loc", "scale"])
+        assert "loc" in param and "scale" in param
         assert dist.parameters.loc is not None
         assert dist.parameters.scale is not None
 

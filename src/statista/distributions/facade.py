@@ -61,8 +61,10 @@ class Distributions:
             >>> data = np.loadtxt("examples/data/time_series2.txt")
             >>> dist = Distributions("Gumbel", data=data)
             >>> params = dist.fit_model(method="lmoments", test=False)
-            >>> sorted(params.keys())
-            ['loc', 'scale']
+            >>> params.loc is not None
+            True
+            >>> params.scale is not None
+            True
 
             ```
         - Multi-distribution mode — find the best fit in one call:
@@ -251,8 +253,8 @@ class Distributions:
                 ... ) # doctest: +ELLIPSIS
                 -----KS Test--------
                 ...
-                >>> sorted(results["Gumbel"]["parameters"].keys())
-                ['loc', 'scale']
+                >>> results["Gumbel"]["parameters"].loc is not None
+                True
                 >>> bool(0 <= results["Gumbel"]["ks"][1] <= 1)
                 True
 
@@ -344,8 +346,8 @@ class Distributions:
                 ...
                 >>> best_name
                 'GEV'
-                >>> sorted(best_info["parameters"].keys())
-                ['loc', 'scale', 'shape']
+                >>> best_info["parameters"].shape is not None
+                True
 
                 ```
             - Select by Chi-square criterion among specific distributions:

@@ -65,8 +65,8 @@ class Parameters:
             500.0
             >>> params.shape is None
             True
-            >>> sorted(params.keys())
-            ['loc', 'scale']
+            >>> len(params)
+            2
 
             ```
         - Invalid scale raises ParameterError:
@@ -147,7 +147,12 @@ class Parameters:
         Replaces ``params.keys()`` previously used on plain dicts.
         For 2-param distributions returns ["loc", "scale"], matching
         the old dict that had no "shape" key.
+
+        .. deprecated::
+            Use attribute access instead: ``params.loc``,
+            ``params.scale``, ``params.shape``.
         """
+        warnings.warn(_DEPRECATION_MSG, DeprecationWarning, stacklevel=2)
         if self.shape is not None:
             result = ["loc", "scale", "shape"]
         else:
@@ -159,7 +164,12 @@ class Parameters:
 
         Replaces ``params.values()`` previously used on plain dicts.
         Preserves insertion order: [loc, scale] or [loc, scale, shape].
+
+        .. deprecated::
+            Use attribute access instead: ``params.loc``,
+            ``params.scale``, ``params.shape``.
         """
+        warnings.warn(_DEPRECATION_MSG, DeprecationWarning, stacklevel=2)
         if self.shape is not None:
             result = [self.loc, self.scale, self.shape]
         else:
@@ -170,8 +180,20 @@ class Parameters:
         """Return (name, value) pairs (excludes shape if None).
 
         Replaces ``params.items()`` previously used on plain dicts.
+
+        .. deprecated::
+            Use attribute access instead: ``params.loc``,
+            ``params.scale``, ``params.shape``.
         """
-        result = [(k, getattr(self, k)) for k in self.keys()]
+        warnings.warn(_DEPRECATION_MSG, DeprecationWarning, stacklevel=2)
+        if self.shape is not None:
+            result = [
+                ("loc", self.loc),
+                ("scale", self.scale),
+                ("shape", self.shape),
+            ]
+        else:
+            result = [("loc", self.loc), ("scale", self.scale)]
         return result
 
     def __contains__(self, key: object) -> bool:

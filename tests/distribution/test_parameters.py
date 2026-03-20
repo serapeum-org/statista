@@ -246,59 +246,61 @@ class TestParametersGet:
 
 
 class TestParametersKeys:
-    """Tests for Parameters.keys."""
+    """Tests for Parameters.keys (deprecated dict-style access)."""
 
     def test_keys_two_param(self, two_param):
-        """Test keys returns ['loc', 'scale'] for 2-param."""
-        assert two_param.keys() == [
-            "loc",
-            "scale",
-        ], f"Expected ['loc', 'scale'], got {two_param.keys()}"
+        """Test keys returns ['loc', 'scale'] for 2-param with warning."""
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.keys()
+        assert result == ["loc", "scale"], (
+            f"Expected ['loc', 'scale'], got {result}"
+        )
 
     def test_keys_three_param(self, three_param):
-        """Test keys returns ['loc', 'scale', 'shape'] for 3-param."""
-        assert three_param.keys() == [
-            "loc",
-            "scale",
-            "shape",
-        ], f"Expected ['loc', 'scale', 'shape'], got {three_param.keys()}"
+        """Test keys returns ['loc', 'scale', 'shape'] for 3-param with warning."""
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = three_param.keys()
+        assert result == ["loc", "scale", "shape"], (
+            f"Expected ['loc', 'scale', 'shape'], got {result}"
+        )
 
 
 class TestParametersValues:
-    """Tests for Parameters.values."""
+    """Tests for Parameters.values (deprecated dict-style access)."""
 
     def test_values_two_param(self, two_param):
-        """Test values returns [loc, scale] for 2-param."""
-        assert two_param.values() == [
-            500.0,
-            200.0,
-        ], f"Expected [500.0, 200.0], got {two_param.values()}"
+        """Test values returns [loc, scale] for 2-param with warning."""
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.values()
+        assert result == [500.0, 200.0], (
+            f"Expected [500.0, 200.0], got {result}"
+        )
 
     def test_values_three_param(self, three_param):
-        """Test values returns [loc, scale, shape] for 3-param."""
-        assert three_param.values() == [
-            463.8,
-            220.1,
-            -0.16,
-        ], f"Expected [463.8, 220.1, -0.16], got {three_param.values()}"
+        """Test values returns [loc, scale, shape] for 3-param with warning."""
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = three_param.values()
+        assert result == [463.8, 220.1, -0.16], (
+            f"Expected [463.8, 220.1, -0.16], got {result}"
+        )
 
 
 class TestParametersItems:
-    """Tests for Parameters.items."""
+    """Tests for Parameters.items (deprecated dict-style access)."""
 
     def test_items_two_param(self, two_param):
-        """Test items returns (key, value) pairs for 2-param."""
+        """Test items returns (key, value) pairs for 2-param with warning."""
         expected = [("loc", 500.0), ("scale", 200.0)]
-        assert (
-            two_param.items() == expected
-        ), f"Expected {expected}, got {two_param.items()}"
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.items()
+        assert result == expected, f"Expected {expected}, got {result}"
 
     def test_items_three_param(self, three_param):
-        """Test items returns (key, value) pairs for 3-param."""
+        """Test items returns (key, value) pairs for 3-param with warning."""
         expected = [("loc", 463.8), ("scale", 220.1), ("shape", -0.16)]
-        assert (
-            three_param.items() == expected
-        ), f"Expected {expected}, got {three_param.items()}"
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = three_param.items()
+        assert result == expected, f"Expected {expected}, got {result}"
 
 
 class TestParametersContains:

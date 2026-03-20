@@ -26,7 +26,7 @@ class TestGEV:
             param = dist.fit_model(method=method, test=False)
 
             assert isinstance(param, Parameters)
-            assert all(i in param.keys() for i in ["loc", "scale", "shape"])
+            assert "loc" in param and "scale" in param and "shape" in param
             assert dist.parameters.loc is not None
             assert dist.parameters.scale is not None
             assert dist.parameters.shape is not None

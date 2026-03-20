@@ -24,7 +24,7 @@ class TestNormal:
         for method in dist_estimation_parameters:
             param = norm_dist.fit_model(method=method, test=False)
             assert isinstance(param, Parameters)
-            assert all(i in param.keys() for i in ["loc", "scale"])
+            assert "loc" in param and "scale" in param
             assert norm_dist.parameters.loc is not None
             assert norm_dist.parameters.scale is not None
             assert param == normal_dist_parameters[method]
