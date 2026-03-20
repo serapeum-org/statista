@@ -3,6 +3,7 @@
 import pytest
 
 from statista.distributions import Parameters
+from statista.exceptions import ParameterError
 
 
 @pytest.fixture(scope="module")
@@ -48,7 +49,7 @@ class TestParametersInit:
         Test scenario:
             Scale must be strictly positive; zero is not valid.
         """
-        with pytest.raises(ValueError, match="scale must be positive"):
+        with pytest.raises(ParameterError, match="scale must be positive"):
             Parameters(loc=0.0, scale=0.0)
 
     def test_negative_scale_raises(self):
@@ -57,7 +58,7 @@ class TestParametersInit:
         Test scenario:
             Scale must be strictly positive.
         """
-        with pytest.raises(ValueError, match="scale must be positive, got -5.0"):
+        with pytest.raises(ParameterError, match="scale must be positive, got -5.0"):
             Parameters(loc=0.0, scale=-5.0)
 
     def test_negative_loc_accepted(self):
@@ -485,3 +486,19 @@ class TestParametersIntegration:
             f"Dict should be auto-converted to Parameters, got {type(dist.parameters)}"
         )
         assert dist.parameters.loc == 500.0, "loc should be accessible"
+
+    def test_dict_with_extra_keys_raises(self):
+        """Test that a dict with invalid keys gives a clear error.
+
+        Test scenario:
+            Passing a dict with keys beyond loc/scale/shape should raise
+            TypeError with a statista-specific message, not a generic
+            dataclass error.
+        """
+        from statista.distributions import Normal
+
+        with pytest.raises(
+            ParameterError,
+            match="parameters dict must contain only",
+        ):
+            Normal(parameters={"loc": 1, "scale": 2, "extra": 3})

@@ -13,6 +13,7 @@ from numpy import ndarray
 from scipy.stats import chisquare, ks_2samp
 
 from statista.distributions.parameters import Parameters
+from statista.exceptions import ParameterError
 from statista.plot import Plot
 from statista.utils import merge_small_bins
 
@@ -156,7 +157,14 @@ class AbstractDistribution(ABC):
         if isinstance(parameters, Parameters) or parameters is None:
             self._parameters = parameters
         elif isinstance(parameters, dict):
-            self._parameters = Parameters(**parameters)
+            try:
+                self._parameters = Parameters(**parameters)
+            except TypeError as e:
+                raise ParameterError(
+                    "parameters dict must contain only 'loc',"
+                    " 'scale', and optionally 'shape' keys:"
+                    f" {e}"
+                ) from e
         else:
             raise TypeError(
                 "The `parameters` argument should be a Parameters"
@@ -203,7 +211,14 @@ class AbstractDistribution(ABC):
                 automatically.
         """
         if isinstance(value, dict):
-            self._parameters = Parameters(**value)
+            try:
+                self._parameters = Parameters(**value)
+            except TypeError as e:
+                raise ParameterError(
+                    "parameters dict must contain only 'loc',"
+                    " 'scale', and optionally 'shape' keys:"
+                    f" {e}"
+                ) from e
         else:
             self._parameters = value
 

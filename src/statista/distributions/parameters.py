@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Iterator
 
+from statista.exceptions import ParameterError
+
 
 @dataclass(frozen=True)
 class Parameters:
@@ -21,7 +23,7 @@ class Parameters:
             like GEV). Default is None.
 
     Raises:
-        ValueError: If scale is not positive.
+        ParameterError: If scale is not positive.
 
     Examples:
         - Create 2-parameter distribution parameters:
@@ -68,7 +70,7 @@ class Parameters:
             >>> Parameters(loc=0.0, scale=-1.0)
             Traceback (most recent call last):
                 ...
-            ValueError: scale must be positive, got -1.0
+            statista.exceptions.ParameterError: scale must be positive, got -1.0
 
             ```
 
@@ -93,7 +95,7 @@ class Parameters:
 
     def __post_init__(self) -> None:
         if self.scale <= 0:
-            raise ValueError(
+            raise ParameterError(
                 f"scale must be positive, got {self.scale}"
             )
 
