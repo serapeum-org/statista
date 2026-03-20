@@ -205,7 +205,11 @@ class Parameters:
 
         Replaces ``for key in params`` previously used on plain dicts.
         """
-        return iter(self.keys())
+        if self.shape is not None:
+            result = iter(["loc", "scale", "shape"])
+        else:
+            result = iter(["loc", "scale"])
+        return result
 
     def __eq__(self, other: object) -> bool:
         """Compare with another Parameters or a dict.
@@ -221,7 +225,10 @@ class Parameters:
                 and self.shape == other.shape
             )
         elif isinstance(other, dict):
-            result = dict(self.items()) == other
+            expected = {"loc": self.loc, "scale": self.scale}
+            if self.shape is not None:
+                expected["shape"] = self.shape
+            result = expected == other
         else:
             result = NotImplemented
         return result

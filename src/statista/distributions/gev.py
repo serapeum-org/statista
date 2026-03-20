@@ -834,6 +834,6 @@ class GEV(AbstractDistribution):
         # prob_non_exceed = 1 - 1 / T
         q_th = GEV._inv_cdf(prob_non_exceed, new_param)  # type: ignore[arg-type]
 
-        res = list(new_param.values())
+        res = [new_param.loc, new_param.scale, new_param.shape]
         res.extend(q_th)
         return tuple(res)
