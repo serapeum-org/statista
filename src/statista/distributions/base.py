@@ -12,6 +12,8 @@ from matplotlib.figure import Figure
 from numpy import ndarray
 from scipy.stats import chisquare, ks_2samp
 
+from statista.distributions.parameters import Parameters
+from statista.exceptions import ParameterError
 from statista.plot import Plot
 from statista.utils import merge_small_bins
 
@@ -111,13 +113,13 @@ class AbstractDistribution(ABC):
 
     Attributes:
         _data (np.ndarray): The data array used for distribution calculations.
-        _parameters (dict[str, float]): Distribution parameters.
+        _parameters (Parameters): Distribution parameters.
     """
 
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] | None = None,
+        parameters: dict[str, float] | Parameters | None = None,
     ):
         """Initialize the distribution with data or parameters.
 
@@ -125,19 +127,20 @@ class AbstractDistribution(ABC):
             data:
                 Data time series as a list or numpy array.
             parameters:
-                Dictionary of distribution parameters.
-                - loc: Location parameter
-                - scale: Scale parameter
-                - shape: Shape parameter (if applicable)
-                ```
-                {"loc": 0.0, "scale": 1.0, "shape": 0.0}
+                Distribution parameters as a ``Parameters`` instance or
+                a dictionary with keys 'loc', 'scale', and optionally
+                'shape'. Dicts are converted to ``Parameters``
+                automatically.
+                ```python
+                Parameters(loc=0.0, scale=1.0)
                 ```
 
         Raises:
             ValueError:
                 If neither data nor parameters are provided.
             TypeError:
-                If data is not a list or numpy array, or if parameters argument is not a dictionary.
+                If data is not a list or numpy array, or if parameters
+                is not a dict or Parameters.
         """
         if data is None and parameters is None:
             raise ValueError("Either data or parameters must be provided")
@@ -150,11 +153,23 @@ class AbstractDistribution(ABC):
         else:
             raise TypeError("The `data` argument should be list or numpy array")
 
-        self._parameters: dict[str, float] | None
-        if isinstance(parameters, dict) or parameters is None:
+        self._parameters: Parameters | None
+        if isinstance(parameters, Parameters) or parameters is None:
             self._parameters = parameters
+        elif isinstance(parameters, dict):
+            try:
+                self._parameters = Parameters(**parameters)
+            except TypeError as e:
+                raise ParameterError(
+                    "parameters dict must contain only 'loc',"
+                    " 'scale', and optionally 'shape' keys:"
+                    f" {e}"
+                ) from e
         else:
-            raise TypeError("The `parameters` argument should be dictionary")
+            raise TypeError(
+                "The `parameters` argument should be a Parameters"
+                " instance or dictionary"
+            )
 
     def __str__(self) -> str:
         message = ""
@@ -178,23 +193,34 @@ class AbstractDistribution(ABC):
         return message
 
     @property
-    def parameters(self) -> dict[str, float]:
+    def parameters(self) -> Parameters:
         """Get the distribution parameters.
 
         Returns:
-            Dictionary of distribution parameters (e.g., {"loc": 0.0, "scale": 1.0}).
+            Parameters instance (e.g., ``Parameters(loc=0.0, scale=1.0)``).
         """
         return self._parameters  # type: ignore[return-value]
 
     @parameters.setter
-    def parameters(self, value: dict[str, float]):
+    def parameters(self, value: dict[str, float] | Parameters):
         """Set the distribution parameters.
 
         Args:
-            value: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            value: Parameters instance or dictionary of distribution
+                parameters. Dicts are converted to Parameters
+                automatically.
         """
-        self._parameters = value
+        if isinstance(value, dict):
+            try:
+                self._parameters = Parameters(**value)
+            except TypeError as e:
+                raise ParameterError(
+                    "parameters dict must contain only 'loc',"
+                    " 'scale', and optionally 'shape' keys:"
+                    f" {e}"
+                ) from e
+        else:
+            self._parameters = value
 
     @property
     def data(self) -> ndarray:
@@ -243,8 +269,8 @@ class AbstractDistribution(ABC):
 
         Args:
             data: Data points for which to calculate PDF values.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
 
         Returns:
             Numpy array containing the PDF values for each data point.
@@ -269,8 +295,8 @@ class AbstractDistribution(ABC):
         distribution parameters. It can also generate a plot of the PDF.
 
         Args:
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
             plot_figure: Whether to generate a plot of the PDF.
                 Default is False.
@@ -337,8 +363,8 @@ class AbstractDistribution(ABC):
 
         Args:
             data: Data points for which to calculate CDF values.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
 
         Returns:
             Numpy array containing the CDF values for each data point.
@@ -362,8 +388,8 @@ class AbstractDistribution(ABC):
         distribution parameters. It can also generate a plot of the CDF.
 
         Args:
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
             plot_figure: Whether to generate a plot of the CDF.
                 Default is False.
@@ -457,8 +483,8 @@ class AbstractDistribution(ABC):
                 Default is True.
 
         Returns:
-            Dictionary of estimated distribution parameters.
-            Example: {"loc": 0.0, "scale": 1.0}
+            Parameters instance with estimated distribution parameters.
+            Example: Parameters(loc=0.0, scale=1.0)
 
         Raises:
             ValueError: If the data is not sufficient for parameter estimation.
@@ -484,8 +510,8 @@ class AbstractDistribution(ABC):
         Args:
             cdf: CDF values (non-exceedance probabilities) for which to calculate the quantiles.
                 Values should be between 0 and 1.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
 
         Returns:
             Numpy array containing the quantile values corresponding to the given CDF values.
@@ -596,8 +622,8 @@ class AbstractDistribution(ABC):
                 Default is False.
             prob_non_exceed: Non-exceedance probabilities for which to calculate quantiles.
                 If None, uses the empirical CDF calculated using Weibull plotting positions.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
 
         Returns:
@@ -640,8 +666,8 @@ class AbstractDistribution(ABC):
                 Default is 15.
             cdf: Theoretical CDF values.
                 If None, uses the empirical CDF calculated using Weibull plotting positions.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
 
         Returns:

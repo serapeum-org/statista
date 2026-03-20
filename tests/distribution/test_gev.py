@@ -3,7 +3,7 @@ import pytest
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from statista.distributions import GEV, PlottingPosition
+from statista.distributions import GEV, Parameters, PlottingPosition
 
 
 class TestGEV:
@@ -25,7 +25,7 @@ class TestGEV:
         for method in dist_estimation_parameters:
             param = dist.fit_model(method=method, test=False)
 
-            assert isinstance(param, dict)
+            assert isinstance(param, Parameters)
             assert all(i in param.keys() for i in ["loc", "scale", "shape"])
             assert dist.parameters.get("loc") is not None
             assert dist.parameters.get("scale") is not None

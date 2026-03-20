@@ -27,17 +27,18 @@ class Distributions:
     1. **Single-distribution mode**: pass a distribution name to wrap a
        specific distribution and delegate all method calls to it.
     2. **Multi-distribution mode**: pass only data (no distribution name)
-       and use ``fit_all`` / ``best_fit`` to compare all distributions.
+       and use ``fit`` / ``best_fit`` to compare all distributions.
 
     Args:
         distribution: Name of the distribution to use. Must be one of the
             keys in ``available_distributions`` ('GEV', 'Gumbel',
             'Exponential', 'Normal'). If None, no single distribution is
-            wrapped — use ``fit_all`` or ``best_fit`` instead.
+            wrapped — use ``fit`` or ``best_fit`` instead.
         data: Data time series as a list or numpy array.
-        parameters: Dictionary of distribution parameters.
+        parameters: Distribution parameters as a ``Parameters`` instance
+            or a dictionary (auto-converted).
             ```python
-            {"loc": 0.0, "scale": 1.0}
+            Parameters(loc=0.0, scale=1.0)
             ```
 
     Attributes:
@@ -78,11 +79,10 @@ class Distributions:
             ```
         - Create a distribution from known parameters:
             ```python
-            >>> from statista.distributions import Distributions
-            >>> dist = Distributions(
-            ...     "Normal", parameters={"loc": 500, "scale": 200}
-            ... )
-            >>> dist.parameters["loc"]
+            >>> from statista.distributions import Distributions, Parameters
+            >>> params = Parameters(loc=500, scale=200)
+            >>> dist = Distributions("Normal", parameters=params)
+            >>> dist.parameters.loc
             500
 
             ```
@@ -176,7 +176,7 @@ class Distributions:
             f"'{type(self).__name__}' object has no attribute '{name}'"
         )
 
-    def fit_all(
+    def fit(
         self,
         method: str = "lmoments",
         distributions: list[str] | None = None,
@@ -199,8 +199,8 @@ class Distributions:
             containing:
                 - 'distribution': the fitted ``AbstractDistribution``
                   instance
-                - 'parameters': dict of estimated parameters (e.g.,
-                  ``{"loc": ..., "scale": ...}``)
+                - 'parameters': ``Parameters`` instance (e.g.,
+                  ``Parameters(loc=..., scale=...)``)
                 - 'ks': tuple of (statistic, p-value) from the
                   Kolmogorov-Smirnov test
                 - 'chisquare': tuple of (statistic, p-value) from the
@@ -217,7 +217,7 @@ class Distributions:
                 >>> from statista.distributions import Distributions
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
                 >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all() # doctest: +ELLIPSIS
+                >>> results = dist.fit() # doctest: +ELLIPSIS
                 -----KS Test--------
                 ...
                 >>> sorted(results.keys())
@@ -230,7 +230,7 @@ class Distributions:
                 >>> from statista.distributions import Distributions
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
                 >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all(
+                >>> results = dist.fit(
                 ...     distributions=["Gumbel", "GEV"]
                 ... ) # doctest: +ELLIPSIS
                 -----KS Test--------
@@ -245,7 +245,7 @@ class Distributions:
                 >>> from statista.distributions import Distributions
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
                 >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all(
+                >>> results = dist.fit(
                 ...     distributions=["Gumbel"]
                 ... ) # doctest: +ELLIPSIS
                 -----KS Test--------
@@ -308,34 +308,27 @@ class Distributions:
         method: str = "lmoments",
         distributions: list[str] | None = None,
         criterion: str = "ks",
-        fit_results: dict[str, dict[str, Any]] | None = None,
     ) -> tuple[str, dict[str, Any]]:
         """Find the best-fitting distribution for the data.
 
-        Fits all (or selected) distributions and returns the one with the
-        highest goodness-of-fit p-value. Can also accept pre-computed
-        ``fit_all`` results to avoid re-fitting.
+        Fits all (or selected) distributions and returns the one with
+        the highest goodness-of-fit p-value.
 
         Args:
             method: Fitting method ('mle', 'mm', 'lmoments', or
-                'optimization'). Default is 'lmoments'. Ignored when
-                ``fit_results`` is provided.
+                'optimization'). Default is 'lmoments'.
             distributions: List of distribution names to fit. If None,
-                fits all available distributions. Ignored when
-                ``fit_results`` is provided.
+                fits all available distributions.
             criterion: Goodness-of-fit criterion for selection.
                 'ks' selects by highest Kolmogorov-Smirnov p-value.
                 'chisquare' selects by highest Chi-square p-value.
                 Default is 'ks'.
-            fit_results: Pre-computed results from ``fit_all``. When
-                provided, ``method`` and ``distributions`` are ignored
-                and no refitting occurs.
 
         Returns:
             Tuple of (distribution_name, result_dict) for the best fit.
             The result dict contains:
                 - 'distribution': the fitted distribution instance
-                - 'parameters': dict of estimated parameters
+                - 'parameters': ``Parameters`` instance
                 - 'ks': (statistic, p-value) tuple
                 - 'chisquare': (statistic, p-value) tuple
 
@@ -374,31 +367,9 @@ class Distributions:
                 True
 
                 ```
-            - Reuse pre-computed fit_all results (no refitting):
-                ```python
-                >>> import numpy as np
-                >>> from statista.distributions import Distributions
-                >>> data = np.loadtxt("examples/data/time_series2.txt")
-                >>> dist = Distributions(data=data)
-                >>> results = dist.fit_all(
-                ...     distributions=["Gumbel"]
-                ... ) # doctest: +ELLIPSIS
-                -----KS Test--------
-                ...
-                >>> best_name, best_info = dist.best_fit(
-                ...     fit_results=results
-                ... )
-                >>> best_name
-                'Gumbel'
-                >>> len(best_info["distribution"].cdf(
-                ...     parameters=best_info["parameters"]
-                ... )) > 0
-                True
-
-                ```
 
         See Also:
-            fit_all: Fit multiple distributions and return all results.
+            fit: Fit multiple distributions and return all results.
 
         """
         if criterion not in ("ks", "chisquare"):
@@ -406,17 +377,14 @@ class Distributions:
                 f"criterion must be 'ks' or 'chisquare', got '{criterion}'"
             )
 
-        if fit_results is None:
-            fit_results = self.fit_all(
-                method=method, distributions=distributions
-            )
+        results = self.fit(method=method, distributions=distributions)
 
         best_name = None
-        best_pvalue = -1.0
-        for name, info in fit_results.items():
-            pvalue = info[criterion][1]
-            if pvalue > best_pvalue:
-                best_pvalue = pvalue
+        best_p_value = -1.0
+        for name, info in results.items():
+            p_value = info[criterion][1]
+            if p_value > best_p_value:
+                best_p_value = p_value
                 best_name = name
 
-        return best_name, fit_results[best_name]
+        return best_name, results[best_name]

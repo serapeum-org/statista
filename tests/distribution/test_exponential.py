@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from matplotlib.figure import Figure
 
-from statista.distributions import Exponential
+from statista.distributions import Exponential, Parameters
 
 
 class TestExponential:
@@ -23,7 +23,7 @@ class TestExponential:
         expo_dist = Exponential(time_series2)
         for method in dist_estimation_parameters:
             param = expo_dist.fit_model(method=method, test=False)
-            assert isinstance(param, dict)
+            assert isinstance(param, Parameters)
             assert all(i in param.keys() for i in ["loc", "scale"])
             assert expo_dist.parameters.get("loc") is not None
             assert expo_dist.parameters.get("scale") is not None

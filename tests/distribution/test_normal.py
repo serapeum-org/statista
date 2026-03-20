@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from matplotlib.figure import Figure
 
-from statista.distributions import Normal
+from statista.distributions import Normal, Parameters
 
 
 class TestNormal:
@@ -23,7 +23,7 @@ class TestNormal:
         norm_dist = Normal(time_series2)
         for method in dist_estimation_parameters:
             param = norm_dist.fit_model(method=method, test=False)
-            assert isinstance(param, dict)
+            assert isinstance(param, Parameters)
             assert all(i in param.keys() for i in ["loc", "scale"])
             assert norm_dist.parameters.get("loc") is not None
             assert norm_dist.parameters.get("scale") is not None
