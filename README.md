@@ -50,6 +50,7 @@ pip install git+https://github.com/Serapieum-of-alex/statista
 
 ### Statistical Distributions
 - **Probability Distributions**: GEV, Gumbel, Normal, Exponential, and more
+- **Multi-Distribution Fitting**: Fit all distributions at once and select the best fit
 - **Parameter Estimation Methods**: Maximum Likelihood (ML), L-moments, Method of Moments (MOM)
 - **Goodness-of-fit Tests**: Kolmogorov-Smirnov, Chi-square
 - **Truncated Distributions**: Focus analysis on values above a threshold
@@ -70,50 +71,62 @@ pip install git+https://github.com/Serapieum-of-alex/statista
 
 ## Quick Start
 
-### Basic Usage
+### Single Distribution
 
 ```python
-import pandas as pd
+import numpy as np
 from statista.distributions import Distributions
 
-# Load your time series data
-data = pd.read_csv("your_data.csv", header=None)[0].tolist()
+# Load your data
+data = np.loadtxt("examples/data/time_series2.txt")
 
-# Create a distribution object (e.g., Gumbel)
-dist = Distributions("Gumbel", data)
+# Create a distribution object and fit parameters
+dist = Distributions("Gumbel", data=data)
+params = dist.fit_model(method="lmoments", test=False)
+print(params.loc, params.scale)
 
-# Fit the distribution using maximum likelihood
-params = dist.fit_model(method="mle")
-print(params)
-
-# Calculate and plot the PDF and CDF
+# Calculate PDF and CDF
 pdf = dist.pdf(plot_figure=True)
 cdf, _, _ = dist.cdf(plot_figure=True)
 
-# Perform goodness-of-fit tests
-ks_test = dist.ks()
-chi2_test = dist.chisquare()
+# Goodness-of-fit tests
+ks_stat, ks_pvalue = dist.ks()
+chi_stat, chi_pvalue = dist.chisquare()
+```
 
-# Create a probability plot with confidence intervals
-fig, ax = dist.plot()
+### Multi-Distribution Fitting
+
+```python
+from statista.distributions import Distributions
+
+# Fit all distributions and find the best one
+dist = Distributions(data=data)
+best_name, best_info = dist.best_fit()
+print(f"Best: {best_name}")
+print(f"Parameters: {best_info['parameters']}")
+
+# Or fit all and inspect results
+results = dist.fit()
+for name, info in results.items():
+    print(f"{name}: KS p-value={info['ks'][1]:.4f}")
 ```
 
 ### Extreme Value Analysis
 
 ```python
-from statista.distributions import GEV, PlottingPosition
+from statista.distributions import Distributions, PlottingPosition
 
-# Create a GEV distribution
-gev_dist = Distributions("GEV", data)
-
-# Fit using L-moments
+# Fit a GEV distribution using L-moments
+gev_dist = Distributions("GEV", data=data)
 params = gev_dist.fit_model(method="lmoments")
 
 # Calculate non-exceedance probabilities
 cdf_weibul = PlottingPosition.weibul(data)
 
 # Calculate confidence intervals
-lower_bound, upper_bound, fig, ax = gev_dist.confidence_interval(plot_figure=True)
+lower_bound, upper_bound, fig, ax = gev_dist.confidence_interval(
+    plot_figure=True
+)
 ```
 
 For more examples and detailed documentation, visit [Statista Documentation](https://serapieum-of-alex.github.io/statista)

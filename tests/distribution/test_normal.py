@@ -24,9 +24,9 @@ class TestNormal:
         for method in dist_estimation_parameters:
             param = norm_dist.fit_model(method=method, test=False)
             assert isinstance(param, Parameters)
-            assert all(i in param.keys() for i in ["loc", "scale"])
-            assert norm_dist.parameters.get("loc") is not None
-            assert norm_dist.parameters.get("scale") is not None
+            assert "loc" in param and "scale" in param
+            assert norm_dist.parameters.loc is not None
+            assert norm_dist.parameters.scale is not None
             assert param == normal_dist_parameters[method]
 
     def test_pdf(
@@ -84,13 +84,13 @@ class TestNormalClassInvalid:
     def test_scale_parameter_error_in_pdf(self):
         """Test that an error is raised when scale parameter is <= 0 in pdf."""
         norm = Normal(data=[1, 2, 3, 4, 5])
-        with pytest.raises(ValueError, match="Scale parameter is negative"):
+        with pytest.raises(ValueError, match="scale must be positive"):
             norm.pdf(parameters={"loc": 0, "scale": 0})
 
     def test_scale_parameter_error_in_cdf(self):
         """Test that an error is raised when scale parameter is <= 0 in cdf."""
         norm = Normal(data=[1, 2, 3, 4, 5])
-        with pytest.raises(ValueError, match="Scale parameter is negative"):
+        with pytest.raises(ValueError, match="scale must be positive"):
             norm.cdf(parameters={"loc": 0, "scale": -1})
 
     def test_cdf_out_of_range_raises(self):

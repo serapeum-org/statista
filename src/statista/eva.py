@@ -320,12 +320,12 @@ def ams_analysis(
         ) = dist.ks()
 
         if distribution == "GEV":
-            distribution_properties.loc[i, "c"] = param_dist["shape"]
-            distribution_properties.loc[i, "loc"] = param_dist["loc"]
-            distribution_properties.loc[i, "scale"] = param_dist["scale"]
+            distribution_properties.loc[i, "c"] = param_dist.shape
+            distribution_properties.loc[i, "loc"] = param_dist.loc
+            distribution_properties.loc[i, "scale"] = param_dist.scale
         else:
-            distribution_properties.loc[i, "loc"] = param_dist["loc"]
-            distribution_properties.loc[i, "scale"] = param_dist["scale"]
+            distribution_properties.loc[i, "loc"] = param_dist.loc
+            distribution_properties.loc[i, "scale"] = param_dist.scale
 
         # Return periods from the fitted distribution are stored.
         # get the Discharge coresponding to the return periods

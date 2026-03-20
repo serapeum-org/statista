@@ -8,8 +8,8 @@ import numpy as np
 import pytest
 
 from statista.distributions import (
-    Distributions,
     GEV,
+    Distributions,
     Gumbel,
     Normal,
     Parameters,
@@ -75,7 +75,9 @@ class TestDistributionsInit:
         """Test single-distribution mode with data delegates correctly."""
         dist = Distributions("Gumbel", data=time_series1)
         assert isinstance(dist.data, np.ndarray), "data should be numpy array"
-        assert isinstance(dist.data_sorted, np.ndarray), "data_sorted should be numpy array"
+        assert isinstance(
+            dist.data_sorted, np.ndarray
+        ), "data_sorted should be numpy array"
 
     def test_create_with_parameters_only(self):
         """Test single-distribution mode with parameters only (no data).
@@ -109,7 +111,9 @@ class TestDistributionsInit:
         """
         data = [100, 200, 300, 400, 500]
         dist = Distributions(data=data)
-        assert isinstance(dist._data, np.ndarray), f"Expected ndarray, got {type(dist._data)}"
+        assert isinstance(
+            dist._data, np.ndarray
+        ), f"Expected ndarray, got {type(dist._data)}"
         assert len(dist._data) == 5, f"Expected length 5, got {len(dist._data)}"
 
     def test_create_with_numpy_data(self):
@@ -120,7 +124,9 @@ class TestDistributionsInit:
         """
         data = np.array([100.0, 200.0, 300.0, 400.0, 500.0])
         dist = Distributions(data=data)
-        assert isinstance(dist._data, np.ndarray), f"Expected ndarray, got {type(dist._data)}"
+        assert isinstance(
+            dist._data, np.ndarray
+        ), f"Expected ndarray, got {type(dist._data)}"
         np.testing.assert_array_equal(dist._data, data)
 
     def test_create_without_distribution(self, time_series2: list):
@@ -177,7 +183,9 @@ class TestDistributionsInit:
             Each name in the registry should create an instance without error.
         """
         dist = Distributions(name, data=time_series2)
-        assert dist.distribution is not None, f"{name} should create a distribution instance"
+        assert (
+            dist.distribution is not None
+        ), f"{name} should create a distribution instance"
 
     def test_data_stored_in_single_mode(self, time_series2: list):
         """Test that _data is stored even in single-distribution mode.
@@ -258,27 +266,39 @@ class TestFit:
         """Test fit with default parameters fits all distributions."""
         dist = Distributions(data=time_series2)
         results = dist.fit()
-        assert set(results.keys()) == {"GEV", "Gumbel", "Exponential", "Normal"}, (
-            f"Expected all 4 distributions, got {set(results.keys())}"
-        )
+        assert set(results.keys()) == {
+            "GEV",
+            "Gumbel",
+            "Exponential",
+            "Normal",
+        }, f"Expected all 4 distributions, got {set(results.keys())}"
         for name, info in results.items():
             assert "distribution" in info, f"{name}: missing 'distribution' key"
             assert "parameters" in info, f"{name}: missing 'parameters' key"
             assert "ks" in info, f"{name}: missing 'ks' key"
             assert "chisquare" in info, f"{name}: missing 'chisquare' key"
-            assert isinstance(info["parameters"], Parameters), f"{name}: parameters should be Parameters"
-            assert "loc" in info["parameters"], f"{name}: parameters should contain 'loc'"
-            assert "scale" in info["parameters"], f"{name}: parameters should contain 'scale'"
+            assert isinstance(
+                info["parameters"], Parameters
+            ), f"{name}: parameters should be Parameters"
+            assert (
+                "loc" in info["parameters"]
+            ), f"{name}: parameters should contain 'loc'"
+            assert (
+                "scale" in info["parameters"]
+            ), f"{name}: parameters should contain 'scale'"
             assert len(info["ks"]) == 2, f"{name}: KS result should be 2-tuple"
-            assert len(info["chisquare"]) == 2, f"{name}: chisquare result should be 2-tuple"
+            assert (
+                len(info["chisquare"]) == 2
+            ), f"{name}: chisquare result should be 2-tuple"
 
     def test_fit_selected_distributions(self, time_series2: list):
         """Test fit with a subset of distributions."""
         dist = Distributions(data=time_series2)
         results = dist.fit(distributions=["Gumbel", "GEV"])
-        assert set(results.keys()) == {"Gumbel", "GEV"}, (
-            f"Expected only Gumbel and GEV, got {set(results.keys())}"
-        )
+        assert set(results.keys()) == {
+            "Gumbel",
+            "GEV",
+        }, f"Expected only Gumbel and GEV, got {set(results.keys())}"
 
     def test_fit_single_distribution(self, time_series2: list):
         """Test fit with a single distribution name.
@@ -289,9 +309,9 @@ class TestFit:
         """
         dist = Distributions(data=time_series2)
         results = dist.fit(distributions=["Normal"])
-        assert list(results.keys()) == ["Normal"], (
-            f"Expected ['Normal'], got {list(results.keys())}"
-        )
+        assert list(results.keys()) == [
+            "Normal"
+        ], f"Expected ['Normal'], got {list(results.keys())}"
 
     def test_fit_mle_method(self, time_series2: list):
         """Test fit with MLE method."""
@@ -344,9 +364,9 @@ class TestFit:
             d = info["distribution"]
             params = info["parameters"]
             cdf_values = d.cdf(parameters=params)
-            assert isinstance(cdf_values, np.ndarray), (
-                f"{name}: CDF should return ndarray"
-            )
+            assert isinstance(
+                cdf_values, np.ndarray
+            ), f"{name}: CDF should return ndarray"
 
     def test_fit_ks_pvalues_in_valid_range(self, time_series2: list):
         """Test that KS p-values are between 0 and 1.
@@ -359,7 +379,9 @@ class TestFit:
         for name, info in results.items():
             ks_stat, ks_pval = info["ks"]
             assert 0 <= ks_stat, f"{name}: KS statistic should be >= 0, got {ks_stat}"
-            assert 0 <= ks_pval <= 1, f"{name}: KS p-value should be in [0,1], got {ks_pval}"
+            assert (
+                0 <= ks_pval <= 1
+            ), f"{name}: KS p-value should be in [0,1], got {ks_pval}"
 
     def test_fit_chisquare_pvalues_in_valid_range(self, time_series2: list):
         """Test that Chi-square p-values are between 0 and 1.
@@ -371,10 +393,12 @@ class TestFit:
         results = dist.fit()
         for name, info in results.items():
             chi_stat, chi_pval = info["chisquare"]
-            assert 0 <= chi_stat, f"{name}: chi-square statistic should be >= 0, got {chi_stat}"
-            assert 0 <= chi_pval <= 1, (
-                f"{name}: chi-square p-value should be in [0,1], got {chi_pval}"
-            )
+            assert (
+                0 <= chi_stat
+            ), f"{name}: chi-square statistic should be >= 0, got {chi_stat}"
+            assert (
+                0 <= chi_pval <= 1
+            ), f"{name}: chi-square p-value should be in [0,1], got {chi_pval}"
 
     def test_fit_returns_independent_instances(self, time_series2: list):
         """Test that each returned distribution is an independent instance.
@@ -388,9 +412,9 @@ class TestFit:
         instances = [info["distribution"] for info in results.values()]
         for i in range(len(instances)):
             for j in range(i + 1, len(instances)):
-                assert instances[i] is not instances[j], (
-                    "Distribution instances should be independent objects"
-                )
+                assert (
+                    instances[i] is not instances[j]
+                ), "Distribution instances should be independent objects"
 
     def test_fit_called_twice_gives_consistent_results(self, time_series2: list):
         """Test that calling fit twice produces the same parameters.
@@ -404,9 +428,9 @@ class TestFit:
         results2 = dist.fit(distributions=["Gumbel"])
         params1 = results1["Gumbel"]["parameters"]
         params2 = results2["Gumbel"]["parameters"]
-        assert params1 == params2, (
-            f"Parameters should be identical across calls: {params1} != {params2}"
-        )
+        assert (
+            params1 == params2
+        ), f"Parameters should be identical across calls: {params1} != {params2}"
 
     def test_fit_method_affects_parameters(self, time_series2: list):
         """Test that different fitting methods produce different parameters.
@@ -417,12 +441,8 @@ class TestFit:
             confirms the method parameter is actually passed through.
         """
         dist = Distributions(data=time_series2)
-        mle_results = dist.fit(
-            method="mle", distributions=["Gumbel"]
-        )
-        lmom_results = dist.fit(
-            method="lmoments", distributions=["Gumbel"]
-        )
+        mle_results = dist.fit(method="mle", distributions=["Gumbel"])
+        lmom_results = dist.fit(method="lmoments", distributions=["Gumbel"])
         mle_params = mle_results["Gumbel"]["parameters"]
         lmom_params = lmom_results["Gumbel"]["parameters"]
         assert mle_params != lmom_params, (
@@ -438,9 +458,9 @@ class TestBestFit:
         """Test best_fit directly from data without calling fit first."""
         dist = Distributions(data=time_series2)
         best_name, best_info = dist.best_fit()
-        assert best_name in Distributions.available_distributions, (
-            f"best_name '{best_name}' not in available distributions"
-        )
+        assert (
+            best_name in Distributions.available_distributions
+        ), f"best_name '{best_name}' not in available distributions"
         assert "distribution" in best_info, "Result should contain 'distribution'"
         assert "parameters" in best_info, "Result should contain 'parameters'"
         assert "ks" in best_info, "Result should contain 'ks'"
@@ -484,17 +504,18 @@ class TestBestFit:
         dist = Distributions(data=time_series2)
         default_name, _ = dist.best_fit()
         ks_name, _ = dist.best_fit(criterion="ks")
-        assert default_name == ks_name, (
-            f"Default ({default_name}) should equal KS ({ks_name})"
-        )
+        assert (
+            default_name == ks_name
+        ), f"Default ({default_name}) should equal KS ({ks_name})"
 
     def test_best_fit_selected_distributions(self, time_series2: list):
         """Test best_fit with a subset of distributions."""
         dist = Distributions(data=time_series2)
         best_name, _ = dist.best_fit(distributions=["Gumbel", "GEV"])
-        assert best_name in ("Gumbel", "GEV"), (
-            f"Expected Gumbel or GEV, got '{best_name}'"
-        )
+        assert best_name in (
+            "Gumbel",
+            "GEV",
+        ), f"Expected Gumbel or GEV, got '{best_name}'"
 
     def test_best_fit_single_distribution(self, time_series2: list):
         """Test best_fit with only one distribution returns that distribution.
@@ -513,6 +534,7 @@ class TestBestFit:
         with pytest.raises(ValueError, match="criterion must be"):
             dist.best_fit(criterion="invalid")
 
+
 class TestDistributionsIntegration:
     """Integration tests for the full Distributions workflow."""
 
@@ -528,9 +550,10 @@ class TestDistributionsIntegration:
         assert "loc" in params, "Single-mode fit_model should return params"
 
         results = dist.fit(distributions=["Gumbel", "Normal"])
-        assert set(results.keys()) == {"Gumbel", "Normal"}, (
-            "fit should work on a single-mode instance"
-        )
+        assert set(results.keys()) == {
+            "Gumbel",
+            "Normal",
+        }, "fit should work on a single-mode instance"
 
     def test_fit_then_best_fit_pipeline(self, time_series2: list):
         """Test the full pipeline: create → fit → best_fit → use distribution.
@@ -550,9 +573,9 @@ class TestDistributionsIntegration:
         prob = np.array([0.5, 0.9, 0.99])
         quantiles = fitted_dist.inverse_cdf(prob, params)
         assert len(quantiles) == 3, f"Expected 3 quantiles, got {len(quantiles)}"
-        assert quantiles[0] < quantiles[1] < quantiles[2], (
-            "Quantiles should increase with probability"
-        )
+        assert (
+            quantiles[0] < quantiles[1] < quantiles[2]
+        ), "Quantiles should increase with probability"
 
     def test_available_distributions_registry(self):
         """Test that available_distributions contains exactly the expected entries.
