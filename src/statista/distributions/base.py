@@ -193,13 +193,14 @@ class AbstractDistribution(ABC):
         return message
 
     @property
-    def parameters(self) -> Parameters:
+    def parameters(self) -> Parameters | None:
         """Get the distribution parameters.
 
         Returns:
-            Parameters instance (e.g., ``Parameters(loc=0.0, scale=1.0)``).
+            Parameters instance (e.g., ``Parameters(loc=0.0, scale=1.0)``),
+            or None if parameters have not been set or estimated yet.
         """
-        return self._parameters  # type: ignore[return-value]
+        return self._parameters
 
     @parameters.setter
     def parameters(self, value: dict[str, float] | Parameters):
