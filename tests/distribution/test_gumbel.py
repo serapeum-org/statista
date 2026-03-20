@@ -48,8 +48,8 @@ class TestGumbel:
             param = dist.fit_model(method=method, test=False)
             assert isinstance(param, Parameters)
             assert all(i in param.keys() for i in ["loc", "scale"])
-            assert dist.parameters.get("loc") is not None
-            assert dist.parameters.get("scale") is not None
+            assert dist.parameters.loc is not None
+            assert dist.parameters.scale is not None
             assert param == gum_dist_parameters[method]
 
     def test_parameter_estimation_optimization(
@@ -66,8 +66,8 @@ class TestGumbel:
         )
         assert isinstance(param, Parameters)
         assert all(i in param.keys() for i in ["loc", "scale"])
-        assert dist.parameters.get("loc") is not None
-        assert dist.parameters.get("scale") is not None
+        assert dist.parameters.loc is not None
+        assert dist.parameters.scale is not None
 
     def test_ks(
         self,
@@ -198,13 +198,13 @@ class TestGumbelClassInvalid:
     def test_scale_parameter_error_in_pdf(self):
         """Test that an error is raised when scale parameter is <= 0 in pdf."""
         gumbel = Gumbel(data=[1, 2, 3, 4, 5])
-        with pytest.raises(ValueError, match="Scale parameter is negative"):
+        with pytest.raises(ValueError, match="scale must be positive"):
             gumbel.pdf(parameters={"loc": 0, "scale": 0})
 
     def test_scale_parameter_error_in_cdf(self):
         """Test that an error is raised when scale parameter is <= 0 in cdf."""
         gumbel = Gumbel(data=[1, 2, 3, 4, 5])
-        with pytest.raises(ValueError, match="Scale parameter is negative"):
+        with pytest.raises(ValueError, match="scale must be positive"):
             gumbel.cdf(parameters={"loc": 0, "scale": -1})
 
     def test_cdf_out_of_range_raises(self):

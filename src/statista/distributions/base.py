@@ -261,7 +261,7 @@ class AbstractDistribution(ABC):
     @staticmethod
     @abstractmethod
     def _pdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
         """Calculate the probability density function (PDF) values.
 
@@ -280,7 +280,7 @@ class AbstractDistribution(ABC):
     @abstractmethod
     def pdf(
         self,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
         plot_figure: bool = False,
         fig_size: tuple = (6, 5),
         xlabel: str = PDF_XAXIS_LABEL,
@@ -332,6 +332,8 @@ class AbstractDistribution(ABC):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
         pdf = self._pdf_eq(ts, parameters)  # type: ignore[arg-type]
 
@@ -355,7 +357,7 @@ class AbstractDistribution(ABC):
     @staticmethod
     @abstractmethod
     def _cdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
         """Calculate the cumulative distribution function (CDF) values.
 
@@ -374,7 +376,7 @@ class AbstractDistribution(ABC):
     @abstractmethod
     def cdf(
         self,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
         plot_figure: bool = False,
         fig_size: tuple = (6, 5),
         xlabel: str = "data",
@@ -423,6 +425,8 @@ class AbstractDistribution(ABC):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
         cdf = self._cdf_eq(ts, parameters)  # type: ignore[arg-type]
 
@@ -500,7 +504,7 @@ class AbstractDistribution(ABC):
     def inverse_cdf(
         self,
         cdf: np.ndarray | list[float],
-        parameters: dict[str, float | Any],
+        parameters: Parameters,
     ) -> np.ndarray:
         """Calculate the inverse of the cumulative distribution function (quantile function).
 
@@ -606,7 +610,7 @@ class AbstractDistribution(ABC):
         alpha: float = 0.1,
         plot_figure: bool = False,
         prob_non_exceed: np.ndarray = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
         **kwargs: Any,
     ) -> tuple[np.ndarray, np.ndarray] | tuple[np.ndarray, np.ndarray, Figure, Axes]:
         """Calculate confidence intervals for the distribution quantiles.
@@ -647,7 +651,7 @@ class AbstractDistribution(ABC):
         ylabel: str = "cdf",
         fontsize: int = 15,
         cdf: np.ndarray | None = None,
-        parameters: dict[str, float | Any] | None = None,
+        parameters: Parameters | None = None,
     ) -> Any:
         """Generate probability plots for the distribution.
 

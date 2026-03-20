@@ -14,6 +14,7 @@ import numpy as np
 
 from statista.distributions.base import AbstractDistribution
 from statista.distributions.exponential import Exponential
+from statista.distributions.parameters import Parameters
 from statista.distributions.gev import GEV
 from statista.distributions.gumbel import Gumbel
 from statista.distributions.normal import Normal
@@ -115,7 +116,7 @@ class Distributions:
         self,
         distribution: str | None = None,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, Any] | None = None,
+        parameters: dict[str, Any] | Parameters | None = None,
     ):
         if distribution is not None:
             if distribution not in self.available_distributions:

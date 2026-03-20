@@ -81,7 +81,7 @@ class GEV(AbstractDistribution):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] = None,
+        parameters: Parameters | None = None,
     ):
         """GEV.
 
@@ -123,11 +123,11 @@ class GEV(AbstractDistribution):
 
     @staticmethod
     def _pdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
-        shape = parameters.get("shape")
+        loc = parameters.loc
+        scale = parameters.scale
+        shape = parameters.shape
 
         pdf = genextreme.pdf(data, loc=loc, scale=scale, c=shape)
         return pdf
@@ -135,7 +135,7 @@ class GEV(AbstractDistribution):
     def pdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float] = None,
+        parameters: Parameters | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -203,7 +203,7 @@ class GEV(AbstractDistribution):
     def random(
         self,
         size: int,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
     ) -> tuple[np.ndarray, Figure, Any] | np.ndarray:
         """Generate Random Variable.
 
@@ -245,10 +245,12 @@ class GEV(AbstractDistribution):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
-        shape = parameters.get("shape")
+        loc = parameters.loc
+        scale = parameters.scale
+        shape = parameters.shape
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
@@ -258,11 +260,11 @@ class GEV(AbstractDistribution):
 
     @staticmethod
     def _cdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
-        shape = parameters.get("shape")
+        loc = parameters.loc
+        scale = parameters.scale
+        shape = parameters.shape
         # equation https://www.rdocumentation.org/packages/evd/versions/2.3-6/topics/fextreme
         # z = (ts - loc) / scale
         # if shape == 0:
@@ -287,7 +289,7 @@ class GEV(AbstractDistribution):
     def cdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -353,7 +355,7 @@ class GEV(AbstractDistribution):
         self,
         *,
         data: np.ndarray | None = None,
-        parameters: dict[str, Any] | None = None,
+        parameters: Parameters | None = None,
     ) -> np.ndarray:
         """return_period.
 
@@ -381,6 +383,8 @@ class GEV(AbstractDistribution):
 
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
         cdf: Any = self.cdf(parameters=parameters, data=data)
 
@@ -510,7 +514,7 @@ class GEV(AbstractDistribution):
     def inverse_cdf(
         self,
         cdf: np.ndarray | list[float] | None = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
     ) -> np.ndarray:
         """Theoretical Estimate.
 
@@ -546,6 +550,8 @@ class GEV(AbstractDistribution):
         """
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
         cdf = np.array(cdf)
         if np.any(cdf < 0) or np.any(cdf > 1):
@@ -555,10 +561,10 @@ class GEV(AbstractDistribution):
         return q_th
 
     @staticmethod
-    def _inv_cdf(cdf: np.ndarray | list[float], parameters: dict[str, float]):
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
-        shape = parameters.get("shape")
+    def _inv_cdf(cdf: np.ndarray | list[float], parameters: Parameters):
+        loc = parameters.loc
+        scale = parameters.scale
+        shape = parameters.shape
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
@@ -593,7 +599,7 @@ class GEV(AbstractDistribution):
         alpha: float = 0.1,
         plot_figure: bool = False,
         prob_non_exceed: np.ndarray = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
         state_function: Callable | None = None,
         n_samples: int = 100,
         method: str = "lmoments",
@@ -659,8 +665,10 @@ class GEV(AbstractDistribution):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
-        scale = parameters.get("scale")
+        scale = parameters.scale
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -702,7 +710,7 @@ class GEV(AbstractDistribution):
         ylabel: str = "cdf",
         fontsize: int = 15,
         cdf: np.ndarray | list | None = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
     ) -> tuple[Figure, tuple[Axes, Axes]]:
         """Probability Plot.
 
@@ -759,7 +767,9 @@ class GEV(AbstractDistribution):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
-        scale = parameters.get("scale")
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
+        scale = parameters.scale
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)

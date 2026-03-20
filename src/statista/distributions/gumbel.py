@@ -63,7 +63,7 @@ class Gumbel(AbstractDistribution):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] = None,
+        parameters: Parameters | None = None,
     ):
         """Initialize a Gumbel distribution with data or parameters.
 
@@ -117,7 +117,7 @@ class Gumbel(AbstractDistribution):
 
     @staticmethod
     def _pdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
         """Calculate the probability density function (PDF) values for Gumbel distribution.
 
@@ -148,8 +148,8 @@ class Gumbel(AbstractDistribution):
 
         ```
         """
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
+        loc = parameters.loc
+        scale = parameters.scale
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -159,7 +159,7 @@ class Gumbel(AbstractDistribution):
     def pdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, Any] = None,
+        parameters: Parameters | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -269,7 +269,7 @@ class Gumbel(AbstractDistribution):
     def random(
         self,
         size: int,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
     ) -> tuple[np.ndarray, Figure, Any] | np.ndarray:
         """Generate random samples from the Gumbel distribution.
 
@@ -339,9 +339,11 @@ class Gumbel(AbstractDistribution):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
+        loc = parameters.loc
+        scale = parameters.scale
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -350,7 +352,7 @@ class Gumbel(AbstractDistribution):
 
     @staticmethod
     def _cdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
         """Calculate the cumulative distribution function (CDF) values for Gumbel distribution.
 
@@ -379,8 +381,8 @@ class Gumbel(AbstractDistribution):
 
         ```
         """
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
+        loc = parameters.loc
+        scale = parameters.scale
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -390,7 +392,7 @@ class Gumbel(AbstractDistribution):
     def cdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, Any] = None,
+        parameters: Parameters | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -496,7 +498,7 @@ class Gumbel(AbstractDistribution):
         self,
         *,
         data: bool | list[float] | None = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
     ) -> np.ndarray:
         """Calculate return periods for given data values.
 
@@ -561,6 +563,8 @@ class Gumbel(AbstractDistribution):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
         cdf: np.ndarray = self.cdf(parameters=parameters, data=ts)  # type: ignore[assignment]
 
@@ -808,7 +812,7 @@ class Gumbel(AbstractDistribution):
     def inverse_cdf(
         self,
         cdf: np.ndarray | list[float] | None = None,
-        parameters: dict[str, float] = None,
+        parameters: Parameters | None = None,
     ) -> np.ndarray:
         """Calculate the inverse of the cumulative distribution function (quantile function).
 
@@ -869,6 +873,8 @@ class Gumbel(AbstractDistribution):
         """
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
         cdf = np.array(cdf)
         if np.any(cdf < 0) or np.any(cdf > 1):
@@ -880,7 +886,7 @@ class Gumbel(AbstractDistribution):
 
     @staticmethod
     def _inv_cdf(
-        cdf: np.ndarray | list[float], parameters: dict[str, float]
+        cdf: np.ndarray | list[float], parameters: Parameters
     ) -> np.ndarray:
         """Calculate the inverse CDF (quantile function) values for Gumbel distribution.
 
@@ -900,8 +906,8 @@ class Gumbel(AbstractDistribution):
         Raises:
             ValueError: If the scale parameter is negative or zero.
         """
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
+        loc = parameters.loc
+        scale = parameters.scale
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -1027,7 +1033,7 @@ class Gumbel(AbstractDistribution):
         self,
         alpha: float = 0.1,
         prob_non_exceed: np.ndarray = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
         plot_figure: bool = False,
         **kwargs: Any,
     ) -> tuple[np.ndarray, np.ndarray] | tuple[np.ndarray, np.ndarray, Figure, Axes]:
@@ -1108,8 +1114,10 @@ class Gumbel(AbstractDistribution):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
-        scale = parameters.get("scale")
+        scale = parameters.scale
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -1146,7 +1154,7 @@ class Gumbel(AbstractDistribution):
         ylabel: str = "cdf",
         fontsize: int = 15,
         cdf: np.ndarray | list | None = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
     ) -> tuple[Figure, tuple[Axes, Axes]]:  # pylint: disable=arguments-differ
         """Probability plot.
 
@@ -1202,8 +1210,10 @@ class Gumbel(AbstractDistribution):
         # if no parameters are provided, take the parameters provided in the class initialization.
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
-        scale = parameters.get("scale")
+        scale = parameters.scale
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)

@@ -43,7 +43,7 @@ class Normal(AbstractDistribution):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] | None = None,
+        parameters: Parameters | None = None,
     ):
         """Normal.
 
@@ -63,10 +63,10 @@ class Normal(AbstractDistribution):
 
     @staticmethod
     def _pdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
+        loc = parameters.loc
+        scale = parameters.scale
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
         pdf = norm.pdf(data, loc=loc, scale=scale)
@@ -76,7 +76,7 @@ class Normal(AbstractDistribution):
     def pdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float] | None = None,
+        parameters: Parameters | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -130,10 +130,10 @@ class Normal(AbstractDistribution):
 
     @staticmethod
     def _cdf_eq(
-        data: list | np.ndarray, parameters: dict[str, float | Any]
+        data: list | np.ndarray, parameters: Parameters
     ) -> np.ndarray:
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
+        loc = parameters.loc
+        scale = parameters.scale
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
@@ -144,7 +144,7 @@ class Normal(AbstractDistribution):
     def cdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: dict[str, float | Any] | None = None,
+        parameters: Parameters | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -269,7 +269,7 @@ class Normal(AbstractDistribution):
     def inverse_cdf(
         self,
         cdf: np.ndarray | list[float] | None = None,
-        parameters: dict[str, float | Any] = None,
+        parameters: Parameters | None = None,
     ) -> np.ndarray:
         """Theoretical Estimate.
 
@@ -292,9 +292,11 @@ class Normal(AbstractDistribution):
         """
         if parameters is None:
             parameters = self.parameters
+        elif isinstance(parameters, dict):
+            parameters = Parameters(**parameters)
 
-        loc = parameters.get("loc")
-        scale = parameters.get("scale")
+        loc = parameters.loc
+        scale = parameters.scale
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)

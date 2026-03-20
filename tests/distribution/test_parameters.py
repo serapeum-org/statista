@@ -152,41 +152,40 @@ class TestParametersRepr:
 
 
 class TestParametersGetitem:
-    """Tests for Parameters.__getitem__."""
+    """Tests for Parameters.__getitem__ (deprecated dict-style access)."""
 
     @pytest.mark.parametrize(
         "key, expected",
         [("loc", 500.0), ("scale", 200.0)],
     )
     def test_getitem_valid_keys(self, two_param, key, expected):
-        """Test bracket access for valid keys.
+        """Test bracket access for valid keys emits deprecation warning.
 
         Args:
             key: Parameter name.
             expected: Expected value.
 
         Test scenario:
-            params["loc"] and params["scale"] should return the stored values.
+            params["loc"] and params["scale"] should return the stored
+            values but emit a DeprecationWarning.
         """
-        assert two_param[key] == expected, (
-            f"Expected params['{key}'] = {expected}, got {two_param[key]}"
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param[key]
+        assert result == expected, (
+            f"Expected params['{key}'] = {expected}, got {result}"
         )
 
     def test_getitem_shape_none(self, two_param):
-        """Test bracket access for shape returns None on 2-param.
-
-        Test scenario:
-            params["shape"] should return None, not raise KeyError.
-        """
-        assert two_param["shape"] is None, (
-            f"Expected None for shape, got {two_param['shape']}"
-        )
+        """Test bracket access for shape returns None on 2-param."""
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param["shape"]
+        assert result is None, f"Expected None for shape, got {result}"
 
     def test_getitem_shape_set(self, three_param):
         """Test bracket access for shape returns value on 3-param."""
-        assert three_param["shape"] == -0.16, (
-            f"Expected -0.16, got {three_param['shape']}"
-        )
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = three_param["shape"]
+        assert result == -0.16, f"Expected -0.16, got {result}"
 
     def test_getitem_invalid_key(self, two_param):
         """Test bracket access with invalid key raises KeyError.
@@ -194,16 +193,19 @@ class TestParametersGetitem:
         Test scenario:
             Keys other than loc/scale/shape should raise KeyError.
         """
-        with pytest.raises(KeyError, match="invalid"):
-            two_param["invalid"]
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            with pytest.raises(KeyError, match="invalid"):
+                two_param["invalid"]
 
 
 class TestParametersGet:
-    """Tests for Parameters.get."""
+    """Tests for Parameters.get (deprecated dict-style access)."""
 
     def test_get_existing_key(self, two_param):
         """Test get returns value for existing key."""
-        assert two_param.get("loc") == 500.0, "get('loc') should return 500.0"
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.get("loc")
+        assert result == 500.0, "get('loc') should return 500.0"
 
     def test_get_shape_none_returns_default(self, two_param):
         """Test get returns default when shape is None.
@@ -212,33 +214,39 @@ class TestParametersGet:
             For a 2-param instance, get("shape", 0.0) should return
             the default since shape is None.
         """
-        assert two_param.get("shape", 0.0) == 0.0, (
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.get("shape", 0.0)
+        assert result == 0.0, (
             "get('shape', 0.0) should return default 0.0 when shape is None"
         )
 
     def test_get_shape_none_default_none(self, two_param):
         """Test get returns None when shape is None and no default given."""
-        assert two_param.get("shape") is None, (
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.get("shape")
+        assert result is None, (
             "get('shape') with no default should return None"
         )
 
     def test_get_shape_set(self, three_param):
         """Test get returns actual value when shape is set."""
-        assert three_param.get("shape", 0.0) == -0.16, (
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = three_param.get("shape", 0.0)
+        assert result == -0.16, (
             "get('shape') should return actual value, not default"
         )
 
     def test_get_unknown_key_returns_default(self, two_param):
         """Test get with unknown key returns default."""
-        assert two_param.get("unknown", 42) == 42, (
-            "get('unknown', 42) should return default 42"
-        )
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.get("unknown", 42)
+        assert result == 42, "get('unknown', 42) should return default 42"
 
     def test_get_unknown_key_default_none(self, two_param):
         """Test get with unknown key and no default returns None."""
-        assert two_param.get("unknown") is None, (
-            "get('unknown') should return None"
-        )
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            result = two_param.get("unknown")
+        assert result is None, "get('unknown') should return None"
 
 
 class TestParametersKeys:
@@ -360,8 +368,10 @@ class TestParametersIter:
         Test scenario:
             The combination of __iter__ and __getitem__ should allow
             constructing a plain dict from a Parameters instance.
+            Uses __getitem__ which emits a deprecation warning.
         """
-        d = {k: three_param[k] for k in three_param}
+        with pytest.warns(DeprecationWarning, match="Dict-style access"):
+            d = {k: three_param[k] for k in three_param}
         assert d == {"loc": 463.8, "scale": 220.1, "shape": -0.16}, (
             f"Dict construction failed: {d}"
         )
