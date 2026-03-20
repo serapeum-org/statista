@@ -65,8 +65,8 @@ class Exponential(AbstractDistribution):
         Args:
             data (list):
                 data time series.
-            parameters (dict[str, float]):
-                {"loc": val, "scale": val}
+            parameters (Parameters):
+                Parameters(loc=val, scale=val)
 
                 - loc (numeric):
                     location parameter of the exponential distribution.
@@ -101,16 +101,16 @@ class Exponential(AbstractDistribution):
         Returns the value of Gumbel's pdf with parameters loc and scale at x.
 
         Args:
-            parameters (dict[str, float], optional):
+            parameters (Parameters, optional):
                 if not provided, the parameters provided in the class initialization will be used.
                 - loc: [numeric]
                     location parameter of the gumbel distribution.
                 - scale: [numeric]
                     scale parameter of the gumbel distribution.
                 ```python
-                {"loc": val, "scale": val}. default is None.
-
+                Parameters(loc=val, scale=val)
                 ```
+                default is None.
             data (np.ndarray):
                 array if you want to calculate the pdf for different data than the time series given to the constructor
                 method. default is None.
@@ -139,7 +139,7 @@ class Exponential(AbstractDistribution):
             >>> import numpy as np
             >>> from statista.distributions import Exponential
             >>> data = np.loadtxt("examples/data/expo.txt")
-            >>> parameters = {'loc': 0, 'scale': 2}
+            >>> parameters = Parameters(loc=0, scale=2)
             >>> expo_dist = Exponential(data, parameters)
             >>> _ = expo_dist.pdf(plot_figure=True)
 
@@ -166,14 +166,13 @@ class Exponential(AbstractDistribution):
         Args:
             size (int):
                 size of the random generated sample.
-            parameters (dict[str, str]):
+            parameters (Parameters):
                 - loc (numeric):
                     location parameter of the gumbel distribution.
                 - scale (numeric):
                     scale parameter of the gumbel distribution.
                 ```python
-                {"loc": val, "scale": val}
-
+                Parameters(loc=val, scale=val)
                 ```
 
         Returns:
@@ -184,7 +183,7 @@ class Exponential(AbstractDistribution):
             - To generate a random sample that follow the gumbel distribution with the parameters loc=0 and scale=1.
                 ```python
                 >>> from statista.distributions import Exponential
-                >>> parameters = {'loc': 0, 'scale': 2}
+                >>> parameters = Parameters(loc=0, scale=2)
                 >>> expon_dist = Exponential(parameters=parameters)
                 >>> random_data = expon_dist.random(1000)
 
@@ -255,14 +254,14 @@ class Exponential(AbstractDistribution):
         cdf calculates the value of Gumbel's cdf with parameters loc and scale at x.
 
         Args:
-            parameters (dict[str, str], optional):
+            parameters (Parameters, optional):
                 if not provided, the parameters provided in the class initialization will be used. default is None.
                 - loc (numeric):
                     location parameter of the gumbel distribution.
                 - scale (numeric):
                     scale parameter of the gumbel distribution.
                 ```python
-                {"loc": val, "scale": val}
+                Parameters(loc=val, scale=val)
                 ```
             data (np.ndarray):
                 array if you want to calculate the cdf for different data than the time series given to the constructor
@@ -292,7 +291,7 @@ class Exponential(AbstractDistribution):
             >>> import numpy as np
             >>> from statista.distributions import Exponential
             >>> data = np.loadtxt("examples/data/expo.txt")
-            >>> parameters = {'loc': 0, 'scale': 2}
+            >>> parameters = Parameters(loc=0, scale=2)
             >>> expo_dist = Exponential(data, parameters)
             >>> _ = expo_dist.cdf(plot_figure=True)
 
@@ -359,9 +358,9 @@ class Exponential(AbstractDistribution):
                 Statistic = 0.019
                 Accept Hypothesis
                 P value = 0.9937026761524456
-                Out[14]: {'loc': 0.0009, 'scale': 2.0498075}
+                Out[14]: Parameters(loc=0.0009, scale=2.0498075)
                 >>> print(parameters) # doctest: +SKIP
-                {'loc': 0, 'scale': 2}
+                Parameters(loc=0, scale=2)
 
                 ```
             - You can also use the `lmoments` method to estimate the distribution parameters.
@@ -372,7 +371,7 @@ class Exponential(AbstractDistribution):
                 Accept Hypothesis
                 P value = 0.9802627322900355
                 >>> print(parameters) # doctest: +SKIP
-                {'loc': -0.00805012182182141, 'scale': 2.0587576218218215}
+                Parameters(loc=-0.00805012182182141, scale=2.0587576218218215)
 
                 ```
         """
@@ -423,13 +422,13 @@ class Exponential(AbstractDistribution):
         Theoretical Estimate method calculates the theoretical values based on a given  non-exceedance probability
 
         Args:
-            parameters (dict[str, str]):
+            parameters (Parameters):
                 - loc: [numeric]
                     location parameter of the gumbel distribution.
                 - scale: [numeric]
                     scale parameter of the gumbel distribution.
                 ```python
-                {"loc": val, "scale": val}
+                Parameters(loc=val, scale=val)
                 ```
             cdf (list):
                 cumulative distribution function/ Non-Exceedance probability.
@@ -442,7 +441,7 @@ class Exponential(AbstractDistribution):
             - Instantiate the Exponential class only with the data.
                 ```python
                 >>> data = np.loadtxt("examples/data/expo.txt")
-                >>> parameters = {'loc': 0, 'scale': 2}
+                >>> parameters = Parameters(loc=0, scale=2)
                 >>> expo_dist = Exponential(data, parameters)
 
                 ```

@@ -35,7 +35,7 @@ class Gumbel(AbstractDistribution):
 
     Attributes:
         _data (np.ndarray): The data array used for distribution calculations.
-        _parameters (dict[str, float]): Distribution parameters (loc and scale).
+        _parameters (Parameters): Distribution parameters (loc and scale).
 
     - The probability density function (PDF) of the Gumbel distribution is:
 
@@ -71,12 +71,13 @@ class Gumbel(AbstractDistribution):
             data:
                 Data time series as a list or numpy array.
             parameters:
+                Distribution parameters.
                 - loc (numeric):
                     Location parameter of the Gumbel distribution
                 - scale (numeric):
                     Scale parameter of the Gumbel distribution (must be positive)
                 ```python
-                {"loc": 0.0, "scale": 1.0}
+                Parameters(loc=0.0, scale=1.0)
                 ```
 
         Raises:
@@ -102,13 +103,13 @@ class Gumbel(AbstractDistribution):
                 ```
             - Initialize with both data and parameters
                 ```python
-                >>> parameters = {"loc": 0, "scale": 1}
+                >>> parameters = Parameters(loc=0, scale=1)
                 >>> gumbel_dist = Gumbel(data, parameters)
 
                 ```
             - Initialize with parameters only
                 ```python
-                >>> gumbel_dist = Gumbel(parameters={"loc": 0, "scale": 1})
+                >>> gumbel_dist = Gumbel(parameters=Parameters(loc=0, scale=1))
 
                 ```
         """
@@ -127,10 +128,9 @@ class Gumbel(AbstractDistribution):
             data:
                 Data points for which to calculate PDF values.
             parameters:
-                Dictionary of distribution parameters.
-                Must contain:
-                    - "loc": Location parameter (ζ)
-                    - "scale": Scale parameter (δ), must be positive
+                Parameters instance containing:
+                    - loc: Location parameter (ζ)
+                    - scale: Scale parameter (δ), must be positive
 
         Returns:
             Numpy array containing the PDF values for each data point.
@@ -173,12 +173,13 @@ class Gumbel(AbstractDistribution):
             plot_figure:
                 Whether to generate a plot of the PDF. Default is False.
             parameters:
+                    Distribution parameters.
                     - loc (Numberic):
                         Location parameter of the Gumbel distribution
                     - scale (Numberic):
                         Scale parameter of the Gumbel distribution (must be positive)
                     ```python
-                    {"loc": 0.0, "scale": 1.0}
+                    Parameters(loc=0.0, scale=1.0)
                     ```
                     If None, uses the parameters provided during initialization.
             data:
@@ -226,7 +227,7 @@ class Gumbel(AbstractDistribution):
                 Statistic = 0.019
                 Accept Hypothesis
                 P value = 0.9937026761524456
-                {'loc': np.float64(0.010101355750222706), 'scale': 1.0313042643102108}
+                Parameters(loc=np.float64(0.010101355750222706), scale=1.0313042643102108)
                 >>> pdf_values = gumbel_dist.pdf() # doctest: +SKIP
 
                 ```
@@ -244,7 +245,7 @@ class Gumbel(AbstractDistribution):
 
             - Calculate PDF with custom parameters:
                 ```python
-                >>> parameters = {'loc': 0, 'scale': 1}
+                >>> parameters = Parameters(loc=0, scale=1)
                 >>> pdf_custom = gumbel_dist.pdf(parameters=parameters)
                 >>> print(pdf_custom) #doctest: +SKIP
                 array([5.44630532e-02, 1.55313724e-01, 3.29857975e-01, 7.01082330e-02,
@@ -279,12 +280,13 @@ class Gumbel(AbstractDistribution):
             size:
                 Number of random samples to generate.
             parameters:
+                    Distribution parameters.
                     - loc (Numberic):
                         Location parameter of the Gumbel distribution
                     - scale (Numberic):
                         Scale parameter of the Gumbel distribution (must be positive)
                     ```python
-                    {"loc": 0.0, "scale": 1.0}
+                    Parameters(loc=0.0, scale=1.0)
                     ```
                     If None, uses the parameters provided during initialization.
 
@@ -299,7 +301,7 @@ class Gumbel(AbstractDistribution):
                 ```python
                 >>> import numpy as np
                 >>> from statista.distributions import Gumbel
-                >>> parameters = {'loc': 0, 'scale': 1}
+                >>> parameters = Parameters(loc=0, scale=1)
                 >>> gumbel_dist = Gumbel(parameters=parameters)
                 >>> random_data = gumbel_dist.random(1000)
 
@@ -328,10 +330,10 @@ class Gumbel(AbstractDistribution):
                 Accept Hypothesis
                 P value = 0.9969602438295625
                 >>> print(f"Fitted parameters: {fitted_params}") #doctest: +SKIP
-                Fitted parameters: {'loc': np.float64(-0.010212105435018243), 'scale': 1.010287499893525}
+                Fitted parameters: Parameters(loc=np.float64(-0.010212105435018243), scale=1.010287499893525)
 
                 ```
-            - Should be close to the original parameters {'loc': 0, 'scale': 1}
+            - Should be close to the original parameters Parameters(loc=0, scale=1)
             ```
         """
         # if no parameters are provided, take the parameters provided in the class initialization.
@@ -357,10 +359,9 @@ class Gumbel(AbstractDistribution):
 
         Args:
             data: Data points for which to calculate CDF values.
-            parameters: Dictionary of distribution parameters.
-                Must contain:
-                - "loc": Location parameter (ζ)
-                - "scale": Scale parameter (δ), must be positive
+            parameters: Parameters instance containing:
+                - loc: Location parameter (ζ)
+                - scale: Scale parameter (δ), must be positive
 
         Returns:
             Numpy array containing the CDF values for each data point.
@@ -405,12 +406,13 @@ class Gumbel(AbstractDistribution):
             plot_figure:
                 Whether to generate a plot of the CDF. Default is False.
             parameters:
+                Distribution parameters.
                 - loc:
                     Location parameter of the Gumbel distribution
                 - scale:
                     Scale parameter of the Gumbel distribution (must be positive)
                 ```python
-                {"loc": 0.0, "scale": 1.0}
+                Parameters(loc=0.0, scale=1.0)
                 ```
                 If None, uses the parameters provided during initialization.
             data:
@@ -452,7 +454,7 @@ class Gumbel(AbstractDistribution):
                 Statistic = 0.019
                 Accept Hypothesis
                 P value = 0.9937026761524456
-                {'loc': np.float64(0.010101355750222706), 'scale': 1.0313042643102108}
+                Parameters(loc=np.float64(0.010101355750222706), scale=1.0313042643102108)
                 >>> cdf_values = gumbel_dist.cdf() # doctest: +SKIP
 
                 ```
@@ -470,7 +472,7 @@ class Gumbel(AbstractDistribution):
 
             -  Calculate CDF with custom parameters:
                 ```python
-                >>> parameters = {'loc': 0, 'scale': 1}
+                >>> parameters = Parameters(loc=0, scale=1)
                 >>> cdf_custom = gumbel_dist.cdf(parameters=parameters)
 
                 ```
@@ -506,12 +508,13 @@ class Gumbel(AbstractDistribution):
                 Values for which to calculate return periods. Can be a single value, list, or array.
                 If None, uses the data provided during initialization.
             parameters:
+                Distribution parameters.
                 - loc (Numeric):
                     Location parameter of the Gumbel distribution
                 - scale (Numeric):
                     Scale parameter of the Gumbel distribution (must be positive)
                 ```
-                {"loc": 0.0, "scale": 1.0}
+                Parameters(loc=0.0, scale=1.0)
                 ```
                 If None, uses the parameters provided during initialization.
 
@@ -531,7 +534,7 @@ class Gumbel(AbstractDistribution):
             -  Calculate return periods for specific values
                 ```python
                 >>> data = np.loadtxt("examples/data/gumbel.txt")
-                >>> gumbel_dist = Gumbel(data=data,parameters={"loc": 0, "scale": 1})
+                >>> gumbel_dist = Gumbel(data=data, parameters=Parameters(loc=0, scale=1))
                 >>> return_periods = gumbel_dist.return_period()
 
                 ```
@@ -544,7 +547,7 @@ class Gumbel(AbstractDistribution):
                 ```
             - Then, find the quantile corresponding to this CDF value:
                 ```python
-                >>> return_level_100yr = gumbel_dist.inverse_cdf([cdf_value], parameters={"loc": 0, "scale": 1})[0]
+                >>> return_level_100yr = gumbel_dist.inverse_cdf([cdf_value], parameters=Parameters(loc=0, scale=1))[0]
                 >>> print(f"100-year return level: {return_level_100yr:.4f}")
                 100-year return level: 4.6001
 
@@ -694,13 +697,13 @@ class Gumbel(AbstractDistribution):
                 Whether to perform goodness-of-fit tests after estimation. Default is True.
 
         Returns:
-            Dict:
+            Parameters:
                 - loc (Numeric):
                     Location parameter of the Gumbel distribution
                 - scale (Numeric):
                     Scale parameter of the Gumbel distribution
                 ```python
-                {"loc": 0.0, "scale": 1.0}
+                Parameters(loc=0.0, scale=1.0)
                 ```
 
         Raises:
@@ -727,7 +730,7 @@ class Gumbel(AbstractDistribution):
                 Accept Hypothesis
                 P value = 0.9937026761524456
                 >>> print(parameters)
-                {'loc': np.float64(0.010101355750222706), 'scale': 1.0313042643102108}
+                Parameters(loc=np.float64(0.010101355750222706), scale=1.0313042643102108)
 
                 ```
             - Fit using L-moments:
@@ -738,7 +741,7 @@ class Gumbel(AbstractDistribution):
                 Accept Hypothesis
                 P value = 0.9937026761524456
                 >>> print(parameters)
-                {'loc': np.float64(0.006700226367219564), 'scale': np.float64(1.0531061622114444)}
+                Parameters(loc=np.float64(0.006700226367219564), scale=np.float64(1.0531061622114444))
 
                 ```
             - Fit using optimization with a threshold:
@@ -815,14 +818,14 @@ class Gumbel(AbstractDistribution):
         Args:
             cdf: CDF values (non-exceedance probabilities) for which to calculate the quantiles.
                 Values should be between 0 and 1.
-            parameters (dict[str, float]):
+            parameters (Parameters):
                 If None, uses the parameters provided during initialization.
                     - loc (Numeric):
                         Location parameter of the Gumbel distribution
                     - scale (Numeric):
                         Scale parameter of the Gumbel distribution (must be positive)
                     ```python
-                    {"loc": 0.0, "scale": 1.0}
+                    Parameters(loc=0.0, scale=1.0)
                 ```
 
         Returns:
@@ -837,7 +840,7 @@ class Gumbel(AbstractDistribution):
                 >>> import numpy as np
                 >>> from statista.distributions import Gumbel
                 >>> data = np.loadtxt("examples/data/gumbel.txt")
-                >>> parameters = {'loc': 0, 'scale': 1}
+                >>> parameters = Parameters(loc=0, scale=1)
                 >>> gumbel_dist = Gumbel(data, parameters)
 
                 ```
@@ -887,10 +890,9 @@ class Gumbel(AbstractDistribution):
         Args:
             cdf: CDF values (non-exceedance probabilities) for which to calculate quantiles.
                 Values should be between 0 and 1.
-            parameters: Dictionary of distribution parameters.
-                Must contain:
-                - "loc": Location parameter (ζ)
-                - "scale": Scale parameter (δ), must be positive
+            parameters: Parameters instance containing:
+                - loc: Location parameter (ζ)
+                - scale: Scale parameter (δ), must be positive
 
         Returns:
             Numpy array containing the quantile values corresponding to the given CDF values.
@@ -948,7 +950,7 @@ class Gumbel(AbstractDistribution):
                 Statistic = 0.019
                 Accept Hypothesis
                 P value = 0.9937026761524456
-                {'loc': np.float64(0.010101355750222706), 'scale': 1.0313042643102108}
+                Parameters(loc=np.float64(0.010101355750222706), scale=1.0313042643102108)
                 >>> d_stat, p_value = gumbel_dist.ks()
                 -----KS Test--------
                 Statistic = 0.019
@@ -1004,7 +1006,7 @@ class Gumbel(AbstractDistribution):
                 Statistic = 0.019
                 Accept Hypothesis
                 P value = 0.9937026761524456
-                {'loc': np.float64(0.010101355750222706), 'scale': 1.0313042643102108}
+                Parameters(loc=np.float64(0.010101355750222706), scale=1.0313042643102108)
                 >>> gumbel_dist.chisquare() #doctest: +SKIP
 
                 ```
@@ -1040,14 +1042,14 @@ class Gumbel(AbstractDistribution):
                 Significance level for the confidence interval. Default is 0.1 (90% confidence interval).
             prob_non_exceed: Non-exceedance probabilities for which to calculate quantiles.
                 If None, uses the empirical CDF calculated using Weibull plotting positions.
-            parameters (dict[str, Any]):
+            parameters (Parameters):
                 If None, uses the parameters provided during initialization.
                 - loc (Numeric):
                     Location parameter of the Gumbel distribution
                 - scale (Numeric):
                     Scale parameter of the Gumbel distribution (must be positive)
                 ```python
-                {"loc": 0.0, "scale": 1.0}
+                Parameters(loc=0.0, scale=1.0)
                 ```
             plot_figure (bool):
                 Whether to generate a plot of the confidence intervals. Default is False.
@@ -1082,7 +1084,7 @@ class Gumbel(AbstractDistribution):
                 >>> import matplotlib.pyplot as plt
                 >>> from statista.distributions import Gumbel
                 >>> data = np.loadtxt("examples/data/time_series2.txt")
-                >>> parameters = {"loc": 463.8040, "scale": 220.0724}
+                >>> parameters = Parameters(loc=463.8040, scale=220.0724)
                 >>> gumbel_dist = Gumbel(data, parameters)
 
                 ```
@@ -1164,8 +1166,8 @@ class Gumbel(AbstractDistribution):
                 Default is "cdf"
             fontsize: [float]
                 Default is 15.
-            parameters: dict[str, str]
-                {"loc": val, "scale": val}
+            parameters: Parameters
+                Parameters(loc=val, scale=val)
                 - loc: [numeric]
                     location parameter of the gumbel distribution.
                 - scale: [numeric]
@@ -1182,7 +1184,7 @@ class Gumbel(AbstractDistribution):
             ```python
             >>> import matplotlib.pyplot as plt
             >>> data = np.loadtxt("examples/data/time_series2.txt")
-            >>> parameters = {"loc": 463.8040, "scale": 220.0724}
+            >>> parameters = Parameters(loc=463.8040, scale=220.0724)
             >>> gumbel_dist = Gumbel(data, parameters)
 
             ```

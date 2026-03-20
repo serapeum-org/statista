@@ -24,7 +24,7 @@ class Plot:
             ```python
             >>> import numpy as np
             >>> from statista.plot import Plot
-            >>> from statista.distributions import Normal
+            >>> from statista.distributions import Normal, Parameters
             >>> np.random.seed(42)
             >>> data = np.random.normal(loc=10, scale=2, size=100)
 
@@ -37,13 +37,13 @@ class Plot:
             Statistic = 0.09
             Accept Hypothesis
             P value = 0.8154147124661313
-            {'loc': np.float64(9.876997051725278), 'scale': np.float64(2.010896054339655)}
+            Parameters(loc=np.float64(9.876997051725278), scale=np.float64(2.010896054339655))
 
             ```
         - Generate points for plotting:
             ```python
             >>> x = np.linspace(min(data), max(data), 10000)
-            >>> parameters = {'loc': 9.876997051725278, 'scale': 2.010896054339655}
+            >>> parameters = Parameters(loc=9.876997051725278, scale=2.010896054339655)
             >>> pdf_values = normal_dist.pdf(data=x, parameters=parameters)
 
             ```
@@ -98,7 +98,7 @@ class Plot:
                 ```python
                 >>> import numpy as np
                 >>> from statista.plot import Plot
-                >>> from statista.distributions import Normal
+                >>> from statista.distributions import Normal, Parameters
                 >>> data = np.random.normal(loc=10, scale=2, size=100)
 
                 ```
@@ -110,13 +110,13 @@ class Plot:
                 Statistic = 0.08
                 Accept Hypothesis
                 P value = 0.9084105017744525
-                {'loc': np.float64(10.031759532159755), 'scale': np.float64(1.819201407871162)}
+                Parameters(loc=np.float64(10.031759532159755), scale=np.float64(1.819201407871162))
 
                 ```
             - Generate points for plotting
                 ```python
                 >>> x = np.linspace(min(data), max(data), 1000)
-                >>> parameters = {'loc': 10.031759532159755, 'scale': 1.819201407871162}
+                >>> parameters = Parameters(loc=10.031759532159755, scale=1.819201407871162)
                 >>> pdf_values = normal_dist.pdf(data=x, parameters=parameters)
 
                 ```
@@ -190,7 +190,7 @@ class Plot:
                 ```python
                 >>> import numpy as np
                 >>> from statista.plot import Plot
-                >>> from statista.distributions import Normal
+                >>> from statista.distributions import Normal, Parameters
                 >>> np.random.seed(42)
                 >>> data = np.random.normal(loc=10, scale=2, size=100)
                 >>> data_sorted = np.sort(data)
@@ -210,13 +210,13 @@ class Plot:
                 Statistic = 0.08
                 Accept Hypothesis
                 P value = 0.9084105017744525
-                {'loc': np.float64(9.62108385209537), 'scale': np.float64(2.1593427284432147)}
+                Parameters(loc=np.float64(9.62108385209537), scale=np.float64(2.1593427284432147))
 
                 ```
             - Generate points for plotting:
                 ```python
                 >>> x = np.linspace(min(data), max(data), 1000)
-                >>> parameters = {'loc': 9.62108385209537, 'scale': 2.1593427284432147}
+                >>> parameters = Parameters(loc=9.62108385209537, scale=2.1593427284432147)
                 >>> cdf_values = normal_dist.cdf(data=x, parameters=parameters)
 
                 ```
@@ -301,7 +301,7 @@ class Plot:
                 ```python
                 >>> import numpy as np
                 >>> from statista.plot import Plot
-                >>> from statista.distributions import Normal
+                >>> from statista.distributions import Normal, Parameters
 
                 ```
             - Generate some sample data:
@@ -325,13 +325,13 @@ class Plot:
                 Statistic = 0.06
                 Accept Hypothesis
                 P value = 0.9942356257694902
-                {'loc': np.float64(10.061702421737607), 'scale': np.float64(1.857026806934038)}
+                Parameters(loc=np.float64(10.061702421737607), scale=np.float64(1.857026806934038))
 
                 ```
             - Generate points for plotting:
                 ```python
                 >>> x = np.linspace(min(data), max(data), 1000)
-                >>> parameters = {'loc': 10.061702421737607, 'scale': 1.857026806934038}
+                >>> parameters = Parameters(loc=10.061702421737607, scale=1.857026806934038)
                 >>> pdf_values = normal_dist.pdf(data=x, parameters=parameters)
                 >>> cdf_values = normal_dist.cdf(data=x, parameters=parameters)
 
@@ -418,7 +418,7 @@ class Plot:
                 ```python
                 >>> import numpy as np
                 >>> from statista.plot import Plot
-                >>> from statista.distributions import Normal
+                >>> from statista.distributions import Normal, Parameters
 
                 ```
             - Generate some sample data:
@@ -435,13 +435,13 @@ class Plot:
                 Statistic = 0.07
                 Accept Hypothesis
                 P value = 0.9684099261397212
-                {'loc': np.float64(10.51674893337459), 'scale': np.float64(2.002961856532672)}
+                Parameters(loc=np.float64(10.51674893337459), scale=np.float64(2.002961856532672))
 
                 ```
             - Generate theoretical quantiles:
                 ```python
                 >>> p = np.linspace(0.01, 0.99, 100)  # Probability points
-                >>> parameters = {'loc': 10.51674893337459, 'scale': 2.002961856532672}
+                >>> parameters = Parameters(loc=10.51674893337459, scale=2.002961856532672)
                 >>> theoretical_quantiles = normal_dist.inverse_cdf(p, parameters=parameters)
 
                 ```

@@ -78,6 +78,19 @@ class Parameters:
     scale: float
     shape: float | None = None
 
+    def __repr__(self) -> str:
+        """Return a repr that omits shape when it is None."""
+        if self.shape is not None:
+            result = (
+                f"Parameters(loc={self.loc!r}, scale={self.scale!r},"
+                f" shape={self.shape!r})"
+            )
+        else:
+            result = (
+                f"Parameters(loc={self.loc!r}, scale={self.scale!r})"
+            )
+        return result
+
     def __post_init__(self) -> None:
         if self.scale <= 0:
             raise ValueError(

@@ -112,7 +112,7 @@ class AbstractDistribution(ABC):
 
     Attributes:
         _data (np.ndarray): The data array used for distribution calculations.
-        _parameters (dict[str, float]): Distribution parameters.
+        _parameters (Parameters): Distribution parameters.
     """
 
     def __init__(
@@ -132,7 +132,6 @@ class AbstractDistribution(ABC):
                 automatically.
                 ```python
                 Parameters(loc=0.0, scale=1.0)
-                {"loc": 0.0, "scale": 1.0}
                 ```
 
         Raises:
@@ -255,8 +254,8 @@ class AbstractDistribution(ABC):
 
         Args:
             data: Data points for which to calculate PDF values.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
 
         Returns:
             Numpy array containing the PDF values for each data point.
@@ -281,8 +280,8 @@ class AbstractDistribution(ABC):
         distribution parameters. It can also generate a plot of the PDF.
 
         Args:
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
             plot_figure: Whether to generate a plot of the PDF.
                 Default is False.
@@ -349,8 +348,8 @@ class AbstractDistribution(ABC):
 
         Args:
             data: Data points for which to calculate CDF values.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
 
         Returns:
             Numpy array containing the CDF values for each data point.
@@ -374,8 +373,8 @@ class AbstractDistribution(ABC):
         distribution parameters. It can also generate a plot of the CDF.
 
         Args:
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
             plot_figure: Whether to generate a plot of the CDF.
                 Default is False.
@@ -469,8 +468,8 @@ class AbstractDistribution(ABC):
                 Default is True.
 
         Returns:
-            Dictionary of estimated distribution parameters.
-            Example: {"loc": 0.0, "scale": 1.0}
+            Parameters instance with estimated distribution parameters.
+            Example: Parameters(loc=0.0, scale=1.0)
 
         Raises:
             ValueError: If the data is not sufficient for parameter estimation.
@@ -496,8 +495,8 @@ class AbstractDistribution(ABC):
         Args:
             cdf: CDF values (non-exceedance probabilities) for which to calculate the quantiles.
                 Values should be between 0 and 1.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
 
         Returns:
             Numpy array containing the quantile values corresponding to the given CDF values.
@@ -608,8 +607,8 @@ class AbstractDistribution(ABC):
                 Default is False.
             prob_non_exceed: Non-exceedance probabilities for which to calculate quantiles.
                 If None, uses the empirical CDF calculated using Weibull plotting positions.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
 
         Returns:
@@ -652,8 +651,8 @@ class AbstractDistribution(ABC):
                 Default is 15.
             cdf: Theoretical CDF values.
                 If None, uses the empirical CDF calculated using Weibull plotting positions.
-            parameters: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            parameters: Distribution parameters.
+                Example: Parameters(loc=0.0, scale=1.0)
                 If None, uses the parameters provided during initialization.
 
         Returns:

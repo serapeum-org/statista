@@ -88,8 +88,8 @@ class GEV(AbstractDistribution):
         Args:
             data: [list]
                 data time series.
-            parameters: dict[str, str]
-                {"loc": val, "scale": val, "shape": value}
+            parameters: Parameters
+                Distribution parameters instance.
 
                 - loc: [numeric]
                     location parameter of the GEV distribution.
@@ -113,7 +113,7 @@ class GEV(AbstractDistribution):
             ```
         - You can also instantiate the Gumbel class with the data and the parameters if you already have them.
             ```python
-            >>> parameters = {"loc": 0, "scale": 1, "shape": 0.1}
+            >>> parameters = Parameters(loc=0, scale=1, shape=0.1)
             >>> gev_dist = GEV(data, parameters)
             >>> print(gev_dist) # doctest: +SKIP
             <statista.distributions.Gumbel object at 0x000001CDDEB32C00>
@@ -145,9 +145,8 @@ class GEV(AbstractDistribution):
         Returns the value of GEV's pdf with parameters loc and scale at x.
 
         Args:
-            parameters: dict[str, float], optional, default is None.
+            parameters: Parameters, optional, default is None.
                 if not provided, the parameters provided in the class initialization will be used.
-                {"loc": val, "scale": val, "shape": value}
 
                 - loc: [numeric]
                     location parameter of the GEV distribution.
@@ -184,7 +183,7 @@ class GEV(AbstractDistribution):
             >>> import numpy as np
             >>> from statista.distributions import GEV
             >>> data = np.loadtxt("examples/data/gev.txt")
-            >>> parameters = {"loc": 0, "scale": 1, "shape": 0.1}
+            >>> parameters = Parameters(loc=0, scale=1, shape=0.1)
             >>> gev_dist = GEV(data, parameters)
             >>> _ = gev_dist.pdf(plot_figure=True)
 
@@ -211,8 +210,8 @@ class GEV(AbstractDistribution):
         Args:
             size: int
                 size of the random generated sample.
-            parameters: dict[str, str]
-                {"loc": val, "scale": val}
+            parameters: Parameters
+                Distribution parameters instance.
 
                 - loc: [numeric]
                     location parameter of the gumbel distribution.
@@ -226,7 +225,7 @@ class GEV(AbstractDistribution):
         Examples:
             - To generate a random sample that follow the gumbel distribution with the parameters loc=0 and scale=1.
                 ```python
-                >>> parameters = {'loc': 0, 'scale': 1, "shape": 0.1}
+                >>> parameters = Parameters(loc=0, scale=1, shape=0.1)
                 >>> gev_dist = GEV(parameters=parameters)
                 >>> random_data = gev_dist.random(100)
 
@@ -300,9 +299,8 @@ class GEV(AbstractDistribution):
         cdf calculates the value of Gumbel's cdf with parameters loc and scale at x.
 
         Args:
-            parameters: dict[str, str], optional, default is None.
+            parameters: Parameters, optional, default is None.
                 if not provided, the parameters provided in the class initialization will be used.
-                {"loc": val, "scale": val}
 
                 - loc: [numeric]
                     location parameter of the gumbel distribution.
@@ -335,7 +333,7 @@ class GEV(AbstractDistribution):
             - To calculate the cdf of the GEV distribution, we need to provide the parameters.
                 ```python
                 >>> data = np.loadtxt("examples/data/gev.txt")
-                >>> parameters = {"loc": 0, "scale": 1, "shape": 0.1}
+                >>> parameters = Parameters(loc=0, scale=1, shape=0.1)
                 >>> gev_dist = GEV(data, parameters)
                 >>> _ = gev_dist.cdf(plot_figure=True)
 
@@ -364,8 +362,8 @@ class GEV(AbstractDistribution):
         Args:
             data (list/array/float):
                 value you want the coresponding return value for
-            parameters (dict[str, Any]):
-                {"loc": val, "scale": val, "shape": value}
+            parameters (Parameters):
+                Distribution parameters instance.
 
                 - shape (float):
                     shape parameter
@@ -421,8 +419,8 @@ class GEV(AbstractDistribution):
                 Default is True
 
         Returns:
-            dict[str, str]:
-                {"loc": val, "scale": val}
+            Parameters:
+                Distribution parameters instance.
 
                 - loc: [numeric]
                     location parameter of the GEV distribution.
@@ -448,7 +446,7 @@ class GEV(AbstractDistribution):
                 Accept Hypothesis
                 P value = 0.9942356257694902
                 >>> print(parameters) # doctest: +SKIP
-                {'loc': -0.05962776672431072, 'scale': 0.9114319092295455, 'shape': 0.03492066094614391}
+                Parameters(loc=-0.05962776672431072, scale=0.9114319092295455, shape=0.03492066094614391)
 
                 ```
             - You can also use the `lmoments` method to estimate the distribution parameters.
@@ -459,7 +457,7 @@ class GEV(AbstractDistribution):
                 Accept Hypothesis
                 P value = 0.9996892272702655
                 >>> print(parameters) # doctest: +SKIP
-                {'loc': -0.07182150513604696, 'scale': 0.9153288314267931, 'shape': 0.018944589308927475}
+                Parameters(loc=-0.07182150513604696, scale=0.9153288314267931, shape=0.018944589308927475)
 
                 ```
             - You can also use the `fit_model` method to estimate the distribution parameters using the 'optimization'
@@ -519,8 +517,8 @@ class GEV(AbstractDistribution):
         Theoretical Estimate method calculates the theoretical values based on a given non-exceedance probability
 
         Args:
-            parameters: [list]
-                location and scale parameters of the gumbel distribution.
+            parameters: Parameters
+                Distribution parameters instance.
             cdf: [list]
                 cumulative distribution function/ Non-Exceedance probability.
 
@@ -532,7 +530,7 @@ class GEV(AbstractDistribution):
             - Instantiate the Gumbel class only with the data.
                 ```python
                 >>> data = np.loadtxt("examples/data/gev.txt")
-                >>> parameters = {'loc': 0, 'scale': 1, "shape": 0.1}
+                >>> parameters = Parameters(loc=0, scale=1, shape=0.1)
                 >>> gev_dist = GEV(data, parameters)
 
                 ```
@@ -606,9 +604,8 @@ class GEV(AbstractDistribution):
         """confidence_interval.
 
         Args:
-            parameters: dict[str, str], optional, default is None.
+            parameters: Parameters, optional, default is None.
                 if not provided, the parameters provided in the class initialization will be used.
-                {"loc": val, "scale": val, "shape": value}
 
                 - loc: [numeric]
                     location parameter of the gumbel distribution.
@@ -643,7 +640,7 @@ class GEV(AbstractDistribution):
                 ```python
                 >>> import matplotlib.pyplot as plt
                 >>> data = np.loadtxt("examples/data/time_series1.txt")
-                >>> parameters = {"loc": 16.3928, "scale": 0.70054, "shape": -0.1614793,}
+                >>> parameters = Parameters(loc=16.3928, scale=0.70054, shape=-0.1614793)
                 >>> gev_dist = GEV(data, parameters)
 
                 ```
@@ -713,8 +710,8 @@ class GEV(AbstractDistribution):
         parameters, theoretical cdf (or weibul), and calculates the confidence interval.
 
         Args:
-            parameters (dict[str, str]):
-                {"loc": val, "scale": val, shape: val}
+            parameters (Parameters):
+                Distribution parameters instance.
 
                 - loc (numeric):
                     Location parameter of the GEV distribution.
@@ -744,7 +741,7 @@ class GEV(AbstractDistribution):
                 ```python
                 >>> import numpy as np
                 >>> data = np.loadtxt("examples/data/time_series1.txt")
-                >>> parameters = {"loc": 16.3928, "scale": 0.70054, "shape": -0.1614793,}
+                >>> parameters = Parameters(loc=16.3928, scale=0.70054, shape=-0.1614793)
                 >>> gev_dist = GEV(data, parameters)
 
                 ```
@@ -805,8 +802,8 @@ class GEV(AbstractDistribution):
         data: [list, np.ndarray]
             time series
         kwargs (dict[str, Any]):
-            gevfit: [list]
-                GEV parameter [shape, location, scale]
+            gevfit: Parameters
+                GEV distribution parameters instance.
             F: [list]
                 Non-Exceedance probability
             method: [str]

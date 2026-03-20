@@ -50,13 +50,13 @@ class Normal(AbstractDistribution):
         Args:
             data (list):
                 data time series.
-            parameters (dict[str, float]):
+            parameters (Parameters):
                 - loc: [numeric]
                     location (mean) parameter of the Normal distribution.
                 - scale: [numeric]
                     scale (standard deviation) parameter of the Normal distribution.
                 ```python
-                {"loc": val, "scale": val}
+                Parameters(loc=val, scale=val)
                 ```
         """
         super().__init__(data, parameters)
@@ -86,14 +86,14 @@ class Normal(AbstractDistribution):
         Returns the value of Gumbel's pdf with parameters loc and scale at x.
 
         Args:
-            parameters (dict[str, str], optional):
+            parameters (Parameters, optional):
                 if not provided, the parameters provided in the class initialization will be used. default is None.
                 - loc: [numeric]
                     location parameter of the normal distribution.
                 - scale: [numeric]
                     scale parameter of the normal distribution.
                 ```python
-                {"loc": val, "scale": val}
+                Parameters(loc=val, scale=val)
                 ```
             data (np.ndarray):
                 array if you want to calculate the pdf for different data than the time series given to the constructor
@@ -154,14 +154,14 @@ class Normal(AbstractDistribution):
         cdf calculates the value of Normal distribution cdf with parameters loc and scale at x.
 
         Args:
-            parameters (dict[str, str], optional):
+            parameters (Parameters, optional):
                 if not provided, the parameters provided in the class initialization will be used. default is None.
                 - loc (numeric):
                     location parameter of the Normal distribution.
                 - scale (numeric):
                     scale parameter of the Normal distribution.
                 ```python
-                {"loc": val, "scale": val, "shape": value}
+                Parameters(loc=val, scale=val)
                 ```
             data (np.ndarray):
                 array if you want to calculate the pdf for different data than the time series given to the constructor
@@ -276,8 +276,8 @@ class Normal(AbstractDistribution):
         Theoretical Estimate method calculates the theoretical values based on a given  non exceedence probability
 
         Args:
-            parameters (dict[str, str]):
-                {"loc": val, "scale": val}
+            parameters (Parameters):
+                Parameters(loc=val, scale=val)
 
                 - loc (numeric):
                     location parameter of the Normal distribution.

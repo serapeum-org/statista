@@ -35,9 +35,10 @@ class Distributions:
             'Exponential', 'Normal'). If None, no single distribution is
             wrapped — use ``fit`` or ``best_fit`` instead.
         data: Data time series as a list or numpy array.
-        parameters: Dictionary of distribution parameters.
+        parameters: Distribution parameters as a ``Parameters`` instance
+            or a dictionary (auto-converted).
             ```python
-            {"loc": 0.0, "scale": 1.0}
+            Parameters(loc=0.0, scale=1.0)
             ```
 
     Attributes:
@@ -78,11 +79,10 @@ class Distributions:
             ```
         - Create a distribution from known parameters:
             ```python
-            >>> from statista.distributions import Distributions
-            >>> dist = Distributions(
-            ...     "Normal", parameters={"loc": 500, "scale": 200}
-            ... )
-            >>> dist.parameters["loc"]
+            >>> from statista.distributions import Distributions, Parameters
+            >>> params = Parameters(loc=500, scale=200)
+            >>> dist = Distributions("Normal", parameters=params)
+            >>> dist.parameters.loc
             500
 
             ```
@@ -199,8 +199,8 @@ class Distributions:
             containing:
                 - 'distribution': the fitted ``AbstractDistribution``
                   instance
-                - 'parameters': dict of estimated parameters (e.g.,
-                  ``{"loc": ..., "scale": ...}``)
+                - 'parameters': ``Parameters`` instance (e.g.,
+                  ``Parameters(loc=..., scale=...)``)
                 - 'ks': tuple of (statistic, p-value) from the
                   Kolmogorov-Smirnov test
                 - 'chisquare': tuple of (statistic, p-value) from the
@@ -328,7 +328,7 @@ class Distributions:
             Tuple of (distribution_name, result_dict) for the best fit.
             The result dict contains:
                 - 'distribution': the fitted distribution instance
-                - 'parameters': dict of estimated parameters
+                - 'parameters': ``Parameters`` instance
                 - 'ks': (statistic, p-value) tuple
                 - 'chisquare': (statistic, p-value) tuple
 
