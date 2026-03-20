@@ -58,7 +58,7 @@ class Exponential(AbstractDistribution):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ):
         """Exponential Distribution.
 
@@ -76,9 +76,7 @@ class Exponential(AbstractDistribution):
         super().__init__(data, parameters)
 
     @staticmethod
-    def _pdf_eq(
-        data: list | np.ndarray, parameters: Parameters
-    ) -> np.ndarray:
+    def _pdf_eq(data: list | np.ndarray, parameters: Parameters) -> np.ndarray:
         loc = parameters.loc
         scale = parameters.scale
 
@@ -91,7 +89,7 @@ class Exponential(AbstractDistribution):
     def pdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -159,7 +157,7 @@ class Exponential(AbstractDistribution):
     def random(
         self,
         size: int,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ) -> tuple[np.ndarray, Figure, Any] | np.ndarray:
         """Generate Random Variable.
 
@@ -216,9 +214,7 @@ class Exponential(AbstractDistribution):
         return random_data
 
     @staticmethod
-    def _cdf_eq(
-        data: list | np.ndarray, parameters: Parameters
-    ) -> np.ndarray:
+    def _cdf_eq(data: list | np.ndarray, parameters: Parameters) -> np.ndarray:
         """
         old cdf equation.
         ```python
@@ -244,7 +240,7 @@ class Exponential(AbstractDistribution):
     def cdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -417,7 +413,7 @@ class Exponential(AbstractDistribution):
     def inverse_cdf(
         self,
         cdf: np.ndarray | list[float] | None = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ) -> np.ndarray:
         """Theoretical Estimate.
 

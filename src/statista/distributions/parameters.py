@@ -69,7 +69,7 @@ class Parameters:
             ['loc', 'scale']
 
             ```
-        - Invalid scale raises ValueError:
+        - Invalid scale raises ParameterError:
             ```python
             >>> from statista.distributions import Parameters
             >>> Parameters(loc=0.0, scale=-1.0)
@@ -93,16 +93,12 @@ class Parameters:
                 f" shape={self.shape!r})"
             )
         else:
-            result = (
-                f"Parameters(loc={self.loc!r}, scale={self.scale!r})"
-            )
+            result = f"Parameters(loc={self.loc!r}, scale={self.scale!r})"
         return result
 
     def __post_init__(self) -> None:
         if self.scale <= 0:
-            raise ParameterError(
-                f"scale must be positive, got {self.scale}"
-            )
+            raise ParameterError(f"scale must be positive, got {self.scale}")
 
     # -- Dict-compatibility layer ------------------------------------------
     # The methods below replicate the dict interface so that existing code

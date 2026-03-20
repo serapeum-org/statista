@@ -81,7 +81,7 @@ class GEV(AbstractDistribution):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ):
         """GEV.
 
@@ -122,9 +122,7 @@ class GEV(AbstractDistribution):
         super().__init__(data, parameters)
 
     @staticmethod
-    def _pdf_eq(
-        data: list | np.ndarray, parameters: Parameters
-    ) -> np.ndarray:
+    def _pdf_eq(data: list | np.ndarray, parameters: Parameters) -> np.ndarray:
         loc = parameters.loc
         scale = parameters.scale
         shape = parameters.shape
@@ -135,7 +133,7 @@ class GEV(AbstractDistribution):
     def pdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -203,7 +201,7 @@ class GEV(AbstractDistribution):
     def random(
         self,
         size: int,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ) -> tuple[np.ndarray, Figure, Any] | np.ndarray:
         """Generate Random Variable.
 
@@ -259,9 +257,7 @@ class GEV(AbstractDistribution):
         return random_data
 
     @staticmethod
-    def _cdf_eq(
-        data: list | np.ndarray, parameters: Parameters
-    ) -> np.ndarray:
+    def _cdf_eq(data: list | np.ndarray, parameters: Parameters) -> np.ndarray:
         loc = parameters.loc
         scale = parameters.scale
         shape = parameters.shape
@@ -289,7 +285,7 @@ class GEV(AbstractDistribution):
     def cdf(  # type: ignore[override]
         self,
         plot_figure: bool = False,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         data: list[float] | np.ndarray | None = None,
         *args: Any,
         **kwargs: Any,
@@ -355,7 +351,7 @@ class GEV(AbstractDistribution):
         self,
         *,
         data: np.ndarray | None = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ) -> np.ndarray:
         """return_period.
 
@@ -514,7 +510,7 @@ class GEV(AbstractDistribution):
     def inverse_cdf(
         self,
         cdf: np.ndarray | list[float] | None = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ) -> np.ndarray:
         """Theoretical Estimate.
 
@@ -599,7 +595,7 @@ class GEV(AbstractDistribution):
         alpha: float = 0.1,
         plot_figure: bool = False,
         prob_non_exceed: np.ndarray = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         state_function: Callable | None = None,
         n_samples: int = 100,
         method: str = "lmoments",
@@ -710,7 +706,7 @@ class GEV(AbstractDistribution):
         ylabel: str = "cdf",
         fontsize: int = 15,
         cdf: np.ndarray | list | None = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ) -> tuple[Figure, tuple[Axes, Axes]]:
         """Probability Plot.
 

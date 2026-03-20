@@ -260,9 +260,7 @@ class AbstractDistribution(ABC):
 
     @staticmethod
     @abstractmethod
-    def _pdf_eq(
-        data: list | np.ndarray, parameters: Parameters
-    ) -> np.ndarray:
+    def _pdf_eq(data: list | np.ndarray, parameters: Parameters) -> np.ndarray:
         """Calculate the probability density function (PDF) values.
 
         This is an abstract method that must be implemented by subclasses.
@@ -280,7 +278,7 @@ class AbstractDistribution(ABC):
     @abstractmethod
     def pdf(
         self,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         plot_figure: bool = False,
         fig_size: tuple = (6, 5),
         xlabel: str = PDF_XAXIS_LABEL,
@@ -356,9 +354,7 @@ class AbstractDistribution(ABC):
 
     @staticmethod
     @abstractmethod
-    def _cdf_eq(
-        data: list | np.ndarray, parameters: Parameters
-    ) -> np.ndarray:
+    def _cdf_eq(data: list | np.ndarray, parameters: Parameters) -> np.ndarray:
         """Calculate the cumulative distribution function (CDF) values.
 
         This is an abstract method that must be implemented by subclasses.
@@ -376,7 +372,7 @@ class AbstractDistribution(ABC):
     @abstractmethod
     def cdf(
         self,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         plot_figure: bool = False,
         fig_size: tuple = (6, 5),
         xlabel: str = "data",
@@ -610,7 +606,7 @@ class AbstractDistribution(ABC):
         alpha: float = 0.1,
         plot_figure: bool = False,
         prob_non_exceed: np.ndarray = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
         **kwargs: Any,
     ) -> tuple[np.ndarray, np.ndarray] | tuple[np.ndarray, np.ndarray, Figure, Axes]:
         """Calculate confidence intervals for the distribution quantiles.
@@ -651,7 +647,7 @@ class AbstractDistribution(ABC):
         ylabel: str = "cdf",
         fontsize: int = 15,
         cdf: np.ndarray | None = None,
-        parameters: Parameters | None = None,
+        parameters: Parameters | dict[str, float] | None = None,
     ) -> Any:
         """Generate probability plots for the distribution.
 

@@ -14,10 +14,10 @@ import numpy as np
 
 from statista.distributions.base import AbstractDistribution
 from statista.distributions.exponential import Exponential
-from statista.distributions.parameters import Parameters
 from statista.distributions.gev import GEV
 from statista.distributions.gumbel import Gumbel
 from statista.distributions.normal import Normal
+from statista.distributions.parameters import Parameters
 
 
 class Distributions:
@@ -127,13 +127,13 @@ class Distributions:
                     " specifying a distribution"
                 )
             dist_class = self.available_distributions[distribution]
-            self.distribution = dist_class(data, parameters)
+            self.distribution: AbstractDistribution | None = dist_class(
+                data, parameters
+            )
             self.__data = None
         else:
             if data is None:
-                raise ValueError(
-                    "Either distribution or data must be provided"
-                )
+                raise ValueError("Either distribution or data must be provided")
             self.distribution = None
             self.__data = np.array(data)
 
@@ -265,9 +265,7 @@ class Distributions:
         """
         valid_methods = ("mle", "mm", "lmoments", "optimization")
         if method not in valid_methods:
-            raise ValueError(
-                f"method must be one of {valid_methods}, got '{method}'"
-            )
+            raise ValueError(f"method must be one of {valid_methods}, got '{method}'")
 
         data = np.array(self._data)
         data = data[~np.isnan(data)]
@@ -289,9 +287,7 @@ class Distributions:
 
             dist_class = self.available_distributions[name]
             dist_instance = dist_class(data=data)
-            parameters = dist_instance.fit_model(
-                method=method, test=False
-            )
+            parameters = dist_instance.fit_model(method=method, test=False)
             ks_result = dist_instance.ks()
             chisquare_result = dist_instance.chisquare()
 
@@ -380,7 +376,7 @@ class Distributions:
 
         results = self.fit(method=method, distributions=distributions)
 
-        best_name = None
+        best_name = next(iter(results))
         best_p_value = -1.0
         for name, info in results.items():
             p_value = info[criterion][1]
