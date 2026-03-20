@@ -21,14 +21,10 @@ def pearson_3_parameters():
 class TestPearson3Method:
     """Test pearson_3 method."""
 
-    def test_pearson_3_valid_inputs(
-        self, pearson_3_lmoments, pearson_3_parameters
-    ):
+    def test_pearson_3_valid_inputs(self, pearson_3_lmoments, pearson_3_parameters):
         """Test pearson_3 method with valid inputs."""
         result = Lmoments.pearson_3(pearson_3_lmoments)
-        np.testing.assert_almost_equal(
-            result, pearson_3_parameters, decimal=4
-        )
+        np.testing.assert_almost_equal(result, pearson_3_parameters, decimal=4)
 
     def test_pearson_3_invalid_inputs(self):
         """Test pearson_3 method with invalid inputs returns [0, 0, 0]."""

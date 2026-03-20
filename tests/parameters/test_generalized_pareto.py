@@ -28,9 +28,7 @@ class TestGeneralizedParetoMethod:
     ):
         """Test generalized_pareto method with valid inputs."""
         result = Lmoments.generalized_pareto(generalized_pareto_lmoments)
-        np.testing.assert_almost_equal(
-            result, generalized_pareto_parameters, decimal=4
-        )
+        np.testing.assert_almost_equal(result, generalized_pareto_parameters, decimal=4)
 
     def test_generalized_pareto_invalid_inputs(self):
         """Test generalized_pareto method with invalid inputs returns None."""

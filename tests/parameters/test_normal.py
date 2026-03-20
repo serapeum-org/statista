@@ -24,9 +24,7 @@ class TestNormalMethod:
     def test_normal_valid_inputs(self, normal_lmoments, normal_parameters):
         """Test normal method with valid inputs."""
         result = Lmoments.normal(normal_lmoments)
-        np.testing.assert_almost_equal(
-            result, normal_parameters, decimal=5
-        )
+        np.testing.assert_almost_equal(result, normal_parameters, decimal=5)
 
     def test_normal_invalid_inputs(self):
         """Test normal method with invalid inputs returns None."""

@@ -27,9 +27,7 @@ class TestGeneralizedLogisticMethod:
         generalized_logistic_parameters,
     ):
         """Test generalized_logistic method with valid inputs."""
-        result = Lmoments.generalized_logistic(
-            generalized_logistic_lmoments
-        )
+        result = Lmoments.generalized_logistic(generalized_logistic_lmoments)
         np.testing.assert_almost_equal(
             result, generalized_logistic_parameters, decimal=4
         )

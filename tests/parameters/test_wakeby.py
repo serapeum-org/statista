@@ -30,9 +30,7 @@ class TestWakebyMethod:
     def test_wakeby_valid_inputs(self, wakeby_lmoments, wakeby_parameters):
         """Test wakeby method with valid inputs."""
         result = Lmoments.wakeby(wakeby_lmoments)
-        np.testing.assert_almost_equal(
-            result, wakeby_parameters, decimal=4
-        )
+        np.testing.assert_almost_equal(result, wakeby_parameters, decimal=4)
 
     def test_wakeby_invalid_inputs(self):
         """Test wakeby method with invalid inputs returns None."""

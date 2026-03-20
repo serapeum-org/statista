@@ -26,9 +26,7 @@ class TestExponentialMethod:
     ):
         """Test exponential method with valid inputs."""
         result = Lmoments.exponential(exponential_lmoments)
-        np.testing.assert_almost_equal(
-            result, exponential_parameters, decimal=5
-        )
+        np.testing.assert_almost_equal(result, exponential_parameters, decimal=5)
 
     def test_exponential_invalid_inputs(self):
         """Test exponential method with invalid inputs returns None."""

@@ -28,9 +28,7 @@ class TestGeneralizedNormalMethod:
     ):
         """Test generalized_normal method with valid inputs."""
         result = Lmoments.generalized_normal(generalized_normal_lmoments)
-        np.testing.assert_almost_equal(
-            result, generalized_normal_parameters, decimal=4
-        )
+        np.testing.assert_almost_equal(result, generalized_normal_parameters, decimal=4)
 
     def test_generalized_normal_invalid_inputs(self):
         """Test generalized_normal method with invalid inputs returns None."""
