@@ -12,6 +12,7 @@ from statista.distributions import (
     GEV,
     Gumbel,
     Normal,
+    Parameters,
     PlottingPosition,
 )
 
@@ -42,14 +43,28 @@ class TestAbstractDistribution:
         dist = Gumbel(time_series1)
         assert str(dist) == text_1
 
+        param_repr = "Parameters(loc=16.392889171307772, scale=0.7005442761744839, shape=-0.1614793298009645)"
         text_2 = (
-            "\n                Distribution : Gumbel\n                parameters: {'loc': 16.392889171307772, "
-            "'scale': 0.7005442761744839, 'shape': -0.1614793298009645}\n                "
+            f"\n                Distribution : Gumbel\n"
+            f"                parameters: {param_repr}\n                "
         )
         dist = Gumbel(parameters=parameters)
         assert str(dist) == text_2
         dist = Gumbel(data=time_series1, parameters=parameters)
-        text_3 = "\n                    Dataset of 27 value\n                    min: 15.790480003140171\n                    max: 19.39645340792385\n                    mean: 16.929171461473548\n                    median: 16.626465201654593\n                    mode: 15.999737471905252\n                    std: 1.0211514099144634\n                    Distribution : Gumbel\n                    parameters: {'loc': 16.392889171307772, 'scale': 0.7005442761744839, 'shape': -0.1614793298009645}\n                    \n                Distribution : Gumbel\n                parameters: {'loc': 16.392889171307772, 'scale': 0.7005442761744839, 'shape': -0.1614793298009645}\n                "
+        text_3 = (
+            f"\n                    Dataset of 27 value\n"
+            f"                    min: 15.790480003140171\n"
+            f"                    max: 19.39645340792385\n"
+            f"                    mean: 16.929171461473548\n"
+            f"                    median: 16.626465201654593\n"
+            f"                    mode: 15.999737471905252\n"
+            f"                    std: 1.0211514099144634\n"
+            f"                    Distribution : Gumbel\n"
+            f"                    parameters: {param_repr}\n"
+            f"                    \n"
+            f"                Distribution : Gumbel\n"
+            f"                parameters: {param_repr}\n                "
+        )
         assert str(dist) == text_3
 
 
@@ -188,7 +203,7 @@ class TestDistributionsGetattr:
         """
         dist = Distributions("Gumbel", data=time_series2)
         param = dist.fit_model(method="lmoments", test=False)
-        assert isinstance(param, dict), f"Expected dict, got {type(param)}"
+        assert isinstance(param, Parameters), f"Expected Parameters, got {type(param)}"
         assert "loc" in param, "Parameters should contain 'loc'"
         assert "scale" in param, "Parameters should contain 'scale'"
 
@@ -251,7 +266,7 @@ class TestFit:
             assert "parameters" in info, f"{name}: missing 'parameters' key"
             assert "ks" in info, f"{name}: missing 'ks' key"
             assert "chisquare" in info, f"{name}: missing 'chisquare' key"
-            assert isinstance(info["parameters"], dict), f"{name}: parameters should be dict"
+            assert isinstance(info["parameters"], Parameters), f"{name}: parameters should be Parameters"
             assert "loc" in info["parameters"], f"{name}: parameters should contain 'loc'"
             assert "scale" in info["parameters"], f"{name}: parameters should contain 'scale'"
             assert len(info["ks"]) == 2, f"{name}: KS result should be 2-tuple"
@@ -284,7 +299,7 @@ class TestFit:
         results = dist.fit(method="mle")
         assert len(results) == 4, f"Expected 4 results, got {len(results)}"
         for info in results.values():
-            assert isinstance(info["parameters"], dict)
+            assert isinstance(info["parameters"], Parameters)
 
     def test_fit_invalid_distribution(self, time_series2: list):
         """Test fit raises ValueError for invalid distribution name."""

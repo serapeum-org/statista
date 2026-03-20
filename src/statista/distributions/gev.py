@@ -20,6 +20,7 @@ from statista.distributions.base import (
     AbstractDistribution,
     PlottingPosition,
 )
+from statista.distributions.parameters import Parameters
 from statista.parameters import Lmoments
 from statista.plot import Plot
 
@@ -395,7 +396,7 @@ class GEV(AbstractDistribution):
         obj_func=None,
         threshold: int | float | None = None,
         test: bool = True,
-    ) -> dict[str, float]:
+    ) -> Parameters:
         """Fit model.
 
         fit_model estimates the distribution parameter based on MLM
@@ -499,11 +500,7 @@ class GEV(AbstractDistribution):
         else:
             raise ValueError(f"The given: {method} does not exist")
 
-        param: dict[str, float] = {
-            "loc": param_list[1],
-            "scale": param_list[2],
-            "shape": param_list[0],
-        }
+        param = Parameters(loc=param_list[1], scale=param_list[2], shape=param_list[0])
         self.parameters = param
 
         if test:

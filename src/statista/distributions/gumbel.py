@@ -18,6 +18,7 @@ from statista.distributions.base import (
     AbstractDistribution,
     PlottingPosition,
 )
+from statista.distributions.parameters import Parameters
 from statista.parameters import Lmoments
 from statista.plot import Plot
 
@@ -637,7 +638,7 @@ class Gumbel(AbstractDistribution):
         nx2 = len(data[data >= threshold])  # type: ignore[arg-type, operator]
         # pdf with a scaled pdf
         # L1 is pdf based
-        parameters = {"loc": loc, "scale": scale}
+        parameters = Parameters(loc=loc, scale=scale)
         pdf = Gumbel._pdf_eq(non_truncated_data, parameters)  # type: ignore[arg-type]
         #  the CDF at the threshold is used because the data is assumed to be truncated, meaning that observations below
         #  this threshold are not included in the dataset. When dealing with truncated data, it's essential to adjust
@@ -661,7 +662,7 @@ class Gumbel(AbstractDistribution):
         obj_func: Callable = None,
         threshold: None | float | int = None,
         test: bool = True,
-    ) -> dict[str, float]:
+    ) -> Parameters:
         """Estimate the parameters of the Gumbel distribution from data.
 
         This method fits the Gumbel distribution to the data using various estimation
@@ -792,7 +793,7 @@ class Gumbel(AbstractDistribution):
         else:
             raise ValueError(f"The given: {method} does not exist")
 
-        param: dict[str, float] = {"loc": param_list[0], "scale": param_list[1]}
+        param = Parameters(loc=param_list[0], scale=param_list[1])
         self.parameters = param
 
         if test:

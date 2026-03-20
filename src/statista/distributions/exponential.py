@@ -15,6 +15,7 @@ from statista.distributions.base import (
     SCALE_PARAMETER_ERROR,
     AbstractDistribution,
 )
+from statista.distributions.parameters import Parameters
 from statista.parameters import Lmoments
 
 
@@ -313,7 +314,7 @@ class Exponential(AbstractDistribution):
         obj_func=None,
         threshold: int | float | None = None,
         test: bool = True,
-    ) -> dict[str, float]:
+    ) -> Parameters:
         """fit_model.
 
         fit_model estimates the distribution parameter based on MLM
@@ -403,7 +404,7 @@ class Exponential(AbstractDistribution):
         else:
             raise ValueError(f"The given: {method} does not exist")
 
-        param: dict[str, float] = {"loc": param_list[0], "scale": param_list[1]}
+        param = Parameters(loc=param_list[0], scale=param_list[1])
         self.parameters = param
 
         if test:

@@ -12,6 +12,7 @@ from matplotlib.figure import Figure
 from numpy import ndarray
 from scipy.stats import chisquare, ks_2samp
 
+from statista.distributions.parameters import Parameters
 from statista.plot import Plot
 from statista.utils import merge_small_bins
 
@@ -117,7 +118,7 @@ class AbstractDistribution(ABC):
     def __init__(
         self,
         data: list | np.ndarray | None = None,
-        parameters: dict[str, float] | None = None,
+        parameters: dict[str, float] | Parameters | None = None,
     ):
         """Initialize the distribution with data or parameters.
 
@@ -125,19 +126,21 @@ class AbstractDistribution(ABC):
             data:
                 Data time series as a list or numpy array.
             parameters:
-                Dictionary of distribution parameters.
-                - loc: Location parameter
-                - scale: Scale parameter
-                - shape: Shape parameter (if applicable)
-                ```
-                {"loc": 0.0, "scale": 1.0, "shape": 0.0}
+                Distribution parameters as a ``Parameters`` instance or
+                a dictionary with keys 'loc', 'scale', and optionally
+                'shape'. Dicts are converted to ``Parameters``
+                automatically.
+                ```python
+                Parameters(loc=0.0, scale=1.0)
+                {"loc": 0.0, "scale": 1.0}
                 ```
 
         Raises:
             ValueError:
                 If neither data nor parameters are provided.
             TypeError:
-                If data is not a list or numpy array, or if parameters argument is not a dictionary.
+                If data is not a list or numpy array, or if parameters
+                is not a dict or Parameters.
         """
         if data is None and parameters is None:
             raise ValueError("Either data or parameters must be provided")
@@ -150,11 +153,16 @@ class AbstractDistribution(ABC):
         else:
             raise TypeError("The `data` argument should be list or numpy array")
 
-        self._parameters: dict[str, float] | None
-        if isinstance(parameters, dict) or parameters is None:
+        self._parameters: Parameters | None
+        if isinstance(parameters, Parameters) or parameters is None:
             self._parameters = parameters
+        elif isinstance(parameters, dict):
+            self._parameters = Parameters(**parameters)
         else:
-            raise TypeError("The `parameters` argument should be dictionary")
+            raise TypeError(
+                "The `parameters` argument should be a Parameters"
+                " instance or dictionary"
+            )
 
     def __str__(self) -> str:
         message = ""
@@ -178,23 +186,27 @@ class AbstractDistribution(ABC):
         return message
 
     @property
-    def parameters(self) -> dict[str, float]:
+    def parameters(self) -> Parameters:
         """Get the distribution parameters.
 
         Returns:
-            Dictionary of distribution parameters (e.g., {"loc": 0.0, "scale": 1.0}).
+            Parameters instance (e.g., ``Parameters(loc=0.0, scale=1.0)``).
         """
         return self._parameters  # type: ignore[return-value]
 
     @parameters.setter
-    def parameters(self, value: dict[str, float]):
+    def parameters(self, value: dict[str, float] | Parameters):
         """Set the distribution parameters.
 
         Args:
-            value: Dictionary of distribution parameters.
-                Example: {"loc": 0.0, "scale": 1.0}
+            value: Parameters instance or dictionary of distribution
+                parameters. Dicts are converted to Parameters
+                automatically.
         """
-        self._parameters = value
+        if isinstance(value, dict):
+            self._parameters = Parameters(**value)
+        else:
+            self._parameters = value
 
     @property
     def data(self) -> ndarray:

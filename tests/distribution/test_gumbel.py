@@ -3,7 +3,7 @@ import pytest
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from statista.distributions import Gumbel, PlottingPosition
+from statista.distributions import Gumbel, Parameters, PlottingPosition
 
 
 class TestGumbel:
@@ -46,7 +46,7 @@ class TestGumbel:
         dist = Gumbel(time_series2)
         for method in dist_estimation_parameters:
             param = dist.fit_model(method=method, test=False)
-            assert isinstance(param, dict)
+            assert isinstance(param, Parameters)
             assert all(i in param.keys() for i in ["loc", "scale"])
             assert dist.parameters.get("loc") is not None
             assert dist.parameters.get("scale") is not None
@@ -64,7 +64,7 @@ class TestGumbel:
             obj_func=Gumbel.truncated_distribution,
             threshold=parameter_estimation_optimization_threshold,
         )
-        assert isinstance(param, dict)
+        assert isinstance(param, Parameters)
         assert all(i in param.keys() for i in ["loc", "scale"])
         assert dist.parameters.get("loc") is not None
         assert dist.parameters.get("scale") is not None
