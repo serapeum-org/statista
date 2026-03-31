@@ -75,9 +75,9 @@ docs = [
 
 
 [project.urls]
-Homepage = "https://github.com/Serapieum-of-alex/statista"
-Documentation = "https://github.com/Serapieum-of-alex/statista"
-Repository = "https://github.com/Serapieum-of-alex/statista"
+Homepage = "https://github.com/serapeum-org/statista"
+Documentation = "https://github.com/serapeum-org/statista"
+Repository = "https://github.com/serapeum-org/statista"
 
 
 [tool.hatch.build.targets.wheel]

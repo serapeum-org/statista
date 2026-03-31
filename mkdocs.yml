@@ -1,8 +1,8 @@
 site_name: Statista
 site_description: Statistical analysis package
-site_url: https://serapieum-of-alex.github.io/statista/
-repo_url: https://github.com/Serapieum-of-alex/statista
-repo_name: Serapieum-of-alex/statista
+site_url: https://serapeum-org.github.io/statista/
+repo_url: https://github.com/serapeum-org/statista
+repo_name: serapeum-org/statista
 
 theme:
   name: material
@@ -147,7 +147,7 @@ extra_javascript:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Serapieum-of-alex/statista
+      link: https://github.com/serapeum-org/statista
   version:
       provider: mike
   version_selector: true

@@ -79,18 +79,18 @@ pip install statista==0.6.1
 
 ### From Sources
 
-The sources for statista can be downloaded from the [GitHub repository](https://github.com/Serapieum-of-alex/statista).
+The sources for statista can be downloaded from the [GitHub repository](https://github.com/serapeum-org/statista).
 
 You can either clone the public repository:
 
 ```bash
-git clone https://github.com/Serapieum-of-alex/statista.git
+git clone https://github.com/serapeum-org/statista.git
 ```
 
-Or download the [tarball](https://github.com/Serapieum-of-alex/statista/tarball/main):
+Or download the [tarball](https://github.com/serapeum-org/statista/tarball/main):
 
 ```bash
-curl -OJL https://github.com/Serapieum-of-alex/statista/tarball/main
+curl -OJL https://github.com/serapeum-org/statista/tarball/main
 ```
 
 Once you have a copy of the source, you can install it with:
@@ -102,13 +102,13 @@ python -m pip install .
 To install directly from GitHub (from the HEAD of the main branch):
 
 ```bash
-pip install git+https://github.com/Serapieum-of-alex/statista.git
+pip install git+https://github.com/serapeum-org/statista.git
 ```
 
 Or from GitHub for a specific release (e.g., 0.6.1):
 
 ```bash
-pip install git+https://github.com/Serapieum-of-alex/statista.git@0.6.1
+pip install git+https://github.com/serapeum-org/statista.git@0.6.1
 ```
 
 Now you should be able to start this environment's Python with `python` and try
@@ -124,7 +124,7 @@ instead create a link in your Python installation pointing to the folder you ins
 it from, so any changes you make there are directly reflected in your install.
 
 ```bash
-git clone https://github.com/Serapieum-of-alex/statista.git
+git clone https://github.com/serapeum-org/statista.git
 cd statista
 conda activate statista  # or your preferred environment
 pip install -e .
@@ -138,7 +138,7 @@ pip install -e ".[dev]"
 
 Alternatively, if you want to avoid using `git` and simply want to test the latest
 version from the `main` branch, you can download a
-[zip archive from GitHub](https://github.com/Serapieum-of-alex/statista/archive/main.zip).
+[zip archive from GitHub](https://github.com/serapeum-org/statista/archive/main.zip).
 
 ### Install Using Pip
 
@@ -162,7 +162,7 @@ Or install a specific version (e.g., 0.6.1):
 pip install statista==0.6.1
 ```
 
-You can check [libraries.io](https://libraries.io/github/Serapieum-of-alex/statista) to see the latest versions of the dependencies.
+You can check [libraries.io](https://libraries.io/github/serapeum-org/statista) to see the latest versions of the dependencies.
 
 ## Verifying the Installation
 

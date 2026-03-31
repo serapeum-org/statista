@@ -5,12 +5,12 @@
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/statista.svg)](https://anaconda.org/conda-forge/statista)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Documentation Status](https://readthedocs.org/projects/statista/badge/?version=latest)](https://statista.readthedocs.io/en/latest/?badge=latest)
-[![codecov](https://codecov.io/gh/Serapieum-of-alex/statista/branch/main/graph/badge.svg?token=GQKhcj2pFK)](https://codecov.io/gh/Serapieum-of-alex/statista)
+[![codecov](https://codecov.io/gh/serapeum-org/statista/branch/main/graph/badge.svg?token=GQKhcj2pFK)](https://codecov.io/gh/serapeum-org/statista)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/commits/main)
-[![GitHub issues](https://img.shields.io/github/issues/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/issues)
-[![GitHub stars](https://img.shields.io/github/stars/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/network/members)
+[![GitHub last commit](https://img.shields.io/github/last-commit/serapeum-org/statista)](https://github.com/serapeum-org/statista/commits/main)
+[![GitHub issues](https://img.shields.io/github/issues/serapeum-org/statista)](https://github.com/serapeum-org/statista/issues)
+[![GitHub stars](https://img.shields.io/github/stars/serapeum-org/statista)](https://github.com/serapeum-org/statista/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/serapeum-org/statista)](https://github.com/serapeum-org/statista/network/members)
 
 ## Overview
 
@@ -40,7 +40,7 @@ pip install statista
 ### Development Version
 
 ```bash
-pip install git+https://github.com/Serapieum-of-alex/statista
+pip install git+https://github.com/serapeum-org/statista
 ```
 
 ## Main Features
@@ -113,7 +113,7 @@ cdf_weibul = PlottingPosition.weibul(data)
 lower_bound, upper_bound, fig, ax = gev_dist.confidence_interval(plot_figure=True)
 ```
 
-For more examples and detailed documentation, visit [Statista Documentation](https://serapieum-of-alex.github.io/statista)
+For more examples and detailed documentation, visit [Statista Documentation](https://serapeum-org.github.io/statista)
 
 ## Contributing
 
@@ -129,7 +129,7 @@ If you use Statista in your research, please cite it as:
 
 ```
 Farrag, M. (2023). Statista: A Python package for statistical analysis, extreme value analysis, and sensitivity analysis.
-https://github.com/Serapieum-of-alex/statista
+https://github.com/serapeum-org/statista
 ```
 
 BibTeX:
@@ -137,7 +137,7 @@ BibTeX:
 @software{statista2023,
   author = {Farrag, Mostafa},
   title = {Statista: A Python package for statistical analysis, extreme value analysis, and sensitivity analysis},
-  url = {https://github.com/Serapieum-of-alex/statista},
+  url = {https://github.com/serapeum-org/statista},
   year = {2023}
 }
 ```
