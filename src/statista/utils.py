@@ -1,8 +1,11 @@
-from typing import List
+from __future__ import annotations
+
 import numpy as np
 
 
-def merge_small_bins(bin_count_observed: List[float], bin_count_fitted_data: List[float]):
+def merge_small_bins(
+    bin_count_observed: list[float], bin_count_fitted_data: list[float]
+) -> tuple[np.ndarray, np.ndarray]:
     """Merge small bins for goodness-of-fit tests (e.g., chi-square).
 
     This utility merges adjacent "small" bins (those whose expected count is < 5)
@@ -81,17 +84,21 @@ def merge_small_bins(bin_count_observed: List[float], bin_count_fitted_data: Lis
             ```
     """
     if len(bin_count_observed) != len(bin_count_fitted_data):
-        raise ValueError("bin_count_observed and bin_count_fitted_data must have the same length.")
+        raise ValueError(
+            "bin_count_observed and bin_count_fitted_data must have the same length."
+        )
 
     # Merge tail bins whose expected counts are < 5
-    merged_obs = []
-    merged_exp = []
-    accum_obs  = 0
-    accum_exp  = 0
+    merged_obs: list[float] = []
+    merged_exp: list[float] = []
+    accum_obs: float = 0
+    accum_exp: float = 0
 
     # Work from the rightmost bin backwards, accumulating bins until the combined
     # expected count is ≥ 5
-    for observed, expected in reversed(list(zip(bin_count_observed, bin_count_fitted_data))):
+    for observed, expected in reversed(
+        list(zip(bin_count_observed, bin_count_fitted_data))
+    ):
         if expected < 5:
             accum_obs += observed
             accum_exp += expected
@@ -114,10 +121,10 @@ def merge_small_bins(bin_count_observed: List[float], bin_count_fitted_data: Lis
         merged_exp.append(accum_exp)
 
     # Reverse the order back to low→high
-    merged_obs = np.array(merged_obs[::-1])
-    merged_exp = np.array(merged_exp[::-1]).astype(float)
+    arr_obs = np.array(merged_obs[::-1])
+    arr_exp = np.array(merged_exp[::-1]).astype(float)
 
     # Rescale expected counts so they sum to the total number of observations
     # This is required for Pearson’s χ² test
-    merged_exp *= merged_obs.sum() / merged_exp.sum()
-    return merged_obs, merged_exp
+    arr_exp *= arr_obs.sum() / arr_exp.sum()
+    return arr_obs, arr_exp

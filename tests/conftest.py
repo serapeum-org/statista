@@ -5,6 +5,8 @@ import pandas as pd
 import pytest
 from pandas import DataFrame
 
+from statista.distributions import Parameters
+
 
 @pytest.fixture(scope="module")
 def time_series1() -> list:
@@ -569,7 +571,8 @@ def confidence_interval_alpha() -> float:
 
 @pytest.fixture(scope="module")
 def parameter_estimation_optimization_threshold() -> int:
-    return 800  # 17
+    """Threshold for truncated distribution fitting on time_series2."""
+    return 800
 
 
 @pytest.fixture(scope="module")
@@ -608,8 +611,8 @@ def ci_cdf() -> np.ndarray:
 
 
 @pytest.fixture(scope="module")
-def ci_param() -> Dict[str, float]:
-    return {"loc": 464.825, "scale": 222.120, "shape": 0.01012}
+def ci_param() -> Parameters:
+    return Parameters(loc=464.825, scale=222.120, shape=0.01012)
 
 
 @pytest.fixture(scope="module")

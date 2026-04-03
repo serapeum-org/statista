@@ -1,14 +1,14 @@
 # Statista - Advanced Statistical Analysis Package
 
 [![Python Versions](https://img.shields.io/pypi/pyversions/statista.svg)](https://pypi.org/project/statista/)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://serapieum-of-alex.github.io/statista/latest/)
-[![codecov](https://codecov.io/gh/Serapieum-of-alex/statista/branch/main/graph/badge.svg?token=GQKhcj2pFK)](https://codecov.io/gh/Serapieum-of-alex/statista)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://serapeum-org.github.io/statista/latest/)
+[![codecov](https://codecov.io/gh/serapeum-org/statista/branch/main/graph/badge.svg?token=GQKhcj2pFK)](https://codecov.io/gh/serapeum-org/statista)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/commits/main)
-[![GitHub issues](https://img.shields.io/github/issues/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/issues)
-[![GitHub stars](https://img.shields.io/github/stars/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Serapieum-of-alex/statista)](https://github.com/Serapieum-of-alex/statista/network/members)
+[![GitHub last commit](https://img.shields.io/github/last-commit/serapeum-org/statista)](https://github.com/serapeum-org/statista/commits/main)
+[![GitHub issues](https://img.shields.io/github/issues/serapeum-org/statista)](https://github.com/serapeum-org/statista/issues)
+[![GitHub stars](https://img.shields.io/github/stars/serapeum-org/statista)](https://github.com/serapeum-org/statista/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/serapeum-org/statista)](https://github.com/serapeum-org/statista/network/members)
 
 ## Overview
 
@@ -17,13 +17,14 @@
 Current release info
 ====================
 
-Repository: [GitHub](https://github.com/Serapieum-of-alex/statista)
-conda-forge feedstock: [![Repo: statista-feedstock](https://img.shields.io/badge/repo‑statista--feedstock-blue)](https://github.com/conda-forge/statista-feedstock)
-Documentation: [GitHub Pages](https://serapieum-of-alex.github.io/statista)
+| Name                                                                                                                      | Downloads                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Version                                                                                                                                                                                                                                                                                                                                                 | Platforms                                                                                                                                                                                                                                                                                                                                 |
+|---------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![Conda Recipe](https://img.<br/>shields.io/badge/recipe-statista-green.svg)](https://anaconda.org/conda-forge/statista) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/statista.svg)](https://anaconda.org/conda-forge/statista) [![Downloads](https://pepy.tech/badge/statista)](https://pepy.tech/project/statista) [![Downloads](https://pepy.tech/badge/statista/month)](https://pepy.tech/project/statista)  [![Downloads](https://pepy.tech/badge/statista/week)](https://pepy.tech/project/statista)  ![PyPI - Downloads](https://img.shields.io/pypi/dd/statista?color=blue&style=flat-square) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/statista.svg)](https://anaconda.org/conda-forge/statista) [![PyPI version](https://badge.fury.io/py/statista.svg)](https://badge.fury.io/py/statista) [![Anaconda-Server Badge](https://anaconda.org/conda-forge/statista/badges/version.svg)](https://anaconda.org/conda-forge/statista) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/statista.svg)](https://anaconda.org/conda-forge/statista) [![Join the chat at https://gitter.im/Hapi-Nile/Hapi](https://badges.gitter.im/Hapi-Nile/Hapi.svg)](https://gitter.im/Hapi-Nile/Hapi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
 
-| Name | Downloads                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | Version | Platforms |
-| --- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| --- | --- |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-statista-green.svg)](https://anaconda.org/conda-forge/statista) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/statista.svg)](https://anaconda.org/conda-forge/statista) [![Downloads](https://pepy.tech/badge/statista)](https://pepy.tech/project/statista) [![Downloads](https://pepy.tech/badge/statista/month)](https://pepy.tech/project/statista)  [![Downloads](https://pepy.tech/badge/statista/week)](https://pepy.tech/project/statista)  ![PyPI - Downloads](https://img.shields.io/pypi/dd/statista?color=blue&style=flat-square) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/statista.svg)](https://anaconda.org/conda-forge/statista) [![PyPI version](https://badge.fury.io/py/statista.svg)](https://badge.fury.io/py/statista) [![Anaconda-Server Badge](https://anaconda.org/conda-forge/statista/badges/version.svg)](https://anaconda.org/conda-forge/statista) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/statista.svg)](https://anaconda.org/conda-forge/statista) [![Join the chat at https://gitter.im/Hapi-Nile/Hapi](https://badges.gitter.im/Hapi-Nile/Hapi.svg)](https://gitter.im/Hapi-Nile/Hapi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
+
+conda-forge feedstock
+=====================
+[Conda-forge feedstock](https://github.com/conda-forge/statista-feedstock)
 
 ## Installation
 
@@ -42,13 +43,14 @@ pip install statista
 ### Development Version
 
 ```bash
-pip install git+https://github.com/Serapieum-of-alex/statista
+pip install git+https://github.com/serapeum-org/statista
 ```
 
 ## Main Features
 
 ### Statistical Distributions
 - **Probability Distributions**: GEV, Gumbel, Normal, Exponential, and more
+- **Multi-Distribution Fitting**: Fit all distributions at once and select the best fit
 - **Parameter Estimation Methods**: Maximum Likelihood (ML), L-moments, Method of Moments (MOM)
 - **Goodness-of-fit Tests**: Kolmogorov-Smirnov, Chi-square
 - **Truncated Distributions**: Focus analysis on values above a threshold
@@ -69,53 +71,65 @@ pip install git+https://github.com/Serapieum-of-alex/statista
 
 ## Quick Start
 
-### Basic Usage
+### Single Distribution
 
 ```python
-import pandas as pd
+import numpy as np
 from statista.distributions import Distributions
 
-# Load your time series data
-data = pd.read_csv("your_data.csv", header=None)[0].tolist()
+# Load your data
+data = np.loadtxt("examples/data/time_series2.txt")
 
-# Create a distribution object (e.g., Gumbel)
-dist = Distributions("Gumbel", data)
+# Create a distribution object and fit parameters
+dist = Distributions("Gumbel", data=data)
+params = dist.fit_model(method="lmoments", test=False)
+print(params.loc, params.scale)
 
-# Fit the distribution using maximum likelihood
-params = dist.fit_model(method="mle")
-print(params)
-
-# Calculate and plot the PDF and CDF
+# Calculate PDF and CDF
 pdf = dist.pdf(plot_figure=True)
 cdf, _, _ = dist.cdf(plot_figure=True)
 
-# Perform goodness-of-fit tests
-ks_test = dist.ks()
-chi2_test = dist.chisquare()
+# Goodness-of-fit tests
+ks_stat, ks_pvalue = dist.ks()
+chi_stat, chi_pvalue = dist.chisquare()
+```
 
-# Create a probability plot with confidence intervals
-fig, ax = dist.plot()
+### Multi-Distribution Fitting
+
+```python
+from statista.distributions import Distributions
+
+# Fit all distributions and find the best one
+dist = Distributions(data=data)
+best_name, best_info = dist.best_fit()
+print(f"Best: {best_name}")
+print(f"Parameters: {best_info['parameters']}")
+
+# Or fit all and inspect results
+results = dist.fit()
+for name, info in results.items():
+    print(f"{name}: KS p-value={info['ks'][1]:.4f}")
 ```
 
 ### Extreme Value Analysis
 
 ```python
-from statista.distributions import PlottingPosition
+from statista.distributions import Distributions, PlottingPosition
 
-# Create a GEV distribution
-gev_dist = Distributions("GEV", data)
-
-# Fit using L-moments
+# Fit a GEV distribution using L-moments
+gev_dist = Distributions("GEV", data=data)
 params = gev_dist.fit_model(method="lmoments")
 
 # Calculate non-exceedance probabilities
 cdf_weibul = PlottingPosition.weibul(data)
 
 # Calculate confidence intervals
-lower_bound, upper_bound, fig, ax = gev_dist.confidence_interval(plot_figure=True)
+lower_bound, upper_bound, fig, ax = gev_dist.confidence_interval(
+    plot_figure=True
+)
 ```
 
-For more examples and detailed documentation, visit [Statista Documentation](https://serapieum-of-alex.github.io/statista)
+For more examples and detailed documentation, visit [Statista Documentation](https://serapeum-org.github.io/statista)
 
 ## Contributing
 
@@ -123,7 +137,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the GPL-3.0 License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Citation
 
@@ -131,7 +145,7 @@ If you use Statista in your research, please cite it as:
 
 ```
 Farrag, M. (2023). Statista: A Python package for statistical analysis, extreme value analysis, and sensitivity analysis.
-https://github.com/Serapieum-of-alex/statista
+https://github.com/serapeum-org/statista
 ```
 
 BibTeX:
@@ -139,7 +153,7 @@ BibTeX:
 @software{statista2023,
   author = {Farrag, Mostafa},
   title = {Statista: A Python package for statistical analysis, extreme value analysis, and sensitivity analysis},
-  url = {https://github.com/Serapieum-of-alex/statista},
+  url = {https://github.com/serapeum-org/statista},
   year = {2023}
 }
 ```

@@ -1,5 +1,7 @@
 import numpy as np
 import pytest
+from numpy.testing import assert_allclose, assert_array_equal
+
 from statista.utils import merge_small_bins
 
 
@@ -20,8 +22,8 @@ class TestMergeSmallBins:
 
         assert isinstance(merged_obs, np.ndarray)
         assert isinstance(merged_exp, np.ndarray)
-        np.testing.assert_array_equal(merged_obs, np.array(observed))
-        np.testing.assert_array_equal(merged_exp, np.array(expected))
+        assert_array_equal(merged_obs, np.array(observed))
+        assert_array_equal(merged_exp, np.array(expected))
         # sums must match and be unchanged here
         assert merged_obs.sum() == sum(observed) == 60
         assert merged_exp.sum() == merged_obs.sum()
@@ -38,8 +40,8 @@ class TestMergeSmallBins:
 
         merged_obs, merged_exp = merge_small_bins(observed, expected)
 
-        np.testing.assert_array_equal(merged_obs, np.array([15]))
-        np.testing.assert_array_equal(merged_exp, np.array([15]))
+        assert_array_equal(merged_obs, np.array([15]))
+        assert_array_equal(merged_exp, np.array([15]))
         assert merged_exp.sum() == merged_obs.sum() == 15
 
     @pytest.mark.unit
@@ -56,9 +58,11 @@ class TestMergeSmallBins:
         merged_obs, merged_exp = merge_small_bins(observed, expected)
 
         # Order should be low -> high
-        np.testing.assert_array_equal(merged_obs, np.array([10, 10]))
+        assert_array_equal(merged_obs, np.array([10, 10]))
         # Before rescaling, expected would be [4, 6]; after rescaling they sum to 20
-        np.testing.assert_allclose(merged_exp, np.array([8.0, 12.0]), rtol=1e-12, atol=1e-12)
+        np.testing.assert_allclose(
+            merged_exp, np.array([8.0, 12.0]), rtol=1e-12, atol=1e-12
+        )
         assert merged_exp.sum() == merged_obs.sum() == 20
 
     @pytest.mark.unit
@@ -75,8 +79,8 @@ class TestMergeSmallBins:
         merged_obs, merged_exp = merge_small_bins(observed, expected)
 
         # No rescaling required (sums are already equal = 12)
-        np.testing.assert_array_equal(merged_obs, np.array([6, 6]))
-        np.testing.assert_array_equal(merged_exp, np.array([6, 6]))
+        assert_array_equal(merged_obs, np.array([6, 6]))
+        assert_array_equal(merged_exp, np.array([6, 6]))
         assert merged_exp.sum() == merged_obs.sum() == 12
 
     @pytest.mark.unit
@@ -95,8 +99,8 @@ class TestMergeSmallBins:
         # Merging logic from the right: [5,5,10] with [2,3,5]
         #   Right bin 5 (>=5) kept; then 3 (<5) accum; then 2 (<5) accum -> append 2+3 as 5
         # Final bins: observed [5, 15], expected before scaling [5, 5] -> after scaling both to sum 20 -> [10, 10]
-        np.testing.assert_array_equal(merged_obs, np.array([5 + 5, 10]))
-        np.testing.assert_allclose(merged_exp, np.array([10.0, 10.0]), rtol=1e-12, atol=1e-12)
+        assert_array_equal(merged_obs, np.array([5 + 5, 10]))
+        assert_allclose(merged_exp, np.array([10.0, 10.0]), rtol=1e-12, atol=1e-12)
         assert merged_exp.sum() == merged_obs.sum() == sum(observed)
 
     @pytest.mark.unit
@@ -114,7 +118,7 @@ class TestMergeSmallBins:
         # then leftmost 1 remains -> appended -> [1, 11, 11] after reversing back to low->high
         assert isinstance(merged_obs, np.ndarray)
         assert isinstance(merged_exp, np.ndarray)
-        np.testing.assert_array_equal(merged_obs, np.array([1, 11, 11]))
-        np.testing.assert_array_equal(merged_exp, np.array([1, 11, 11]))
+        assert_array_equal(merged_obs, np.array([1, 11, 11]))
+        assert_array_equal(merged_exp, np.array([1, 11, 11]))
         # sums preserved and equal between observed and expected
         assert merged_exp.sum() == merged_obs.sum() == sum(observed)

@@ -1,8 +1,8 @@
 site_name: Statista
 site_description: Statistical analysis package
-site_url: https://serapieum-of-alex.github.io/statista/
-repo_url: https://github.com/Serapieum-of-alex/statista
-repo_name: Serapieum-of-alex/statista
+site_url: https://serapeum-org.github.io/statista/
+repo_url: https://github.com/serapeum-org/statista
+repo_name: serapeum-org/statista
 
 theme:
   name: material
@@ -10,10 +10,8 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
-    - navigation.expand
     - navigation.indexes
     - navigation.footer
-    - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.top
@@ -96,6 +94,8 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.arithmatex:
+      generic: true
   - toc:
       permalink: "#"
       toc_depth: 1-4
@@ -105,20 +105,35 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - Reference:
-    - Distributions: reference/distributions-class.md
+    - Distributions:
+      - Facade: reference/distributions/facade.md
+      - Plotting Position: reference/distributions/plotting-position.md
+      - Gumbel: reference/distributions/gumbel.md
+      - GEV: reference/distributions/gev.md
+      - Exponential: reference/distributions/exponential.md
+      - Normal: reference/distributions/normal.md
+    - Parameters:
+      - L-moments: reference/parameters/lmoments.md
+      - Extreme Value: reference/parameters/extreme-value.md
+      - Normal Family: reference/parameters/normal-family.md
+      - Other: reference/parameters/other.md
     - Time Series: reference/time-series-class.md
     - Extreme Value Analysis: reference/eva-class.md
+    - Confidence Interval: reference/confidence-interval.md
     - Descriptors: reference/descriptors-module.md
     - Plot: reference/plot-class.md
     - Sensitivity Analysis: reference/sensitivity-class.md
     - Tools: reference/tools-module.md
-    - utils: reference/utils-module.md
+    - Utils: reference/utils-module.md
   - Examples:
     - sensitivity-analysis:
       - Sensitivity Analysis: notebook/sensitivity-analysis/scs-cn.ipynb
     - Extreme Value Analysis:
       - Extreme Value Analysis: notebook/extreme-value-analysis/extreme-value-analysis.ipynb
       - Rhine Catchment: notebook/extreme-value-analysis/rhine_discharge_analysis.ipynb
+  - Guides:
+    - Commitizen: guides/commitizen.md
+    - Mypy: guides/mypy.md
   - About:
     - Change-log: change-log.md
     - Code of Conduct: CODE_OF_CONDUCT.md
@@ -126,10 +141,14 @@ nav:
     - License: LICENSE.md
     - Authors: AUTHORS.md
 
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Serapieum-of-alex/statista
+      link: https://github.com/serapeum-org/statista
   version:
       provider: mike
   version_selector: true
