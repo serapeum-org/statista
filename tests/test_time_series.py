@@ -44,6 +44,76 @@ def test_stats(ts: TimeSeries, request):
     ]
 
 
+EXTENDED_STATS_INDEX = [
+    "count", "mean", "std", "cv", "skewness", "kurtosis",
+    "min", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "max",
+    "iqr", "mad",
+]
+
+
+class TestExtendedStats:
+    """Tests for the extended_stats property."""
+
+    @pytest.mark.parametrize("ts", ["ts_1d", "ts_2d"])
+    def test_extended_stats_rows(self, ts: str, request):
+        """extended_stats should return all expected statistic rows."""
+        ts = request.getfixturevalue(ts)
+        result = ts.extended_stats
+        assert result.index.tolist() == EXTENDED_STATS_INDEX
+
+    @pytest.mark.parametrize("ts", ["ts_1d", "ts_2d"])
+    def test_extended_stats_columns_match(self, ts: str, request):
+        """Column names in extended_stats should match the TimeSeries columns."""
+        ts = request.getfixturevalue(ts)
+        result = ts.extended_stats
+        assert result.columns.tolist() == ts.columns.tolist()
+
+    def test_extended_stats_known_values(self):
+        """Verify computed statistics against known values for a fixed dataset."""
+        data = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0])
+        ts = TimeSeries(data)
+        result = ts.extended_stats
+
+        assert result.loc["count", "Series1"] == 10.0
+        assert result.loc["mean", "Series1"] == pytest.approx(5.5)
+        assert result.loc["min", "Series1"] == 1.0
+        assert result.loc["max", "Series1"] == 10.0
+        assert result.loc["50%", "Series1"] == pytest.approx(5.5)
+        # std with ddof=1
+        assert result.loc["std", "Series1"] == pytest.approx(np.std(data, ddof=1))
+        # CV = std / mean
+        expected_cv = np.std(data, ddof=1) / np.mean(data)
+        assert result.loc["cv", "Series1"] == pytest.approx(expected_cv)
+        # IQR = Q3 - Q1
+        q25, q75 = np.percentile(data, [25, 75])
+        assert result.loc["iqr", "Series1"] == pytest.approx(q75 - q25)
+        # MAD
+        from scipy.stats import median_abs_deviation
+        assert result.loc["mad", "Series1"] == pytest.approx(median_abs_deviation(data))
+
+    def test_extended_stats_cv_near_zero_mean(self):
+        """CV should be NaN when the mean is close to zero."""
+        data = np.array([-2.0, -1.0, 0.0, 1.0, 2.0])
+        ts = TimeSeries(data)
+        result = ts.extended_stats
+        assert np.isnan(result.loc["cv", "Series1"])
+
+    def test_extended_stats_skewness_symmetric(self):
+        """Skewness should be close to zero for symmetric data."""
+        data = np.array([-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0])
+        ts = TimeSeries(data)
+        result = ts.extended_stats
+        assert result.loc["skewness", "Series1"] == pytest.approx(0.0, abs=1e-10)
+
+    def test_extended_stats_handles_nan(self):
+        """NaN values in the data should be excluded from calculations."""
+        data = np.array([1.0, 2.0, np.nan, 4.0, 5.0])
+        ts = TimeSeries(data)
+        result = ts.extended_stats
+        assert result.loc["count", "Series1"] == 4.0
+        assert result.loc["mean", "Series1"] == pytest.approx(3.0)
+
+
 class TestBoxPlot:
 
     @pytest.mark.parametrize("ts", ["ts_1d", "ts_2d"])
