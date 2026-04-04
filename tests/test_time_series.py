@@ -4,6 +4,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from pandas import DataFrame
 from statista.time_series import TimeSeries
 
 
@@ -25,6 +26,157 @@ def ts_1d(sample_data_1d) -> TimeSeries:
 @pytest.fixture
 def ts_2d(sample_data_2d) -> TimeSeries:
     return TimeSeries(sample_data_2d, columns=["A", "B", "C"])
+
+
+class TestTimeSeriesInit:
+    """Tests for TimeSeries constructor (__init__) and _constructor property."""
+
+    def test_1d_array_creates_single_column(self):
+        """A 1D numpy array should be reshaped into a single-column DataFrame."""
+        data = np.array([1.0, 2.0, 3.0])
+        ts = TimeSeries(data)
+        assert ts.shape == (3, 1), f"Expected shape (3, 1), got {ts.shape}"
+        assert ts.columns.tolist() == ["Series1"], f"Expected ['Series1'], got {ts.columns.tolist()}"
+
+    def test_2d_array_preserves_shape(self):
+        """A 2D numpy array should keep its shape with auto-generated column names."""
+        data = np.random.randn(10, 3)
+        ts = TimeSeries(data)
+        assert ts.shape == (10, 3), f"Expected shape (10, 3), got {ts.shape}"
+        assert ts.columns.tolist() == ["Series1", "Series2", "Series3"]
+
+    def test_custom_columns(self):
+        """User-provided column names should override auto-generated ones."""
+        data = np.random.randn(5, 2)
+        ts = TimeSeries(data, columns=["X", "Y"])
+        assert ts.columns.tolist() == ["X", "Y"], f"Expected ['X', 'Y'], got {ts.columns.tolist()}"
+
+    def test_custom_index(self):
+        """User-provided index should be preserved."""
+        data = np.array([10.0, 20.0, 30.0])
+        idx = [100, 200, 300]
+        ts = TimeSeries(data, index=idx)
+        assert ts.index.tolist() == idx, f"Expected {idx}, got {ts.index.tolist()}"
+
+    def test_from_dataframe(self):
+        """Passing a pandas DataFrame should work without re-wrapping."""
+        df = DataFrame({"A": [1, 2], "B": [3, 4]})
+        ts = TimeSeries(df, columns=["A", "B"])
+        assert ts.shape == (2, 2), f"Expected (2, 2), got {ts.shape}"
+        assert ts["A"].tolist() == [1, 2]
+
+    def test_from_dict(self):
+        """Passing a dict should create a TimeSeries with dict keys as columns."""
+        data = {"col_a": [1, 2, 3], "col_b": [4, 5, 6]}
+        ts = TimeSeries(data)
+        assert "col_a" in ts.columns, f"Expected 'col_a' in columns, got {ts.columns.tolist()}"
+        assert ts["col_b"].tolist() == [4, 5, 6]
+
+    def test_constructor_returns_timeseries(self, ts_1d):
+        """The _constructor property should return the TimeSeries class for pandas method chaining."""
+        assert ts_1d._constructor is TimeSeries, (
+            f"Expected TimeSeries, got {ts_1d._constructor}"
+        )
+
+    def test_pandas_operation_returns_timeseries(self):
+        """Pandas operations (e.g., copy) should return TimeSeries, not plain DataFrame."""
+        ts = TimeSeries(np.array([1.0, 2.0, 3.0]))
+        copied = ts.copy()
+        assert isinstance(copied, TimeSeries), (
+            f"copy() should return TimeSeries, got {type(copied)}"
+        )
+
+
+class TestGetAxFig:
+    """Isolated tests for the _get_ax_fig static method."""
+
+    def test_creates_new_figure_and_axes(self):
+        """When no fig/ax provided, should create both from scratch."""
+        fig, ax = TimeSeries._get_ax_fig()
+        assert isinstance(fig, plt.Figure), f"Expected Figure, got {type(fig)}"
+        assert isinstance(ax, plt.Axes), f"Expected Axes, got {type(ax)}"
+        plt.close(fig)
+
+    def test_reuses_provided_fig_and_ax(self):
+        """When both fig and ax are provided, should return them unchanged."""
+        fig_in, ax_in = plt.subplots()
+        fig_out, ax_out = TimeSeries._get_ax_fig(fig=fig_in, ax=ax_in)
+        assert fig_out is fig_in, "Should reuse provided Figure"
+        assert ax_out is ax_in, "Should reuse provided Axes"
+        plt.close(fig_in)
+
+    def test_reuses_fig_creates_ax(self):
+        """When only fig is provided (no ax), should add a subplot to it."""
+        fig_in = plt.figure()
+        fig_out, ax_out = TimeSeries._get_ax_fig(fig=fig_in)
+        assert fig_out is fig_in, "Should reuse provided Figure"
+        assert isinstance(ax_out, plt.Axes), f"Should create Axes, got {type(ax_out)}"
+        plt.close(fig_in)
+
+    def test_reuses_ax_gets_fig(self):
+        """When only ax is provided (no fig), should extract fig from ax.figure."""
+        fig_in, ax_in = plt.subplots()
+        fig_out, ax_out = TimeSeries._get_ax_fig(ax=ax_in)
+        assert ax_out is ax_in, "Should reuse provided Axes"
+        assert fig_out is fig_in, "Should extract Figure from Axes"
+        plt.close(fig_in)
+
+    def test_n_subplots(self):
+        """n_subplots > 1 should create multiple axes."""
+        fig, axes = TimeSeries._get_ax_fig(n_subplots=3)
+        assert len(axes) == 3, f"Expected 3 axes, got {len(axes)}"
+        plt.close(fig)
+
+
+class TestAdjustAxesLabels:
+    """Isolated tests for _adjust_axes_labels static method."""
+
+    def test_sets_title_and_labels(self):
+        """Title, xlabel, ylabel should be applied to the axes."""
+        fig, ax = plt.subplots()
+        TimeSeries._adjust_axes_labels(
+            ax, title="T", xlabel="X", ylabel="Y"
+        )
+        assert ax.get_title() == "T", f"Expected title 'T', got '{ax.get_title()}'"
+        assert ax.get_xlabel() == "X", f"Expected xlabel 'X', got '{ax.get_xlabel()}'"
+        assert ax.get_ylabel() == "Y", f"Expected ylabel 'Y', got '{ax.get_ylabel()}'"
+        plt.close(fig)
+
+    def test_sets_tick_labels(self):
+        """Tick labels should be applied when provided."""
+        fig, ax = plt.subplots()
+        ax.bar([1, 2, 3], [4, 5, 6])
+        TimeSeries._adjust_axes_labels(ax, tick_labels=["a", "b", "c"])
+        labels = [t.get_text() for t in ax.get_xticklabels()]
+        assert "a" in labels, f"Expected 'a' in tick labels, got {labels}"
+        plt.close(fig)
+
+    def test_sets_legend(self):
+        """Legend should be created when legend kwarg is provided."""
+        fig, ax = plt.subplots()
+        ax.plot([1, 2], [3, 4])
+        TimeSeries._adjust_axes_labels(ax, legend=["MyLine"])
+        legend = ax.get_legend()
+        assert legend is not None, "Legend should be created"
+        assert legend.get_texts()[0].get_text() == "MyLine"
+        plt.close(fig)
+
+    def test_font_sizes(self):
+        """Custom font sizes should be applied."""
+        fig, ax = plt.subplots()
+        TimeSeries._adjust_axes_labels(
+            ax, title="T", title_fontsize=20, xlabel="X", xlabel_fontsize=16,
+            ylabel="Y", ylabel_fontsize=14, tick_fontsize=10,
+        )
+        assert ax.title.get_fontsize() == 20, f"Expected title fontsize 20, got {ax.title.get_fontsize()}"
+        plt.close(fig)
+
+    def test_no_kwargs_does_not_crash(self):
+        """Calling with no kwargs should not raise."""
+        fig, ax = plt.subplots()
+        result = TimeSeries._adjust_axes_labels(ax)
+        assert result is ax, "Should return the same axes object"
+        plt.close(fig)
 
 
 @pytest.mark.parametrize("ts", ["ts_1d", "ts_2d"])
@@ -314,3 +466,245 @@ class TestDensity:
         fig2, ax2 = ts.density(fig=fig, ax=ax)
         assert fig2 is fig, "If fig is provided, plot_density should use it."
         assert ax2 is ax, "If ax is provided, plot_density should use it."
+
+
+class TestExtendedStatsEdgeCases:
+    """Additional edge-case tests for the extended_stats property."""
+
+    def test_negative_mean_cv(self):
+        """CV should be computed correctly for data with negative mean."""
+        data = np.array([-10.0, -20.0, -30.0, -40.0, -50.0])
+        ts = TimeSeries(data)
+        result = ts.extended_stats
+        expected_cv = np.std(data, ddof=1) / np.mean(data)
+        assert result.loc["cv", "Series1"] == pytest.approx(expected_cv), (
+            f"Expected CV {expected_cv}, got {result.loc['cv', 'Series1']}"
+        )
+
+    def test_single_value(self):
+        """A single-value series should produce std=0, NaN for CV, and consistent min/max."""
+        data = np.array([42.0])
+        ts = TimeSeries(data)
+        result = ts.extended_stats
+        assert result.loc["count", "Series1"] == 1.0
+        assert result.loc["mean", "Series1"] == 42.0
+        assert result.loc["min", "Series1"] == 42.0
+        assert result.loc["max", "Series1"] == 42.0
+
+    def test_kurtosis_heavy_tails(self):
+        """Kurtosis should be positive for heavy-tailed data (leptokurtic)."""
+        np.random.seed(99)
+        data = np.concatenate([np.random.randn(100), np.array([10.0, -10.0, 15.0, -15.0])])
+        ts = TimeSeries(data)
+        result = ts.extended_stats
+        assert result.loc["kurtosis", "Series1"] > 0, (
+            f"Expected positive kurtosis for heavy tails, got {result.loc['kurtosis', 'Series1']}"
+        )
+
+    def test_stats_values_match_pandas_describe(self):
+        """The stats property values should match pandas describe() output."""
+        data = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+        ts = TimeSeries(data)
+        stats = ts.stats
+        desc = ts.describe()
+        assert stats.loc["mean", "Series1"] == desc.loc["mean", "Series1"], (
+            "stats and describe() should produce identical mean"
+        )
+        assert stats.loc["std", "Series1"] == desc.loc["std", "Series1"], (
+            "stats and describe() should produce identical std"
+        )
+
+
+class TestBoxPlotParameters:
+    """Tests for box_plot parameter coverage."""
+
+    def test_mean_marker(self):
+        """box_plot(mean=True) should not raise and should return valid axes."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.box_plot(mean=True)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_notch(self):
+        """box_plot(notch=True) should not raise."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.box_plot(notch=True)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_custom_color(self):
+        """box_plot with color dict should apply the color."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.box_plot(color={"boxes": "#DC143C"})
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_title_xlabel_ylabel(self):
+        """box_plot should apply title and axis labels."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.box_plot(title="My Title", xlabel="X", ylabel="Y")
+        assert ax.get_title() == "My Title"
+        assert ax.get_xlabel() == "X"
+        assert ax.get_ylabel() == "Y"
+        plt.close(fig)
+
+
+class TestCalculateWhiskersEdgeCases:
+    """Additional tests for calculate_whiskers static method."""
+
+    def test_float_data(self):
+        """Should work with floating point data."""
+        data = [0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+        q1, q3 = np.percentile(data, [25, 75])
+        lower, upper = TimeSeries.calculate_whiskers(data, q1, q3)
+        assert lower >= data[0], f"Lower whisker {lower} should be >= min {data[0]}"
+        assert upper <= data[-1], f"Upper whisker {upper} should be <= max {data[-1]}"
+
+    def test_zero_iqr(self):
+        """When Q1 == Q3 (IQR=0), whiskers should equal Q1 and Q3."""
+        data = [5, 5, 5, 5, 5]
+        lower, upper = TimeSeries.calculate_whiskers(data, 5.0, 5.0)
+        assert lower == 5.0, f"Expected lower whisker 5.0, got {lower}"
+        assert upper == 5.0, f"Expected upper whisker 5.0, got {upper}"
+
+    def test_negative_data(self):
+        """Should handle negative values correctly."""
+        data = list(range(-50, 50))
+        q1, q3 = np.percentile(data, [25, 75])
+        lower, upper = TimeSeries.calculate_whiskers(data, q1, q3)
+        assert lower >= data[0], f"Lower whisker {lower} should be >= min {data[0]}"
+        assert upper <= data[-1], f"Upper whisker {upper} should be <= max {data[-1]}"
+
+
+class TestViolinParameters:
+    """Tests for violin plot parameter coverage."""
+
+    def test_median_shown(self):
+        """violin(median=True) should not raise."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.violin(median=True)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_no_mean_no_extrema(self):
+        """violin(mean=False, extrema=False) should not raise."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.violin(mean=False, extrema=False)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    @pytest.mark.parametrize("side", ["low", "high", "both"])
+    def test_side_parameter(self, side):
+        """All side options ('low', 'high', 'both') should produce valid plots."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.violin(side=side)
+        assert isinstance(ax, plt.Axes), f"side='{side}' should produce valid Axes"
+        plt.close(fig)
+
+    def test_spacing(self):
+        """Violin with spacing > 0 should work for multi-column data."""
+        ts = TimeSeries(np.random.randn(50, 3), columns=["A", "B", "C"])
+        fig, ax = ts.violin(spacing=2)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_custom_color(self):
+        """Custom color dict should be applied to violin bodies."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.violin(color={"face": "red", "edge": "blue", "alpha": 0.5})
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+
+class TestRaincloudParameters:
+    """Tests for raincloud plot parameter coverage."""
+
+    def test_overlay_false(self):
+        """raincloud(overlay=False) should separate violin, scatter, box."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.raincloud(overlay=False)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_custom_widths(self):
+        """Custom violin_width, scatter_offset, boxplot_width should not raise."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.raincloud(violin_width=0.6, scatter_offset=0.2, boxplot_width=0.15)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_custom_order(self):
+        """Custom order should control which elements appear."""
+        ts = TimeSeries(np.random.randn(50))
+        fig, ax = ts.raincloud(order=["box", "scatter"])
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_2d_overlay_false(self):
+        """Overlay=False with multi-column data should not raise."""
+        ts = TimeSeries(np.random.randn(50, 2), columns=["X", "Y"])
+        fig, ax = ts.raincloud(overlay=False)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+
+class TestRollingStatisticsParameters:
+    """Tests for rolling_statistics parameter coverage."""
+
+    def test_custom_window(self):
+        """Different window sizes should produce valid plots."""
+        ts = TimeSeries(np.random.randn(100))
+        fig, ax = ts.rolling_statistics(window=5)
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+    def test_with_labels(self):
+        """Title and axis labels should be applied."""
+        ts = TimeSeries(np.random.randn(100))
+        fig, ax = ts.rolling_statistics(
+            window=10, title="Rolling", xlabel="Time", ylabel="Value"
+        )
+        assert ax.get_title() == "Rolling"
+        assert ax.get_xlabel() == "Time"
+        plt.close(fig)
+
+
+class TestDensityParameters:
+    """Tests for density plot parameter coverage."""
+
+    def test_with_labels(self):
+        """Title and axis labels should be applied to density plot."""
+        ts = TimeSeries(np.random.randn(100))
+        fig, ax = ts.density(title="KDE", xlabel="Val", ylabel="Density")
+        assert ax.get_title() == "KDE"
+        assert ax.get_xlabel() == "Val"
+        plt.close(fig)
+
+    def test_custom_color(self):
+        """Custom color kwarg should not raise."""
+        ts = TimeSeries(np.random.randn(100))
+        fig, ax = ts.density(color="red")
+        assert isinstance(ax, plt.Axes)
+        plt.close(fig)
+
+
+class TestHistogramParameters:
+    """Additional tests for histogram parameter coverage."""
+
+    def test_custom_color_list_2d(self):
+        """2D data with a list of face colors should not trigger the 'Multiple columns' warning."""
+        ts = TimeSeries(np.random.randn(50, 2), columns=["A", "B"])
+        import warnings
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            fig, ax = plt.subplots()
+            n, edges, fig2, ax2 = ts.histogram(
+                fig=fig, ax=ax,
+                color={"face": ["red", "blue"], "edge": "black", "alpha": 0.7},
+            )
+        multi_col_warnings = [x for x in w if "Multiple columns" in str(x.message)]
+        assert len(multi_col_warnings) == 0, (
+            "Should not warn about multiple columns when a color list is provided"
+        )
+        assert isinstance(ax2, plt.Axes)
+        plt.close(fig)
