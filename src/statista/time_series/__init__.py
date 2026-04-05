@@ -13,8 +13,17 @@ Time Series Analysis
 - `raincloud`: Plots a raincloud plot of the time series data.
 - `histogram`: Plots a histogram of the time series data.
 
+Statistical Testing
+-------------------
+Most hypothesis testing methods (e.g., ``mann_kendall``, ``adf_test``, ``pettitt_test``) default to
+``alpha=0.05`` (5% significance level). For safety-critical or high-consequence applications, consider using
+more conservative thresholds like ``alpha=0.01`` or ``alpha=0.10`` depending on your domain requirements.
+
 https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html
 """
+
+# Default significance level for hypothesis tests
+DEFAULT_ALPHA = 0.05  # Consider 0.01 for conservative analyses in safety-critical applications
 
 from statista.time_series.base import BOX_MEAN_PROP, VIOLIN_PROP, TimeSeriesBase
 from statista.time_series.changepoint import ChangePoint
@@ -58,4 +67,4 @@ class TimeSeries(
         return TimeSeries
 
 
-__all__ = ["TimeSeries", "BOX_MEAN_PROP", "VIOLIN_PROP"]
+__all__ = ["TimeSeries", "BOX_MEAN_PROP", "VIOLIN_PROP", "DEFAULT_ALPHA"]
