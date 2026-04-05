@@ -82,6 +82,13 @@ class TestFlowDurationCurve:
         ):
             ts.flow_duration_curve(plot=False)
 
+    def test_negative_values_warns(self):
+        """Negative flow values should issue warning."""
+        data = np.array([10.0, 20.0, -5.0, 30.0, 15.0])
+        ts = TimeSeries(data)
+        with pytest.warns(UserWarning, match="contains negative values.*invalid for flow data"):
+            ts.flow_duration_curve(plot=False)
+
 
 class TestAnnualExtremes:
     """Tests for annual_extremes() method."""
@@ -178,6 +185,13 @@ class TestBaseflowSeparation:
         result, _ = ts_flow.baseflow_separation(plot=False)
         diff = result["total_flow"] - result["baseflow"] - result["quickflow"]
         assert np.allclose(diff.values, 0, atol=1e-10)
+
+    def test_negative_values_warns(self):
+        """Negative flow values should issue warning."""
+        data = np.array([10.0, 20.0, -5.0, 30.0, 15.0])
+        ts = TimeSeries(data)
+        with pytest.warns(UserWarning, match="contains negative values.*invalid for flow data"):
+            ts.baseflow_separation(plot=False)
 
     def test_invalid_method_raises(self, ts_flow):
         """Unknown method should raise ValueError."""

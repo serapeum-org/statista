@@ -81,6 +81,14 @@ class Hydrological(_TimeSeriesStub):
                     f"Column '{col}' contains no valid data after removing NaN values"
                 )
 
+            # Warn about negative flows (physically invalid in hydrology)
+            if (data < 0).any():
+                import warnings
+                warnings.warn(
+                    f"Column '{col}' contains negative values, which may be invalid for flow data",
+                    UserWarning
+                )
+
             ranks = np.arange(1, n + 1)
 
             if method == "weibull":
@@ -305,6 +313,14 @@ class Hydrological(_TimeSeriesStub):
 
         q = self[column].dropna().values.astype(float)
         idx = self[column].dropna().index
+
+        # Warn about negative flows (physically invalid in hydrology)
+        if (q < 0).any():
+            import warnings
+            warnings.warn(
+                f"Column '{column}' contains negative values, which may be invalid for flow data",
+                UserWarning
+            )
 
         if method == "lyne_hollick":
             baseflow = _lyne_hollick(q, alpha)
