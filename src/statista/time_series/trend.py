@@ -12,7 +12,7 @@ from pandas import DataFrame
 from scipy.signal import detrend as scipy_detrend
 from scipy.stats import norm, theilslopes
 
-from statista.time_series._correlation import _compute_acf
+from statista.time_series.correlation import _compute_acf
 
 if TYPE_CHECKING:
     from pandas import Index

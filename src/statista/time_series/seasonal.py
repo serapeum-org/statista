@@ -369,7 +369,7 @@ class SeasonalMixin:
         """
         from scipy.stats import norm as scipy_norm
 
-        from statista.time_series._trend import _mk_score, _mk_variance
+        from statista.time_series.trend import _mk_score, _mk_variance
 
         cols = [column] if column is not None else list(self.columns)
         rows = []

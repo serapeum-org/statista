@@ -1,0 +1,48 @@
+@startuml Visualization Call Graph
+
+skinparam activityFontSize 11
+skinparam partitionFontSize 13
+
+title TimeSeries Visualization — Internal Call Flow
+
+start
+
+partition "User Code" {
+    :ts = TimeSeries(data);
+    :fig, ax = ts.box_plot(**kwargs);
+}
+
+partition "VisualizationMixin.box_plot()" {
+    :fig, ax = self._get_ax_fig(**kwargs);
+    note right: Creates or reuses Figure/Axes
+    :kwargs.pop("fig"), kwargs.pop("ax");
+    :ax.boxplot(data, notch, patch_artist, ...);
+    :ax = self._adjust_axes_labels(ax, columns, **kwargs);
+    note right
+        Sets title, xlabel, ylabel,
+        grid, legend, font sizes
+    end note
+    :plt.show();
+    :return fig, ax;
+}
+
+partition "DescriptiveMixin.extended_stats" {
+    :result = DataFrame(index=stat_names, columns=self.columns);
+    while (for col in self.columns) is (next column)
+        :data = self[col].dropna().values;
+        :Compute: mean, std, CV, skewness, kurtosis;
+        note right
+            scipy.stats.skew(bias=False)
+            scipy.stats.kurtosis(bias=False)
+            scipy.stats.median_abs_deviation
+        end note
+        :Compute: percentiles [5,10,25,50,75,90,95];
+        :Compute: IQR, MAD;
+        :Store in result DataFrame;
+    endwhile (done)
+    :return result;
+}
+
+stop
+
+@enduml

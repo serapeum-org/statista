@@ -12,7 +12,7 @@ from matplotlib.collections import PolyCollection
 from matplotlib.figure import Figure
 from pandas import DataFrame
 
-from statista.time_series._base import BOX_MEAN_PROP, VIOLIN_PROP
+from statista.time_series.base import BOX_MEAN_PROP, VIOLIN_PROP
 
 if TYPE_CHECKING:
     from pandas import Index

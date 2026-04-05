@@ -16,19 +16,19 @@ Time Series Analysis
 https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html
 """
 
-from statista.time_series._base import BOX_MEAN_PROP, VIOLIN_PROP, TimeSeriesBase
-from statista.time_series._changepoint import ChangePointMixin
-from statista.time_series._comparison import ComparisonMixin
-from statista.time_series._correlation import CorrelationMixin
-from statista.time_series._decomposition import DecompositionMixin
-from statista.time_series._descriptive import DescriptiveMixin
-from statista.time_series._distribution import DistributionMixin
-from statista.time_series._hydrological import HydrologicalMixin
-from statista.time_series._missing import MissingDataMixin
-from statista.time_series._seasonal import SeasonalMixin
-from statista.time_series._stationarity import StationarityMixin
-from statista.time_series._trend import TrendMixin
-from statista.time_series._visualization import VisualizationMixin
+from statista.time_series.base import BOX_MEAN_PROP, VIOLIN_PROP, TimeSeriesBase
+from statista.time_series.changepoint import ChangePointMixin
+from statista.time_series.comparison import ComparisonMixin
+from statista.time_series.correlation import CorrelationMixin
+from statista.time_series.decomposition import DecompositionMixin
+from statista.time_series.descriptive import DescriptiveMixin
+from statista.time_series.distribution import DistributionMixin
+from statista.time_series.hydrological import HydrologicalMixin
+from statista.time_series.missing import MissingDataMixin
+from statista.time_series.seasonal import SeasonalMixin
+from statista.time_series.stationarity import StationarityMixin
+from statista.time_series.trend import TrendMixin
+from statista.time_series.visualization import VisualizationMixin
 
 
 class TimeSeries(
