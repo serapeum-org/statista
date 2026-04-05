@@ -20,6 +20,7 @@ from statista.time_series._base import BOX_MEAN_PROP, VIOLIN_PROP, TimeSeriesBas
 from statista.time_series._correlation import CorrelationMixin
 from statista.time_series._descriptive import DescriptiveMixin
 from statista.time_series._missing import MissingDataMixin
+from statista.time_series._stationarity import StationarityMixin
 from statista.time_series._visualization import VisualizationMixin
 
 
@@ -28,6 +29,7 @@ class TimeSeries(
     VisualizationMixin,
     MissingDataMixin,
     CorrelationMixin,
+    StationarityMixin,
     TimeSeriesBase,
 ):
     """A class to represent and analyze time series data using pandas DataFrame.
