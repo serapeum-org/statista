@@ -80,6 +80,10 @@ class TimeSeriesBase(DataFrame):
         if isinstance(data, list):
             data = np.array(data)
 
+        # Validate non-empty data for arrays
+        if isinstance(data, np.ndarray) and data.size == 0:
+            raise ValueError("Cannot create TimeSeries from empty array")
+
         if isinstance(data, np.ndarray) and data.ndim == 1:
             data = data.reshape(-1, 1)  # Convert 1D array to 2D with one column
 
@@ -99,6 +103,10 @@ class TimeSeriesBase(DataFrame):
         if not isinstance(data, DataFrame):
             # Convert input data to a pandas DataFrame
             data = DataFrame(data, index=index, columns=columns)
+
+        # Validate DataFrame is not empty
+        if data.empty:
+            raise ValueError("Cannot create TimeSeries from empty DataFrame")
 
         super().__init__(data, *args, **kwargs)
         self.columns = columns

@@ -109,6 +109,26 @@ class TestTimeSeriesInit:
             copied, TimeSeries
         ), f"copy() should return TimeSeries, got {type(copied)}"
 
+    def test_empty_array_raises_valueerror(self):
+        """Creating TimeSeries from empty array should raise ValueError."""
+        with pytest.raises(ValueError, match="Cannot create TimeSeries from empty array"):
+            TimeSeries(np.array([]))
+
+    def test_empty_2d_array_raises_valueerror(self):
+        """Creating TimeSeries from empty 2D array should raise ValueError."""
+        with pytest.raises(ValueError, match="Cannot create TimeSeries from empty array"):
+            TimeSeries(np.array([]).reshape(0, 3))
+
+    def test_empty_list_raises_valueerror(self):
+        """Creating TimeSeries from empty list should raise ValueError."""
+        with pytest.raises(ValueError, match="Cannot create TimeSeries from empty array"):
+            TimeSeries([])
+
+    def test_empty_dataframe_raises_valueerror(self):
+        """Creating TimeSeries from empty DataFrame should raise ValueError."""
+        with pytest.raises(ValueError, match="Cannot create TimeSeries from empty DataFrame"):
+            TimeSeries(DataFrame())
+
 
 class TestGetAxFig:
     """Isolated tests for the _get_ax_fig static method."""
