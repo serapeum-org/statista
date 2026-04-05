@@ -12,33 +12,18 @@ from pandas import DataFrame
 from scipy.stats import rankdata
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class ChangePoint:
+class ChangePoint(_TimeSeriesStub):
     """Change point detection methods for TimeSeries.
 
     Implements Pettitt, SNHT, and Buishand range tests from scratch following
     the algorithms in pyhomogeneity (Moges et al., 2020). All tests detect a
     single change point in the mean of a time series.
     """
-
-    if TYPE_CHECKING:
-        columns: Index
-        index: Index
-
-        @staticmethod
-        def _get_ax_fig(  # noqa: E704
-            n_subplots: int = 1, **kwargs: object
-        ) -> tuple[Figure, Axes]: ...
-
-        @staticmethod
-        def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
-        ) -> Axes: ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
 
     def pettitt_test(
         self,

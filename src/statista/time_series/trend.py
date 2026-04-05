@@ -15,32 +15,13 @@ from scipy.stats import norm, theilslopes
 from statista.time_series.correlation import _compute_acf
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class Trend:
-    """Trend detection methods for TimeSeries.
-
-    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
-    """
-
-    if TYPE_CHECKING:
-        columns: Index
-        index: Index
-        values: np.ndarray
-
-        @staticmethod
-        def _get_ax_fig(  # noqa: E704
-            n_subplots: int = 1, **kwargs: object
-        ) -> tuple[Figure, Axes]: ...
-
-        @staticmethod
-        def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
-        ) -> Axes: ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
+class Trend(_TimeSeriesStub):
+    """Trend detection methods for TimeSeries."""
 
     def mann_kendall(
         self,

@@ -12,36 +12,17 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class Hydrological:
+class Hydrological(_TimeSeriesStub):
     """Hydrology-specific analysis methods for TimeSeries.
 
     Implements flow duration curves, baseflow separation, annual extremes, and
     hydrological indices commonly used in water resources engineering.
     """
-
-    if TYPE_CHECKING:
-        columns: Index
-        index: Index
-        values: np.ndarray
-
-        @staticmethod
-        def _get_ax_fig(  # noqa: E704
-            n_subplots: int = 1, **kwargs: object
-        ) -> tuple[Figure, Axes]: ...
-
-        @staticmethod
-        def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
-        ) -> Axes: ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
-
-        def resample(self, rule: str, **kwargs: object) -> Any:  # noqa: E704
-            ...
 
     def flow_duration_curve(
         self,

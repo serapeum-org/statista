@@ -13,31 +13,13 @@ from scipy.signal import periodogram as scipy_periodogram
 from scipy.signal import welch as scipy_welch
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class Seasonal:
-    """Seasonal and periodic analysis methods for TimeSeries.
-
-    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
-    """
-
-    if TYPE_CHECKING:
-        columns: Index
-        index: Index
-
-        @staticmethod
-        def _get_ax_fig(  # noqa: E704
-            n_subplots: int = 1, **kwargs: object
-        ) -> tuple[Figure, Axes]: ...
-
-        @staticmethod
-        def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
-        ) -> Axes: ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
+class Seasonal(_TimeSeriesStub):
+    """Seasonal and periodic analysis methods for TimeSeries."""
 
     def monthly_stats(self, column: str = None) -> DataFrame:
         """Compute statistics grouped by month.

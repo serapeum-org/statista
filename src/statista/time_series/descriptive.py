@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING  # noqa: F401
+from typing import TYPE_CHECKING
 
 import numpy as np
 from pandas import DataFrame
@@ -11,24 +11,14 @@ from scipy.stats import median_abs_deviation, skew
 
 from statista.parameters import Lmoments
 
+if TYPE_CHECKING:
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
-class Descriptive:
-    """Descriptive statistical methods for TimeSeries.
 
-    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
-    All attribute access (``self.columns``, ``self.describe()``, indexing) is provided by DataFrame
-    at runtime.
-    """
-
-    if TYPE_CHECKING:
-        # Allow mypy to see DataFrame attributes on the mixin.
-        columns: DataFrame.columns  # type: ignore[assignment]
-
-        def describe(self) -> DataFrame:  # noqa: E704
-            ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
+class Descriptive(_TimeSeriesStub):
+    """Descriptive statistical methods for TimeSeries."""
 
     @property
     def stats(self) -> DataFrame:

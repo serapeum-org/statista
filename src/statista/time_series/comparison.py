@@ -12,32 +12,13 @@ from pandas import DataFrame
 from scipy.stats import mannwhitneyu
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class Comparison:
-    """Comparison, anomaly, and regime analysis methods.
-
-    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
-    """
-
-    if TYPE_CHECKING:
-        columns: Index
-        index: Index
-        values: np.ndarray
-
-        @staticmethod
-        def _get_ax_fig(  # noqa: E704
-            n_subplots: int = 1, **kwargs: object
-        ) -> tuple[Figure, Axes]: ...
-
-        @staticmethod
-        def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
-        ) -> Axes: ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
+class Comparison(_TimeSeriesStub):
+    """Comparison, anomaly, and regime analysis methods."""
 
     def anomaly(
         self,

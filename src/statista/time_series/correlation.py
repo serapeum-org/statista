@@ -12,36 +12,13 @@ from pandas import DataFrame
 from scipy.stats import chi2, kendalltau, norm, pearsonr, spearmanr
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class Correlation:
-    """Autocorrelation and dependence analysis for TimeSeries.
-
-    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
-    """
-
-    if TYPE_CHECKING:
-        columns: Index
-        index: Index
-
-        @staticmethod
-        def _get_ax_fig(  # noqa: E704
-            n_subplots: int = 1, **kwargs: object
-        ) -> tuple[Figure, Axes]: ...
-
-        @staticmethod
-        def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
-        ) -> Axes: ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
-
-        def corr(
-            self, method: str = "pearson", **kwargs: object
-        ) -> DataFrame:  # noqa: E704
-            ...
+class Correlation(_TimeSeriesStub):
+    """Autocorrelation and dependence analysis for TimeSeries."""
 
     def acf(
         self,

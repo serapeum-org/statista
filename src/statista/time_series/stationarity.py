@@ -8,20 +8,13 @@ import numpy as np
 from pandas import DataFrame
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class Stationarity:
-    """Stationarity tests for TimeSeries.
-
-    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
-    """
-
-    if TYPE_CHECKING:
-        columns: Index
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
+class Stationarity(_TimeSeriesStub):
+    """Stationarity tests for TimeSeries."""
 
     def adf_test(
         self,

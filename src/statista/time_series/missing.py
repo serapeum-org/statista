@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,36 +12,13 @@ from pandas import DataFrame
 from scipy.stats import median_abs_deviation
 
 if TYPE_CHECKING:
-    from pandas import Index
+    from statista.time_series.stubs import _TimeSeriesStub
+else:
+    _TimeSeriesStub = object
 
 
-class MissingData:
-    """Missing data diagnostics and outlier detection for TimeSeries.
-
-    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
-    All attribute access (``self.columns``, indexing) is provided by DataFrame at runtime.
-    """
-
-    if TYPE_CHECKING:
-        columns: Index
-        index: Index
-        shape: tuple
-
-        @staticmethod
-        def _get_ax_fig(  # noqa: E704
-            n_subplots: int = 1, **kwargs: object
-        ) -> tuple[Figure, Axes]: ...
-
-        @staticmethod
-        def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
-        ) -> Axes: ...
-
-        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
-            ...
-
-        def resample(self, rule: str, **kwargs: object) -> Any:  # noqa: E704
-            ...
+class MissingData(_TimeSeriesStub):
+    """Missing data diagnostics and outlier detection for TimeSeries."""
 
     def missing_summary(self) -> DataFrame:
         """Per-column summary of missing data.
