@@ -23,6 +23,7 @@ from statista.time_series._decomposition import DecompositionMixin
 from statista.time_series._descriptive import DescriptiveMixin
 from statista.time_series._distribution import DistributionMixin
 from statista.time_series._missing import MissingDataMixin
+from statista.time_series._seasonal import SeasonalMixin
 from statista.time_series._stationarity import StationarityMixin
 from statista.time_series._trend import TrendMixin
 from statista.time_series._visualization import VisualizationMixin
@@ -38,6 +39,7 @@ class TimeSeries(
     DistributionMixin,
     ChangePointMixin,
     DecompositionMixin,
+    SeasonalMixin,
     TimeSeriesBase,
 ):
     """A class to represent and analyze time series data using pandas DataFrame.
