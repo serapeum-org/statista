@@ -86,8 +86,10 @@ class Hydrological(_TimeSeriesStub):
             if method == "weibull":
                 exceedance = ranks / (n + 1) * 100
             elif method == "gringorten":
+                # Gringorten (1963): a=0.44, optimized for Gumbel/GEV distributions
                 exceedance = (ranks - 0.44) / (n + 0.12) * 100  # type: ignore[assignment]
             elif method == "cunnane":
+                # Cunnane (1978): a=0.4, approximately unbiased for most distributions
                 exceedance = (ranks - 0.4) / (n + 0.2) * 100  # type: ignore[assignment]
             else:
                 raise ValueError(
