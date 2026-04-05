@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,7 +28,7 @@ class Correlation:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -51,7 +51,7 @@ class Correlation:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[Union[np.ndarray, Dict[str, np.ndarray]], Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[np.ndarray | dict[str, np.ndarray], tuple[Figure, Axes] | None]:
         """Compute and optionally plot the autocorrelation function.
 
         Args:
@@ -81,12 +81,12 @@ class Correlation:
         """
         cols = _resolve_columns(self.columns, column)
 
-        acf_results: Dict[str, np.ndarray] = {}
+        acf_results: dict[str, np.ndarray] = {}
         for col in cols:
             data = self[col].dropna().values
             acf_results[col] = _compute_acf(data, nlags=nlags, fft=fft)
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig_ax = _plot_acf_pacf(
                 acf_results,
@@ -97,7 +97,7 @@ class Correlation:
                 **kwargs,
             )
 
-        single_result: Union[np.ndarray, Dict[str, np.ndarray]] = (
+        single_result: np.ndarray | dict[str, np.ndarray] = (
             acf_results[cols[0]] if len(cols) == 1 else acf_results
         )
         return single_result, fig_ax
@@ -109,7 +109,7 @@ class Correlation:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[Union[np.ndarray, Dict[str, np.ndarray]], Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[np.ndarray | dict[str, np.ndarray], tuple[Figure, Axes] | None]:
         """Compute and optionally plot the partial autocorrelation function.
 
         Uses the Levinson-Durbin recursion to compute PACF from ACF values.
@@ -138,14 +138,14 @@ class Correlation:
         """
         cols = _resolve_columns(self.columns, column)
 
-        pacf_results: Dict[str, np.ndarray] = {}
+        pacf_results: dict[str, np.ndarray] = {}
         for col in cols:
             data = self[col].dropna().values
             effective_nlags = min(nlags, len(data) // 2 - 1)
             acf_vals = _compute_acf(data, nlags=effective_nlags, fft=True)
             pacf_results[col] = _levinson_durbin_pacf(acf_vals)
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig_ax = _plot_acf_pacf(
                 pacf_results,
@@ -156,7 +156,7 @@ class Correlation:
                 **kwargs,
             )
 
-        single_result: Union[np.ndarray, Dict[str, np.ndarray]] = (
+        single_result: np.ndarray | dict[str, np.ndarray] = (
             pacf_results[cols[0]] if len(cols) == 1 else pacf_results
         )
         return single_result, fig_ax
@@ -168,7 +168,7 @@ class Correlation:
         nlags: int = 40,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[np.ndarray, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[np.ndarray, tuple[Figure, Axes] | None]:
         """Compute the cross-correlation function between two columns.
 
         Args:
@@ -201,7 +201,7 @@ class Correlation:
 
         ccf_vals = _compute_ccf(x, y, nlags=nlags)
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)
@@ -242,7 +242,7 @@ class Correlation:
         lag: int = 1,
         column: str = None,
         **kwargs: Any,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Scatter plot of x(t) vs x(t-lag) for visual serial dependence check.
 
         Args:
@@ -302,7 +302,7 @@ class Correlation:
         method: str = "pearson",
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[DataFrame, DataFrame, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[DataFrame, DataFrame, tuple[Figure, Axes] | None]:
         """Compute pairwise correlation matrix WITH p-values.
 
         Pandas ``.corr()`` provides no p-values. This method computes both the correlation
@@ -354,7 +354,7 @@ class Correlation:
                     pval_df.loc[c1, c2] = p
                     pval_df.loc[c2, c1] = p
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot and len(cols) >= 2:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)
@@ -461,7 +461,7 @@ class Correlation:
         return combined
 
 
-def _resolve_columns(columns: Any, column: Optional[str]) -> list:
+def _resolve_columns(columns: Any, column: str | None) -> list:
     """Resolve which columns to operate on."""
     if column is not None:
         return [column]
@@ -558,13 +558,13 @@ def _levinson_durbin_pacf(acf_vals: np.ndarray) -> np.ndarray:
 
 
 def _plot_acf_pacf(
-    results: Dict[str, np.ndarray],
+    results: dict[str, np.ndarray],
     n: int,
     alpha: float,
     title_prefix: str,
     get_ax_fig_fn: Any,
     **kwargs: Any,
-) -> Tuple[Figure, Axes]:
+) -> tuple[Figure, Axes]:
     """Shared stem-plot renderer for ACF and PACF."""
     n_cols = len(results)
     ci = norm.ppf(1 - alpha / 2) / np.sqrt(n)

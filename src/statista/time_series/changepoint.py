@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,7 +30,7 @@ class ChangePoint:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -296,7 +296,7 @@ class ChangePoint:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[DataFrame, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[DataFrame, tuple[Figure, Axes] | None]:
         """Cumulative sum (CUSUM) of deviations from the mean.
 
         Visual method for detecting shifts. A sustained upward/downward drift
@@ -336,7 +336,7 @@ class ChangePoint:
             index=self[column].dropna().index,
         )
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)

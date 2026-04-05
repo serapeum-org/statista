@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,7 +30,7 @@ class Hydrological:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -50,7 +50,7 @@ class Hydrological:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[DataFrame, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[DataFrame, tuple[Figure, Axes] | None]:
         """Compute and plot the flow duration curve (FDC).
 
         The FDC is the most widely used plot in hydrology. It shows the percentage
@@ -119,7 +119,7 @@ class Hydrological:
                 frames.append(DataFrame({col: col_data, f"{col}_exceedance_pct": exc}))
             fdc_df = pd.concat(frames, axis=1)
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)
@@ -271,7 +271,7 @@ class Hydrological:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[Any, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[Any, tuple[Figure, Axes] | None]:
         """Separate streamflow into baseflow and quickflow.
 
         Args:
@@ -335,7 +335,7 @@ class Hydrological:
             index=idx,
         )
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)
@@ -453,7 +453,7 @@ class Hydrological:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[DataFrame, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[DataFrame, tuple[Figure, Axes] | None]:
         """Extract recession segments and fit a master recession curve.
 
         Identifies periods of monotonically decreasing flow (recession limbs)
@@ -559,7 +559,7 @@ class Hydrological:
             )
         )
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot and len(segments) > 0:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)

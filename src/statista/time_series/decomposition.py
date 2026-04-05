@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,7 +29,7 @@ class Decomposition:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -52,7 +52,7 @@ class Decomposition:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[DataFrame, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[DataFrame, tuple[Figure, Axes] | None]:
         """Classical seasonal decomposition using moving averages.
 
         Decomposes the time series into trend, seasonal, and residual components.
@@ -158,7 +158,7 @@ class Decomposition:
             index=idx,
         )
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig_ax = _plot_decomposition(result_df, column, model, **kwargs)
 
@@ -241,7 +241,7 @@ class Decomposition:
         upper_pct: float = 95,
         column: str = None,
         **kwargs: Any,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Plot the time series with rolling percentile envelope bands.
 
         Shows the natural variability range of the data over a rolling window.
@@ -355,7 +355,7 @@ def _plot_decomposition(
     column: str,
     model: str,
     **kwargs: Any,
-) -> Tuple[Figure, Axes]:
+) -> tuple[Figure, Axes]:
     """Plot 4-panel decomposition (observed, trend, seasonal, residual)."""
     fig, axes = plt.subplots(4, 1, figsize=(10, 8), sharex=True)
 

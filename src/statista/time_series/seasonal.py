@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,7 +29,7 @@ class Seasonal:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -108,7 +108,7 @@ class Seasonal:
         period: int = 12,
         column: str = None,
         **kwargs: Any,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Seasonal subseries plot.
 
         Plots each season (e.g., each month) as a separate mini time series,
@@ -167,7 +167,7 @@ class Seasonal:
         self,
         column: str = None,
         **kwargs: Any,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Overlay all years on a single Jan-Dec axis.
 
         Requires a DatetimeIndex. Plots each year as a gray line with the
@@ -249,7 +249,7 @@ class Seasonal:
         fs: float = 1.0,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[np.ndarray, np.ndarray, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[np.ndarray, np.ndarray, tuple[Figure, Axes] | None]:
         """Compute and optionally plot the power spectral density.
 
         Identifies dominant periodicities/frequencies in the time series.
@@ -294,7 +294,7 @@ class Seasonal:
                 f"Unknown method '{method}'. Choose from 'welch', 'periodogram'."
             )
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)

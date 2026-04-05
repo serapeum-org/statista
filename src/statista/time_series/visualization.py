@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, List, Literal, Tuple, Union
+from typing import TYPE_CHECKING, Any, Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,11 +35,11 @@ class Visualization:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
-            ax: Axes, tick_labels: List[str] | None = None, **kwargs: object
+            ax: Axes, tick_labels: list[str] | None = None, **kwargs: object
         ) -> Axes: ...
 
         def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
@@ -47,7 +47,7 @@ class Visualization:
 
     def box_plot(
         self, mean: bool = False, notch: bool = False, **kwargs
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """a box and whisker plot.
 
         The box extends from the first quartile (Q1) to the third quartile (Q3) of the data, with a line at the median.
@@ -169,7 +169,7 @@ class Visualization:
         return fig, ax
 
     @staticmethod
-    def calculate_whiskers(data: Union[np.ndarray, list], q1: float, q3: float):
+    def calculate_whiskers(data: np.ndarray | list, q1: float, q3: float):
         """Calculate the upper and lower whiskers for a box plot.
 
         Args:
@@ -202,7 +202,7 @@ class Visualization:
         side: Literal["both", "low", "high"] = "both",
         spacing: int = 0,
         **kwargs,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """
         Plots a violin plot of the time series data.
 
@@ -327,9 +327,9 @@ class Visualization:
         violin_width: float = 0.4,
         scatter_offset: float = 0.15,
         boxplot_width: float = 0.1,
-        order: List[str] = None,
+        order: list[str] = None,
         **kwargs,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """RainCloud plot.
 
         Args:
@@ -475,7 +475,7 @@ class Visualization:
 
     def histogram(
         self, bins=10, **kwargs
-    ) -> Tuple[np.ndarray, np.ndarray, Figure, Axes]:
+    ) -> tuple[np.ndarray, np.ndarray, Figure, Axes]:
         """
         Plots a histogram of the time series data.
 
@@ -503,9 +503,9 @@ class Visualization:
                     Font size of the title and labels.
                 tick_fontsize: int, optional
                     Font size of the tick labels.
-                xtick_labels: List[str], optional
+                xtick_labels: list[str], optional
                     Labels for the x-axis ticks.
-                legend: List[str], optional
+                legend: list[str], optional
                     Legend to display in the plot.
                 legend_fontsize: int, optional
                     Font size of the legend.
@@ -586,7 +586,7 @@ class Visualization:
         plt.show()
         return n_values, bin_edges, fig, ax  # type: ignore[return-value]
 
-    def density(self, **kwargs) -> Tuple[Figure, Axes]:
+    def density(self, **kwargs) -> tuple[Figure, Axes]:
         """
         Plots a density (KDE) plot of the time series data.
 
@@ -651,7 +651,7 @@ class Visualization:
 
         return fig, ax
 
-    def rolling_statistics(self, window=10, **kwargs) -> Tuple[Figure, Axes]:
+    def rolling_statistics(self, window=10, **kwargs) -> tuple[Figure, Axes]:
         """
         Plots the rolling mean and standard deviation of the time series data.
 
@@ -679,9 +679,9 @@ class Visualization:
                     Font size of the title and labels.
                 tick_fontsize: int, optional
                     Font size of the tick labels.
-                xtick_labels: List[str], optional
+                xtick_labels: list[str], optional
                     Labels for the x-axis ticks.
-                legend: List[str], optional
+                legend: list[str], optional
                     Legend to display in the plot.
                 legend_fontsize: int, optional
                     Font size of the legend.

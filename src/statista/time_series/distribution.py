@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Tuple
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,7 +28,7 @@ class Distribution:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -44,7 +44,7 @@ class Distribution:
         column: str = None,
         confidence: float = 0.95,
         **kwargs: Any,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Quantile-Quantile plot against a theoretical distribution.
 
         The single most useful diagnostic plot for assessing distributional assumptions.
@@ -122,7 +122,7 @@ class Distribution:
         distribution: str = "norm",
         column: str = None,
         **kwargs: Any,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Probability-Probability plot.
 
         Plots the empirical CDF against the theoretical CDF at each data point.
@@ -283,7 +283,7 @@ class Distribution:
         self,
         column: str = None,
         **kwargs: Any,
-    ) -> Tuple[Figure, Axes]:
+    ) -> tuple[Figure, Axes]:
         """Step-function plot of the empirical CDF.
 
         Simpler than KDE — no bandwidth choice needed. Shows the actual data

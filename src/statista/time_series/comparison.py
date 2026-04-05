@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Tuple
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,7 +29,7 @@ class Comparison:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -45,7 +45,7 @@ class Comparison:
         column: str = None,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[Any, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[Any, tuple[Figure, Axes] | None]:
         """Compute anomaly (deviation from reference) and optionally plot.
 
         Args:
@@ -92,7 +92,7 @@ class Comparison:
             columns=[column],
         )
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)
@@ -186,7 +186,7 @@ class Comparison:
         col_y: str,
         plot: bool = True,
         **kwargs: Any,
-    ) -> Tuple[DataFrame, Optional[Tuple[Figure, Axes]]]:
+    ) -> tuple[DataFrame, tuple[Figure, Axes] | None]:
         """Double mass curve — cumulative X vs cumulative Y.
 
         Used to detect inconsistencies in the relationship between two correlated
@@ -231,7 +231,7 @@ class Comparison:
             }
         )
 
-        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        fig_ax: tuple[Figure, Axes] | None = None
         if plot:
             fig, ax = self._get_ax_fig(**kwargs)
             kwargs.pop("fig", None)

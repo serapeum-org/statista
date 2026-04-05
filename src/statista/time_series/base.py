@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, List, Tuple, Union
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -69,7 +69,7 @@ class TimeSeriesBase(DataFrame):
 
     def __init__(
         self,
-        data: Union[DataFrame, List[float], np.ndarray],
+        data: DataFrame | list[float] | np.ndarray,
         index=None,
         columns=None,
         *args,
@@ -104,7 +104,7 @@ class TimeSeriesBase(DataFrame):
         self.columns = columns
 
     @staticmethod
-    def _get_ax_fig(n_subplots: int = 1, **kwargs: Any) -> Tuple[Figure, Axes]:
+    def _get_ax_fig(n_subplots: int = 1, **kwargs: Any) -> tuple[Figure, Axes]:
         fig: Figure | None = kwargs.get("fig")
         ax: Axes | None = kwargs.get("ax")
         if ax is None and fig is None:
@@ -117,7 +117,7 @@ class TimeSeriesBase(DataFrame):
 
     @staticmethod
     def _adjust_axes_labels(
-        ax: Axes, tick_labels: List[str] | None = None, **kwargs: Any
+        ax: Axes, tick_labels: list[str] | None = None, **kwargs: Any
     ) -> Axes:
         """Adjust the labels of the axes."""
         if tick_labels is not None:

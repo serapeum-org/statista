@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Tuple
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -32,7 +32,7 @@ class Trend:
         @staticmethod
         def _get_ax_fig(  # noqa: E704
             n_subplots: int = 1, **kwargs: object
-        ) -> Tuple[Figure, Axes]: ...
+        ) -> tuple[Figure, Axes]: ...
 
         @staticmethod
         def _adjust_axes_labels(  # noqa: E704
@@ -222,7 +222,7 @@ class Trend:
         self,
         column: str = None,
         **kwargs: Any,
-    ) -> Tuple[DataFrame, Tuple[Figure, Axes]]:
+    ) -> tuple[DataFrame, tuple[Figure, Axes]]:
         """Innovative Trend Analysis (ITA) — Sen (2012) method.
 
         Splits the sorted data into two halves and plots the first half (x-axis) against
