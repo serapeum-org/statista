@@ -440,11 +440,14 @@ class Correlation(_TimeSeriesStub):
 
 def _resolve_columns(columns: Any, column: str | None) -> list:
     """Resolve which columns to operate on."""
+    result = []
     if column is not None:
-        return [column]
-    if len(columns) == 1:
-        return [columns[0]]
-    return list(columns)
+        result = [column]
+    elif len(columns) == 1:
+        result = [columns[0]]
+    else:
+        result = list(columns)
+    return result
 
 
 def _compute_acf(data: np.ndarray, nlags: int, fft: bool = True) -> np.ndarray:

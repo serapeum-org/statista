@@ -314,17 +314,20 @@ def _mackinnon_pvalue(t_stat: float, regression: str, n: int) -> float:
     levels = np.array([0.01, 0.05, 0.10])
     crits = np.array([crit["1%"], crit["5%"], crit["10%"]])
 
+    result = 0.0
     if t_stat <= crits[0]:
-        return 0.001
+        result = 0.001
     elif t_stat >= crits[-1]:
         # Extrapolate: use a rough mapping. t_stat much larger than 10% critical -> large p-value.
         # Linear extrapolation from the 5%-10% segment.
         slope = (0.10 - 0.05) / (crits[2] - crits[1])
         p = 0.10 + slope * (t_stat - crits[2])
-        return min(max(float(p), 0.10), 1.0)
+        result = min(max(float(p), 0.10), 1.0)
     else:
         f = interp1d(crits, levels, kind="linear", fill_value="extrapolate")
-        return float(np.clip(f(t_stat), 0.001, 1.0))
+        result = float(np.clip(f(t_stat), 0.001, 1.0))
+    
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -423,13 +426,16 @@ def _kpss_pvalue(stat: float, crit: dict) -> float:
     crits = np.array([crit["10%"], crit["5%"], crit["2.5%"], crit["1%"]])
     levels = np.array([0.10, 0.05, 0.025, 0.01])
 
+    result = 0.0
     if stat >= crits[-1]:
         # More extreme than 1% critical value
-        return 0.01
+        result = 0.01
     elif stat <= crits[0]:
         # Less extreme than 10% critical value -> fail to reject -> p > 0.10
-        return 0.10
+        result = 0.10
     else:
         # Interpolate between known critical values (both arrays ascending)
         f = interp1d(crits, levels, kind="linear")
-        return float(np.clip(f(stat), 0.01, 0.10))
+        result = float(np.clip(f(stat), 0.01, 0.10))
+    
+    return result
