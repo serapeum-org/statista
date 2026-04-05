@@ -223,3 +223,15 @@ class TestStationaritySummary:
             "Inconclusive",
         }
         assert result.loc["Series1", "diagnosis"] in valid
+
+    def test_constant_series_warns_adf(self):
+        """Constant series should issue warning in ADF test."""
+        ts = TimeSeries(np.ones(100) * 5.0)
+        with pytest.warns(UserWarning, match="Series is constant"):
+            ts.adf_test()
+
+    def test_constant_series_warns_kpss(self):
+        """Constant series should issue warning in KPSS test."""
+        ts = TimeSeries(np.ones(100) * 5.0)
+        with pytest.warns(UserWarning, match="Series is constant"):
+            ts.kpss_test()

@@ -211,11 +211,18 @@ def _adf_test_single(
     data: np.ndarray, regression: str = "c", max_lag: int = None
 ) -> dict:
     """Run ADF test on a single series."""
+    import warnings
+    
     n = len(data)
     if n < 7:
         raise ValueError(f"ADF test requires at least 7 observations, got {n}.")
 
     if np.std(data) == 0:
+        warnings.warn(
+            "Series is constant (std=0). Stationarity tests may produce undefined results. "
+            "Returning default non-stationary result.",
+            UserWarning
+        )
         crit = _ADF_CRITICAL_VALUES.get(regression, _ADF_CRITICAL_VALUES["c"])
         return {
             "statistic": 0.0,
@@ -335,11 +342,18 @@ def _kpss_test_single(
     data: np.ndarray, regression: str = "c", n_lags: int = None
 ) -> dict:
     """Run KPSS test on a single series."""
+    import warnings
+    
     n = len(data)
     if n < 5:
         raise ValueError(f"KPSS test requires at least 5 observations, got {n}.")
 
     if np.std(data) == 0:
+        warnings.warn(
+            "Series is constant (std=0). Stationarity tests may produce undefined results. "
+            "Returning default stationary result.",
+            UserWarning
+        )
         crit = _KPSS_CRITICAL_VALUES.get(regression, _KPSS_CRITICAL_VALUES["c"])
         return {
             "statistic": 0.0,
