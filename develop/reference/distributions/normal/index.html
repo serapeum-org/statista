@@ -2734,8 +2734,8 @@ F(x; \mu, \sigma) = \frac{1}{2}\left[1 + \mathrm{erf}
 <a id="__codelineno-0-291" name="__codelineno-0-291"></a>        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
 <a id="__codelineno-0-292" name="__codelineno-0-292"></a>            <span class="n">parameters</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">(</span><span class="o">**</span><span class="n">parameters</span><span class="p">)</span>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a>
-<a id="__codelineno-0-294" name="__codelineno-0-294"></a>        <span class="n">loc</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">loc</span>
-<a id="__codelineno-0-295" name="__codelineno-0-295"></a>        <span class="n">scale</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">scale</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a>        <span class="n">loc</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">loc</span>  <span class="c1"># type: ignore[union-attr]</span>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a>        <span class="n">scale</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">scale</span>  <span class="c1"># type: ignore[union-attr]</span>
 <a id="__codelineno-0-296" name="__codelineno-0-296"></a>
 <a id="__codelineno-0-297" name="__codelineno-0-297"></a>        <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">scale</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 <a id="__codelineno-0-298" name="__codelineno-0-298"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">SCALE_PARAMETER_ERROR</span><span class="p">)</span>
@@ -3860,8 +3860,8 @@ value C will be exceeded (1-F(C)).</p>
 <a id="__codelineno-0-291" name="__codelineno-0-291"></a>    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
 <a id="__codelineno-0-292" name="__codelineno-0-292"></a>        <span class="n">parameters</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">(</span><span class="o">**</span><span class="n">parameters</span><span class="p">)</span>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a>
-<a id="__codelineno-0-294" name="__codelineno-0-294"></a>    <span class="n">loc</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">loc</span>
-<a id="__codelineno-0-295" name="__codelineno-0-295"></a>    <span class="n">scale</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">scale</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a>    <span class="n">loc</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">loc</span>  <span class="c1"># type: ignore[union-attr]</span>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a>    <span class="n">scale</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">scale</span>  <span class="c1"># type: ignore[union-attr]</span>
 <a id="__codelineno-0-296" name="__codelineno-0-296"></a>
 <a id="__codelineno-0-297" name="__codelineno-0-297"></a>    <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">scale</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 <a id="__codelineno-0-298" name="__codelineno-0-298"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">SCALE_PARAMETER_ERROR</span><span class="p">)</span>
