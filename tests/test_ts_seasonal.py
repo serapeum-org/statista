@@ -179,3 +179,59 @@ class TestPeriodogram:
         assert (
             freqs2.max() > freqs1.max()
         ), "Higher fs should produce higher max frequency"
+
+
+class TestSeasonalMannKendall:
+    """Tests for seasonal_mann_kendall() method."""
+
+    def test_increasing_trend_detected(self):
+        """Data with seasonal pattern + positive trend should detect increasing."""
+        np.random.seed(42)
+        t = np.arange(120)
+        data = 0.05 * t + 3 * np.sin(2 * np.pi * t / 12) + np.random.randn(120)
+        ts = TimeSeries(data)
+        result = ts.seasonal_mann_kendall(period=12)
+        assert result.loc["Series1", "trend"] == "increasing"
+
+    def test_no_trend(self):
+        """Pure seasonal data without trend should show no trend."""
+        np.random.seed(42)
+        t = np.arange(120)
+        data = 5 * np.sin(2 * np.pi * t / 12) + np.random.randn(120) * 0.5
+        ts = TimeSeries(data)
+        result = ts.seasonal_mann_kendall(period=12)
+        assert result.loc["Series1", "trend"] == "no trend"
+
+    def test_returns_expected_columns(self):
+        """Result should have all expected columns."""
+        ts = TimeSeries(np.random.randn(60))
+        result = ts.seasonal_mann_kendall(period=6)
+        expected = [
+            "trend",
+            "h",
+            "p_value",
+            "z",
+            "combined_s",
+            "combined_var_s",
+            "per_season_s",
+        ]
+        assert set(expected).issubset(set(result.columns))
+
+    def test_per_season_s_length(self):
+        """per_season_s should have length equal to period."""
+        ts = TimeSeries(np.random.randn(120))
+        result = ts.seasonal_mann_kendall(period=12)
+        assert len(result.loc["Series1", "per_season_s"]) == 12
+
+    def test_multi_column(self):
+        """Should return one row per column."""
+        ts = TimeSeries(np.random.randn(60, 2), columns=["A", "B"])
+        result = ts.seasonal_mann_kendall(period=6)
+        assert result.shape[0] == 2
+
+    def test_column_parameter(self):
+        """Should only test specified column."""
+        ts = TimeSeries(np.random.randn(60, 2), columns=["X", "Y"])
+        result = ts.seasonal_mann_kendall(period=6, column="Y")
+        assert result.shape[0] == 1
+        assert result.index[0] == "Y"

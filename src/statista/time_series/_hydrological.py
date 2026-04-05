@@ -451,6 +451,148 @@ class HydrologicalMixin:
         result = DataFrame(rows).set_index("column")
         return result
 
+    def recession_analysis(
+        self,
+        min_length: int = 5,
+        column: str = None,
+        plot: bool = True,
+        **kwargs: Any,
+    ) -> Tuple[DataFrame, Optional[Tuple[Figure, Axes]]]:
+        """Extract recession segments and fit a master recession curve.
+
+        Identifies periods of monotonically decreasing flow (recession limbs)
+        and fits an exponential recession model: Q(t) = Q0 * exp(-t / k),
+        where k is the recession constant.
+
+        Args:
+            min_length: Minimum number of consecutive decreasing steps to
+                qualify as a recession segment. Default 5.
+            column: Column to analyze. If None, uses first column.
+            plot: Whether to produce a log(Q) vs t recession plot. Default True.
+            **kwargs: Passed to ``_adjust_axes_labels``.
+
+        Returns:
+            tuple: (recession_df, (fig, ax)) or (recession_df, None).
+                recession_df has columns: recession_id, start_index, end_index, length,
+                recession_constant_k, r_squared.
+
+        Examples:
+            ```python
+            >>> import numpy as np
+            >>> from statista.time_series import TimeSeries
+            >>> np.random.seed(42)
+            >>> q = 100 * np.exp(-np.arange(50) / 15.0) + np.random.randn(50) * 0.5
+            >>> ts = TimeSeries(np.abs(q))
+            >>> result, _ = ts.recession_analysis(min_length=3, plot=False)
+            >>> len(result) >= 1
+            True
+
+            ```
+
+        References:
+            Tallaksen, L.M. (1995). A review of baseflow recession analysis.
+            Journal of Hydrology, 165(1-4), 349-370.
+        """
+        if column is None:
+            column = self.columns[0]
+
+        data = self[column].dropna().values.astype(float)
+        n = len(data)
+
+        # Identify recession segments (monotonically decreasing runs)
+        segments = []
+        start = None
+        for i in range(1, n):
+            if data[i] < data[i - 1]:
+                if start is None:
+                    start = i - 1
+            else:
+                if start is not None:
+                    length = i - start
+                    if length >= min_length:
+                        segments.append((start, i - 1))
+                    start = None
+        if start is not None and (n - start) >= min_length:
+            segments.append((start, n - 1))
+
+        # Fit exponential decay to each segment
+        rows = []
+        for seg_id, (s, e) in enumerate(segments):
+            seg = data[s : e + 1]
+            seg_positive = seg[seg > 0]
+            if len(seg_positive) < 3:
+                continue
+
+            t = np.arange(len(seg_positive), dtype=float)
+            log_q = np.log(seg_positive)
+
+            # Linear fit: log(Q) = log(Q0) - t/k  =>  slope = -1/k
+            coeffs = np.polyfit(t, log_q, 1)
+            slope = coeffs[0]
+            k = -1.0 / slope if slope != 0 else np.inf
+
+            # R-squared
+            predicted = np.polyval(coeffs, t)
+            ss_res = np.sum((log_q - predicted) ** 2)
+            ss_tot = np.sum((log_q - np.mean(log_q)) ** 2)
+            r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
+
+            rows.append(
+                {
+                    "recession_id": seg_id,
+                    "start_index": s,
+                    "end_index": e,
+                    "length": e - s + 1,
+                    "recession_constant_k": float(k),
+                    "r_squared": float(r_squared),
+                }
+            )
+
+        recession_df = (
+            DataFrame(rows)
+            if rows
+            else DataFrame(
+                columns=[
+                    "recession_id",
+                    "start_index",
+                    "end_index",
+                    "length",
+                    "recession_constant_k",
+                    "r_squared",
+                ]
+            )
+        )
+
+        fig_ax: Optional[Tuple[Figure, Axes]] = None
+        if plot and len(segments) > 0:
+            fig, ax = self._get_ax_fig(**kwargs)
+            kwargs.pop("fig", None)
+            kwargs.pop("ax", None)
+
+            for s, e in segments:
+                seg = data[s : e + 1]
+                seg_positive = seg[seg > 0]
+                if len(seg_positive) >= 3:
+                    t = np.arange(len(seg_positive))
+                    ax.plot(
+                        t, seg_positive, "o-", markersize=3, linewidth=0.8, alpha=0.6
+                    )
+
+            ax.set_yscale("log")
+
+            if "title" not in kwargs:
+                kwargs["title"] = f"Recession Analysis — {column}"
+            if "xlabel" not in kwargs:
+                kwargs["xlabel"] = "Time steps from recession start"
+            if "ylabel" not in kwargs:
+                kwargs["ylabel"] = "Flow (log scale)"
+
+            ax = self._adjust_axes_labels(ax, **kwargs)
+            plt.show()
+            fig_ax = (fig, ax)
+
+        return recession_df, fig_ax
+
 
 # ---------------------------------------------------------------------------
 # Baseflow separation algorithms

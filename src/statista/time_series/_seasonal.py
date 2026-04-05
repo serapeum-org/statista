@@ -327,3 +327,104 @@ class SeasonalMixin:
             fig_ax = (fig, ax)
 
         return freqs, power, fig_ax
+
+    def seasonal_mann_kendall(
+        self,
+        period: int = 12,
+        alpha: float = 0.05,
+        column: str = None,
+    ) -> DataFrame:
+        """Seasonal Mann-Kendall trend test.
+
+        Applies the Mann-Kendall test season-by-season and combines the results.
+        The combined S statistic and its variance are summed across seasons
+        (Hirsch et al., 1982).
+
+        Args:
+            period: Number of seasons per cycle (e.g., 12 for monthly). Default 12.
+            alpha: Significance level. Default 0.05.
+            column: Column to test. If None, tests all columns.
+
+        Returns:
+            pandas.DataFrame: One row per column with: trend, h, p_value, z,
+                combined_s, combined_var_s, per_season_s (list).
+
+        Examples:
+            ```python
+            >>> import numpy as np
+            >>> from statista.time_series import TimeSeries
+            >>> np.random.seed(42)
+            >>> t = np.arange(120)
+            >>> data = 0.05 * t + 3 * np.sin(2 * np.pi * t / 12) + np.random.randn(120)
+            >>> ts = TimeSeries(data)
+            >>> result = ts.seasonal_mann_kendall(period=12)
+            >>> result.loc["Series1", "trend"]
+            'increasing'
+
+            ```
+
+        References:
+            Hirsch, R.M., Slack, J.R. and Smith, R.A. (1982). Techniques of trend
+            analysis for monthly water quality data. Water Resources Research, 18(1), 107-121.
+        """
+        from scipy.stats import norm as scipy_norm
+
+        from statista.time_series._trend import _mk_score, _mk_variance
+
+        cols = [column] if column is not None else list(self.columns)
+        rows = []
+
+        for col in cols:
+            data = self[col].dropna().values
+
+            combined_s = 0.0
+            combined_var = 0.0
+            per_season_s = []
+
+            for s in range(period):
+                season_data = data[s::period]
+                if len(season_data) < 3:
+                    per_season_s.append(0.0)
+                    continue
+                ns = len(season_data)
+                s_val = _mk_score(season_data, ns)
+                var_val = _mk_variance(season_data, ns)
+                combined_s += s_val
+                combined_var += var_val
+                per_season_s.append(float(s_val))
+
+            if combined_var > 0:
+                if combined_s > 0:
+                    z = (combined_s - 1) / np.sqrt(combined_var)
+                elif combined_s < 0:
+                    z = (combined_s + 1) / np.sqrt(combined_var)
+                else:
+                    z = 0.0
+            else:
+                z = 0.0
+
+            p_value = 2.0 * (1.0 - scipy_norm.cdf(abs(z)))
+            h = abs(z) > scipy_norm.ppf(1 - alpha / 2)
+
+            if z > 0 and h:
+                trend = "increasing"
+            elif z < 0 and h:
+                trend = "decreasing"
+            else:
+                trend = "no trend"
+
+            rows.append(
+                {
+                    "column": col,
+                    "trend": trend,
+                    "h": bool(h),
+                    "p_value": float(p_value),
+                    "z": float(z),
+                    "combined_s": float(combined_s),
+                    "combined_var_s": float(combined_var),
+                    "per_season_s": per_season_s,
+                }
+            )
+
+        result_df = DataFrame(rows).set_index("column")
+        return result_df

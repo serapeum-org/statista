@@ -224,3 +224,71 @@ class TestFlashinessIndex:
         ts = TimeSeries(np.abs(np.random.randn(50, 2)) * 10, columns=["A", "B"])
         result = ts.flashiness_index()
         assert result.shape[0] == 2
+
+
+class TestRecessionAnalysis:
+    """Tests for recession_analysis() method."""
+
+    def test_detects_recession_in_exponential_decay(self):
+        """Exponential decay should produce at least one recession segment."""
+        np.random.seed(42)
+        q = 100 * np.exp(-np.arange(50) / 15.0) + np.random.randn(50) * 0.1
+        ts = TimeSeries(np.abs(q))
+        result, _ = ts.recession_analysis(min_length=3, plot=False)
+        assert len(result) >= 1, "Should detect at least one recession"
+
+    def test_recession_constant_positive(self):
+        """Recession constant k should be positive for exponential decay."""
+        q = 100 * np.exp(-np.arange(30) / 10.0)
+        ts = TimeSeries(q)
+        result, _ = ts.recession_analysis(min_length=3, plot=False)
+        if len(result) > 0:
+            assert result["recession_constant_k"].iloc[0] > 0
+
+    def test_r_squared_good_for_pure_exponential(self):
+        """R-squared should be very high for pure exponential decay."""
+        q = 100 * np.exp(-np.arange(30) / 10.0)
+        ts = TimeSeries(q)
+        result, _ = ts.recession_analysis(min_length=3, plot=False)
+        if len(result) > 0:
+            assert (
+                result["r_squared"].iloc[0] > 0.95
+            ), f"Expected R2 > 0.95, got {result['r_squared'].iloc[0]}"
+
+    def test_no_recession_in_increasing_data(self):
+        """Monotonically increasing data should have no recession segments."""
+        ts = TimeSeries(np.arange(50, dtype=float))
+        result, _ = ts.recession_analysis(min_length=5, plot=False)
+        assert len(result) == 0
+
+    def test_returns_expected_columns(self):
+        """Result should have expected columns."""
+        q = 100 * np.exp(-np.arange(30) / 10.0)
+        ts = TimeSeries(q)
+        result, _ = ts.recession_analysis(min_length=3, plot=False)
+        expected = [
+            "recession_id",
+            "start_index",
+            "end_index",
+            "length",
+            "recession_constant_k",
+            "r_squared",
+        ]
+        if len(result) > 0:
+            assert set(expected).issubset(set(result.columns))
+
+    def test_plot_returns_figure(self):
+        """With plot=True, should return (fig, ax)."""
+        q = 100 * np.exp(-np.arange(30) / 10.0)
+        ts = TimeSeries(q)
+        _, fig_ax = ts.recession_analysis(min_length=3, plot=True)
+        assert fig_ax is not None
+        plt.close(fig_ax[0])
+
+    def test_min_length_filter(self):
+        """Short recessions below min_length should be excluded."""
+        data = np.array([10.0, 9.0, 8.0, 20.0, 19.0, 18.0, 17.0, 16.0, 15.0])
+        ts = TimeSeries(data)
+        result_strict, _ = ts.recession_analysis(min_length=5, plot=False)
+        result_loose, _ = ts.recession_analysis(min_length=2, plot=False)
+        assert len(result_loose) >= len(result_strict)
