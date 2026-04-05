@@ -219,6 +219,22 @@ def _adf_test_single(
 ) -> dict:
     """Run ADF test on a single series."""
     n = len(data)
+    if n < 7:
+        raise ValueError(f"ADF test requires at least 7 observations, got {n}.")
+
+    if np.std(data) == 0:
+        crit = _ADF_CRITICAL_VALUES.get(regression, _ADF_CRITICAL_VALUES["c"])
+        return {
+            "statistic": 0.0,
+            "p_value": 1.0,
+            "used_lag": 0,
+            "n_obs": n,
+            "crit_1%": crit["1%"],
+            "crit_5%": crit["5%"],
+            "crit_10%": crit["10%"],
+            "conclusion": "Non-stationary",
+        }
+
     if max_lag is None:
         max_lag = int(12.0 * (n / 100.0) ** 0.25)
 
@@ -226,8 +242,13 @@ def _adf_test_single(
     dy = np.diff(data)
     y_lag = data[:-1]
 
-    # Select lag order using AIC-like criterion (simplified: use max_lag directly)
+    # Determine number of deterministic terms
+    n_det = 1 if regression == "c" else 2 if regression == "ct" else 0
+
+    # Reduce lag until the system is sufficiently overdetermined
     used_lag = min(max_lag, len(dy) - 2)
+    while used_lag > 0 and (len(dy) - used_lag) <= (used_lag + 1 + n_det + 2):
+        used_lag -= 1
 
     # Build regression matrix: dy_t = rho * y_{t-1} + sum(gamma_i * dy_{t-i}) + deterministic + e_t
     nobs = len(dy) - used_lag
@@ -249,14 +270,14 @@ def _adf_test_single(
 
     x = np.hstack(x_cols)
 
-    # OLS regression
+    # OLS regression via lstsq (numerically stable)
     beta, residuals, _, _ = np.linalg.lstsq(x, y, rcond=None)
 
     # t-statistic for the coefficient on y_{t-1} (first coefficient)
     e = y - x @ beta
-    sigma2 = np.sum(e**2) / (nobs - x.shape[1])
-    var_beta = sigma2 * np.linalg.inv(x.T @ x)
-    se_rho = np.sqrt(var_beta[0, 0])
+    sigma2 = np.sum(e**2) / max(nobs - x.shape[1], 1)
+    var_beta = sigma2 * np.linalg.pinv(x.T @ x)
+    se_rho = np.sqrt(max(var_beta[0, 0], 1e-30))
     t_stat = beta[0] / se_rho
 
     # Approximate p-value using MacKinnon (1994) regression surface
@@ -322,6 +343,22 @@ def _kpss_test_single(
 ) -> dict:
     """Run KPSS test on a single series."""
     n = len(data)
+    if n < 5:
+        raise ValueError(f"KPSS test requires at least 5 observations, got {n}.")
+
+    if np.std(data) == 0:
+        crit = _KPSS_CRITICAL_VALUES.get(regression, _KPSS_CRITICAL_VALUES["c"])
+        return {
+            "statistic": 0.0,
+            "p_value": 0.10,
+            "lags": 0,
+            "crit_10%": crit["10%"],
+            "crit_5%": crit["5%"],
+            "crit_2.5%": crit["2.5%"],
+            "crit_1%": crit["1%"],
+            "conclusion": "Stationary",
+        }
+
     if n_lags is None:
         n_lags = int(np.sqrt(12.0 * n / 100.0))
 

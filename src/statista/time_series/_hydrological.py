@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from pandas import DataFrame
@@ -112,9 +113,11 @@ class HydrologicalMixin:
             col, data, exceedance = all_results[0]
             fdc_df = DataFrame({"value": data, "exceedance_pct": exceedance})
         else:
-            fdc_df = DataFrame({"exceedance_pct": all_results[0][2]})
-            for col, data, _ in all_results:
-                fdc_df[col] = data
+            # Each column may have different lengths after dropna, so build per-column
+            frames = []
+            for col, col_data, exc in all_results:
+                frames.append(DataFrame({col: col_data, f"{col}_exceedance_pct": exc}))
+            fdc_df = pd.concat(frames, axis=1)
 
         fig_ax: Optional[Tuple[Figure, Axes]] = None
         if plot:
@@ -258,14 +261,7 @@ class HydrologicalMixin:
             )
             frames.append(frame)
 
-        result = (
-            frames[0]
-            if len(frames) == 1
-            else DataFrame(
-                np.concatenate([f.values for f in frames]),
-                columns=frames[0].columns,
-            )
-        )
+        result = frames[0] if len(frames) == 1 else pd.concat(frames, ignore_index=True)
         return result
 
     def baseflow_separation(

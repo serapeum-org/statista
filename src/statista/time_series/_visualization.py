@@ -293,8 +293,9 @@ class VisualizationMixin:
         # positions where violins are plotted (1, 3, 5, ...)ing labels
         positions = np.arange(1, len(self.columns) * (spacing + 1) + 1, spacing + 1)
 
+        violin_data = [self[col].dropna().values for col in self.columns]
         violin_parts = ax.violinplot(
-            self.values,
+            violin_data,
             showmeans=mean,
             showmedians=median,
             showextrema=extrema,

@@ -105,6 +105,12 @@ class TestMannKendall:
         with pytest.raises(ValueError, match="Unknown method"):
             ts.mann_kendall(method="invalid")
 
+    def test_too_short_raises(self):
+        """MK on fewer than 3 observations should raise ValueError."""
+        ts = TimeSeries(np.array([1.0, 2.0]))
+        with pytest.raises(ValueError, match="at least 3"):
+            ts.mann_kendall()
+
     def test_multi_column(self):
         """Should return one row per column."""
         ts = TimeSeries(np.random.randn(50, 3), columns=["A", "B", "C"])

@@ -239,9 +239,19 @@ class DistributionMixin:
             elif chosen == "anderson":
                 result = scipy_stats.anderson(data, dist="norm")
                 stat = result.statistic
-                # Use 5% significance level from Anderson-Darling critical values
-                crit_5 = result.critical_values[2]  # index 2 = 5%
-                p = 0.05 if stat > crit_5 else 0.10  # Approximate
+                # Interpolate p from Anderson-Darling critical values
+                # significance_level: [15%, 10%, 5%, 2.5%, 1%]
+                sig_levels = result.significance_level / 100.0
+                crits = result.critical_values
+                if stat >= crits[-1]:
+                    p = sig_levels[-1]  # beyond 1% critical
+                elif stat <= crits[0]:
+                    p = sig_levels[0]  # below 15% critical
+                else:
+                    from scipy.interpolate import interp1d
+
+                    f = interp1d(crits, sig_levels, kind="linear")
+                    p = float(f(stat))
                 test_name = "Anderson-Darling"
             elif chosen == "jarque_bera":
                 stat, p = scipy_stats.jarque_bera(data)
@@ -371,7 +381,7 @@ class DistributionMixin:
                         "ks_p_value": float(ks_p),
                     }
                 )
-            except Exception as e:
+            except (ValueError, RuntimeError, np.linalg.LinAlgError) as e:
                 rows.append(
                     {
                         "column": col,

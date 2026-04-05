@@ -76,15 +76,25 @@ class TimeSeriesBase(DataFrame):
         **kwargs,
     ):
 
+        # Normalize list input to numpy array
+        if isinstance(data, list):
+            data = np.array(data)
+
         if isinstance(data, np.ndarray) and data.ndim == 1:
             data = data.reshape(-1, 1)  # Convert 1D array to 2D with one column
+
         if columns is None:
             if isinstance(data, dict):
                 # the _constructor method overrides the original constructor of the dataframe and gives an error if the
                 # data is a dictionary
                 columns = list(data.keys())
+            elif isinstance(data, DataFrame):
+                # Preserve existing DataFrame column names
+                columns = list(data.columns)
             else:
-                columns = [f"Series{i + 1}" for i in range(data.shape[1])]  # type: ignore[union-attr]
+                columns = [
+                    f"Series{i + 1}" for i in range(data.shape[1])  # type: ignore[union-attr]
+                ]
 
         if not isinstance(data, DataFrame):
             # Convert input data to a pandas DataFrame

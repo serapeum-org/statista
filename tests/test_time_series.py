@@ -57,6 +57,21 @@ class TestTimeSeriesInit:
             "Y",
         ], f"Expected ['X', 'Y'], got {ts.columns.tolist()}"
 
+    def test_from_list(self):
+        """A plain Python list should be accepted and converted to single-column."""
+        ts = TimeSeries([1.0, 2.0, 3.0, 4.0])
+        assert ts.shape == (4, 1), f"Expected shape (4, 1), got {ts.shape}"
+        assert ts.columns.tolist() == ["Series1"]
+
+    def test_from_dataframe_preserves_columns(self):
+        """DataFrame column names should be preserved when columns=None."""
+        df = DataFrame({"flow": [1, 2, 3], "temp": [4, 5, 6]})
+        ts = TimeSeries(df)
+        assert ts.columns.tolist() == [
+            "flow",
+            "temp",
+        ], f"Expected ['flow', 'temp'], got {ts.columns.tolist()}"
+
     def test_custom_index(self):
         """User-provided index should be preserved."""
         data = np.array([10.0, 20.0, 30.0])

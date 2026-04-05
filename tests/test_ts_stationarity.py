@@ -90,7 +90,26 @@ class TestADFTest:
         result = ts.adf_test(max_lag=5)
         assert result.loc["Series1", "used_lag"] <= 5
 
-    def test_returns_dataframe(self):
+    def test_small_sample_does_not_crash(self):
+        """ADF on a short series (n=10) should not crash."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(10))
+        result = ts.adf_test()
+        assert "statistic" in result.columns
+
+    def test_very_small_raises(self):
+        """ADF on fewer than 7 observations should raise ValueError."""
+        ts = TimeSeries(np.array([1.0, 2.0, 3.0, 4.0, 5.0]))
+        with pytest.raises(ValueError, match="at least 7"):
+            ts.adf_test()
+
+    def test_constant_data_adf(self):
+        """Constant data should return p_value=1.0."""
+        ts = TimeSeries(np.ones(50) * 5.0)
+        result = ts.adf_test()
+        assert result.loc["Series1", "p_value"] == 1.0
+
+    def test_returns_dataframe_adf(self):
         """Return type should be DataFrame."""
         ts = TimeSeries(np.random.randn(100))
         result = ts.adf_test()

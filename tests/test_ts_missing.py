@@ -167,7 +167,7 @@ class TestDetectOutliers:
         ts = TimeSeries(data)
         result = ts.detect_outliers(method="iqr", threshold=1.5)
         assert (
-            result.loc[5, "Series1"] is np.True_
+            result.loc[5, "Series1"] == True  # noqa: E712
         ), "Value 100.0 should be flagged as outlier"
 
     def test_zscore_method(self):
@@ -175,14 +175,14 @@ class TestDetectOutliers:
         data = np.array([1.0, 2.0, 3.0, 100.0, 2.5, 1.5])
         ts = TimeSeries(data)
         result = ts.detect_outliers(method="zscore", threshold=2.0)
-        assert result.loc[3, "Series1"] is np.True_
+        assert result.loc[3, "Series1"] == True  # noqa: E712
 
     def test_modified_zscore_method(self):
         """Modified Z-score (MAD-based) should detect outliers robustly."""
         data = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 50.0])
         ts = TimeSeries(data)
         result = ts.detect_outliers(method="modified_zscore", threshold=3.5)
-        assert result.loc[5, "Series1"] is np.True_
+        assert result.loc[5, "Series1"] == True  # noqa: E712
 
     def test_no_outliers(self):
         """Uniform data should have no outliers."""

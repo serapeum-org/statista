@@ -168,8 +168,10 @@ class ComparisonMixin:
         monthly_mean = series.groupby(series.index.month).transform("mean")
         monthly_std = series.groupby(series.index.month).transform("std")
 
+        # Replace zero std with NaN to avoid inf, then fill all NaN/inf with 0.0
+        monthly_std = monthly_std.replace(0.0, np.nan)
         std_anom = (series - monthly_mean) / monthly_std
-        std_anom = std_anom.fillna(0.0)
+        std_anom = std_anom.replace([np.inf, -np.inf], np.nan).fillna(0.0)
 
         result = TimeSeries(
             std_anom.values.reshape(-1, 1),
@@ -294,6 +296,10 @@ class ComparisonMixin:
             column = self.columns[0]
 
         data = self[column].dropna().values
+        if split_at <= 0 or split_at >= len(data):
+            raise ValueError(
+                f"split_at must be between 1 and {len(data) - 1}, got {split_at}."
+            )
         before = data[:split_at]
         after = data[split_at:]
 

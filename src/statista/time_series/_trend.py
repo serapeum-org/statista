@@ -345,6 +345,10 @@ def _mann_kendall_single(
 ) -> dict:
     """Run Mann-Kendall trend test on a single series."""
     n = len(data)
+    if n < 3:
+        raise ValueError(
+            f"Mann-Kendall test requires at least 3 observations, got {n}."
+        )
 
     # S statistic
     s = _mk_score(data, n)
@@ -400,8 +404,7 @@ def _mann_kendall_single(
     slopes = []
     for i in range(n):
         for j in range(i + 1, n):
-            if j != i:
-                slopes.append((data[j] - data[i]) / (j - i))
+            slopes.append((data[j] - data[i]) / (j - i))
     slope = float(np.median(slopes)) if slopes else 0.0
     intercept = float(np.median(data - slope * np.arange(n)))
 
@@ -484,7 +487,8 @@ def _yue_wang_correction(
 ) -> float:
     """Yue & Wang (2004) variance correction for autocorrelation.
 
-    Like Hamed-Rao but uses ACF on raw detrended values (not ranked).
+    Unlike Hamed-Rao, uses ACF on raw detrended values (not ranked) and
+    includes ALL lags without significance thresholding, per the original paper.
     """
     if lag is None:
         lag = n // 2 - 1
@@ -497,14 +501,10 @@ def _yue_wang_correction(
     # ACF of raw residuals
     acf_vals = _compute_acf(residuals, nlags=lag, fft=True)
 
-    # Significance threshold
-    ci = 1.96 / np.sqrt(n)
-
-    # Correction factor
+    # Correction factor — no significance thresholding per Yue & Wang (2004)
     correction = 0.0
     for i in range(1, lag + 1):
-        if abs(acf_vals[i]) > ci:
-            correction += (n - i) * acf_vals[i]
+        correction += (n - i) * acf_vals[i]
 
     ns_ratio = 1.0 + (2.0 / n) * correction
     corrected_var = var_s * ns_ratio

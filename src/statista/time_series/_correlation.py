@@ -453,13 +453,10 @@ class CorrelationMixin:
                 result.insert(0, "column", col)
             frames.append(result)
 
+        import pandas as pd
+
         combined = (
-            frames[0]
-            if len(frames) == 1
-            else DataFrame(
-                np.concatenate([f.values for f in frames]),
-                columns=frames[0].columns,
-            )
+            frames[0] if len(frames) == 1 else pd.concat(frames, ignore_index=True)
         )
         return combined
 
@@ -495,6 +492,12 @@ def _compute_acf(data: np.ndarray, nlags: int, fft: bool = True) -> np.ndarray:
     else:
         acov = np.correlate(x, x, mode="full")[n - 1 :]
 
+    # Guard for constant data (zero variance)
+    if acov[0] == 0.0:
+        result = np.zeros(nlags + 1)
+        result[0] = 1.0
+        return result
+
     result = acov[: nlags + 1] / acov[0]
     return result
 
@@ -509,6 +512,9 @@ def _compute_ccf(x: np.ndarray, y: np.ndarray, nlags: int) -> np.ndarray:
     xm = x - np.mean(x)
     ym = y - np.mean(y)
     denom = np.sqrt(np.sum(xm**2) * np.sum(ym**2))
+
+    if denom == 0.0:
+        return np.zeros(nlags + 1)
 
     ccf_vals = np.zeros(nlags + 1)
     for k in range(nlags + 1):

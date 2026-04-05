@@ -81,6 +81,10 @@ class ChangePointMixin:
         for col in cols:
             data = self[col].dropna().values
             n = len(data)
+            if n < 5:
+                raise ValueError(
+                    f"Change point tests require at least 5 observations, got {n} for column '{col}'."
+                )
 
             r = rankdata(data)
             s = np.cumsum(r)
@@ -155,6 +159,10 @@ class ChangePointMixin:
         for col in cols:
             data = self[col].dropna().values
             n = len(data)
+            if n < 5:
+                raise ValueError(
+                    f"Change point tests require at least 5 observations, got {n} for column '{col}'."
+                )
 
             mean = np.mean(data)
             std = np.std(data, ddof=1)
@@ -237,6 +245,10 @@ class ChangePointMixin:
         for col in cols:
             data = self[col].dropna().values
             n = len(data)
+            if n < 5:
+                raise ValueError(
+                    f"Change point tests require at least 5 observations, got {n} for column '{col}'."
+                )
 
             std = np.std(data, ddof=1)
             if std == 0:
