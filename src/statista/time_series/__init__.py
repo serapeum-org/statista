@@ -21,6 +21,7 @@ from statista.time_series._correlation import CorrelationMixin
 from statista.time_series._descriptive import DescriptiveMixin
 from statista.time_series._missing import MissingDataMixin
 from statista.time_series._stationarity import StationarityMixin
+from statista.time_series._trend import TrendMixin
 from statista.time_series._visualization import VisualizationMixin
 
 
@@ -30,6 +31,7 @@ class TimeSeries(
     MissingDataMixin,
     CorrelationMixin,
     StationarityMixin,
+    TrendMixin,
     TimeSeriesBase,
 ):
     """A class to represent and analyze time series data using pandas DataFrame.
