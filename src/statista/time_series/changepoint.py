@@ -72,16 +72,17 @@ class ChangePoint(_TimeSeriesStub):
                 )
 
             r = rankdata(data)
-            s = np.cumsum(r)
+            cumsum_ranks = np.cumsum(r)
             k_range = np.arange(1, n)
-            u_values = 2 * s[:-1] - k_range * (n + 1)
-            u_abs = np.abs(u_values)
+            # Mann-Whitney U-like statistic: difference between cumulative ranks and expected value
+            u_statistics = 2 * cumsum_ranks[:-1] - k_range * (n + 1)
+            u_absolute = np.abs(u_statistics)
 
-            cp_pos = int(np.argmax(u_abs))
-            k_stat = float(u_abs[cp_pos])
+            cp_pos = int(np.argmax(u_absolute))
+            pettitt_statistic = float(u_absolute[cp_pos])
 
             # Analytical p-value approximation
-            p_value = 2.0 * np.exp(-6.0 * k_stat**2 / (n**3 + n**2))
+            p_value = 2.0 * np.exp(-6.0 * pettitt_statistic**2 / (n**3 + n**2))
             p_value = min(float(p_value), 1.0)
 
             h = p_value < alpha
@@ -93,7 +94,7 @@ class ChangePoint(_TimeSeriesStub):
                     "column": col,
                     "h": bool(h),
                     "change_point_index": cp_pos,
-                    "statistic": k_stat,
+                    "statistic": pettitt_statistic,
                     "p_value": p_value,
                     "mean_before": mean_before,
                     "mean_after": mean_after,
