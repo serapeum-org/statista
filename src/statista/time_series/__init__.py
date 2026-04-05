@@ -16,12 +16,15 @@ Time Series Analysis
 https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html
 """
 
-from statista.time_series._base import BOX_MEAN_PROP, TimeSeriesBase, VIOLIN_PROP
+from statista.time_series._base import BOX_MEAN_PROP, VIOLIN_PROP, TimeSeriesBase
 from statista.time_series._descriptive import DescriptiveMixin
+from statista.time_series._missing import MissingDataMixin
 from statista.time_series._visualization import VisualizationMixin
 
 
-class TimeSeries(DescriptiveMixin, VisualizationMixin, TimeSeriesBase):
+class TimeSeries(
+    DescriptiveMixin, VisualizationMixin, MissingDataMixin, TimeSeriesBase
+):
     """A class to represent and analyze time series data using pandas DataFrame.
 
     Inherits from `pandas.DataFrame` and adds additional methods for statistical-analysis and visualization specific
