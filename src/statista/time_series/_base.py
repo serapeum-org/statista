@@ -1,6 +1,8 @@
 """Base TimeSeries class — core DataFrame subclass with shared utilities."""
 
-from typing import List, Tuple, Union
+from __future__ import annotations
+
+from typing import Any, List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,9 +35,9 @@ class TimeSeriesBase(DataFrame):
     Examples:
         - Create a time series from a 1D array:
             ```python
-            >>> data = np.random.randn(100)
-            >>> ts = TimeSeries(data)
-            >>> print(ts.stats) # doctest: +SKIP
+            >>> data = np.random.randn(100)  # doctest: +SKIP
+            >>> ts = TimeSeries(data)  # doctest: +SKIP
+            >>> print(ts.stats)  # doctest: +SKIP
                       Series1
             count  100.000000
             mean     0.061816
@@ -49,9 +51,9 @@ class TimeSeriesBase(DataFrame):
             ```
         - Create a time series from a 2D array:
             ```python
-            >>> data_2d = np.random.randn(100, 3)
-            >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C'])
-            >>> print(ts_2d.stats) # doctest: +SKIP
+            >>> data_2d = np.random.randn(100, 3)  # doctest: +SKIP
+            >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C'])  # doctest: +SKIP
+            >>> print(ts_2d.stats)  # doctest: +SKIP
                       Series1     Series2     Series3
             count  100.000000  100.000000  100.000000
             mean     0.239437    0.058122   -0.063077
@@ -82,7 +84,7 @@ class TimeSeriesBase(DataFrame):
                 # data is a dictionary
                 columns = list(data.keys())
             else:
-                columns = [f"Series{i + 1}" for i in range(data.shape[1])]
+                columns = [f"Series{i + 1}" for i in range(data.shape[1])]  # type: ignore[union-attr]
 
         if not isinstance(data, DataFrame):
             # Convert input data to a pandas DataFrame
@@ -92,34 +94,36 @@ class TimeSeriesBase(DataFrame):
         self.columns = columns
 
     @staticmethod
-    def _get_ax_fig(n_subplots: int = 1, **kwargs) -> Tuple[Figure, Axes]:
-        fig = kwargs.get("fig")
-        ax = kwargs.get("ax")
+    def _get_ax_fig(n_subplots: int = 1, **kwargs: Any) -> Tuple[Figure, Axes]:
+        fig: Figure | None = kwargs.get("fig")
+        ax: Axes | None = kwargs.get("ax")
         if ax is None and fig is None:
             fig, ax = plt.subplots(n_subplots, figsize=(8, 6))
-        elif ax is None:
+        elif ax is None and fig is not None:
             ax = fig.add_subplot(111)
-        elif fig is None:
-            fig = ax.figure
-        return fig, ax
+        elif fig is None and ax is not None:
+            fig = ax.figure  # type: ignore[assignment]
+        return fig, ax  # type: ignore[return-value]
 
     @staticmethod
-    def _adjust_axes_labels(ax: Axes, tick_labels: List[str] = None, **kwargs):
+    def _adjust_axes_labels(
+        ax: Axes, tick_labels: List[str] | None = None, **kwargs: Any
+    ) -> Axes:
         """Adjust the labels of the axes."""
         if tick_labels is not None:
             ax.set_xticklabels(tick_labels)
 
         ax.set_title(
-            kwargs.get("title"),
+            kwargs.get("title", ""),
             fontsize=kwargs.get("title_fontsize", 18),
             fontweight="bold",
         )
         ax.set_xlabel(
-            kwargs.get("xlabel"),
+            kwargs.get("xlabel", ""),
             fontsize=kwargs.get("xlabel_fontsize", 14),
         )
         ax.set_ylabel(
-            kwargs.get("ylabel"),
+            kwargs.get("ylabel", ""),
             fontsize=kwargs.get("ylabel_fontsize", 14),
         )
 
@@ -137,8 +141,7 @@ class TimeSeriesBase(DataFrame):
 
         # Add a legend if needed
         if "legend" in kwargs:
-            labels = kwargs.get("legend")
-
+            labels: list[str] = kwargs["legend"]
             ax.legend(labels, fontsize=kwargs.get("legend_fontsize", 12))
 
         # Adjust layout for better spacing

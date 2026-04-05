@@ -1,10 +1,11 @@
-import pytest
-import numpy as np
 import matplotlib
+import numpy as np
+import pytest
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pandas import DataFrame
+
 from statista.time_series import TimeSeries
 
 
@@ -36,7 +37,9 @@ class TestTimeSeriesInit:
         data = np.array([1.0, 2.0, 3.0])
         ts = TimeSeries(data)
         assert ts.shape == (3, 1), f"Expected shape (3, 1), got {ts.shape}"
-        assert ts.columns.tolist() == ["Series1"], f"Expected ['Series1'], got {ts.columns.tolist()}"
+        assert ts.columns.tolist() == [
+            "Series1"
+        ], f"Expected ['Series1'], got {ts.columns.tolist()}"
 
     def test_2d_array_preserves_shape(self):
         """A 2D numpy array should keep its shape with auto-generated column names."""
@@ -49,7 +52,10 @@ class TestTimeSeriesInit:
         """User-provided column names should override auto-generated ones."""
         data = np.random.randn(5, 2)
         ts = TimeSeries(data, columns=["X", "Y"])
-        assert ts.columns.tolist() == ["X", "Y"], f"Expected ['X', 'Y'], got {ts.columns.tolist()}"
+        assert ts.columns.tolist() == [
+            "X",
+            "Y",
+        ], f"Expected ['X', 'Y'], got {ts.columns.tolist()}"
 
     def test_custom_index(self):
         """User-provided index should be preserved."""
@@ -69,22 +75,24 @@ class TestTimeSeriesInit:
         """Passing a dict should create a TimeSeries with dict keys as columns."""
         data = {"col_a": [1, 2, 3], "col_b": [4, 5, 6]}
         ts = TimeSeries(data)
-        assert "col_a" in ts.columns, f"Expected 'col_a' in columns, got {ts.columns.tolist()}"
+        assert (
+            "col_a" in ts.columns
+        ), f"Expected 'col_a' in columns, got {ts.columns.tolist()}"
         assert ts["col_b"].tolist() == [4, 5, 6]
 
     def test_constructor_returns_timeseries(self, ts_1d):
         """The _constructor property should return the TimeSeries class for pandas method chaining."""
-        assert ts_1d._constructor is TimeSeries, (
-            f"Expected TimeSeries, got {ts_1d._constructor}"
-        )
+        assert (
+            ts_1d._constructor is TimeSeries
+        ), f"Expected TimeSeries, got {ts_1d._constructor}"
 
     def test_pandas_operation_returns_timeseries(self):
         """Pandas operations (e.g., copy) should return TimeSeries, not plain DataFrame."""
         ts = TimeSeries(np.array([1.0, 2.0, 3.0]))
         copied = ts.copy()
-        assert isinstance(copied, TimeSeries), (
-            f"copy() should return TimeSeries, got {type(copied)}"
-        )
+        assert isinstance(
+            copied, TimeSeries
+        ), f"copy() should return TimeSeries, got {type(copied)}"
 
 
 class TestGetAxFig:
@@ -134,9 +142,7 @@ class TestAdjustAxesLabels:
     def test_sets_title_and_labels(self):
         """Title, xlabel, ylabel should be applied to the axes."""
         fig, ax = plt.subplots()
-        TimeSeries._adjust_axes_labels(
-            ax, title="T", xlabel="X", ylabel="Y"
-        )
+        TimeSeries._adjust_axes_labels(ax, title="T", xlabel="X", ylabel="Y")
         assert ax.get_title() == "T", f"Expected title 'T', got '{ax.get_title()}'"
         assert ax.get_xlabel() == "X", f"Expected xlabel 'X', got '{ax.get_xlabel()}'"
         assert ax.get_ylabel() == "Y", f"Expected ylabel 'Y', got '{ax.get_ylabel()}'"
@@ -165,10 +171,18 @@ class TestAdjustAxesLabels:
         """Custom font sizes should be applied."""
         fig, ax = plt.subplots()
         TimeSeries._adjust_axes_labels(
-            ax, title="T", title_fontsize=20, xlabel="X", xlabel_fontsize=16,
-            ylabel="Y", ylabel_fontsize=14, tick_fontsize=10,
+            ax,
+            title="T",
+            title_fontsize=20,
+            xlabel="X",
+            xlabel_fontsize=16,
+            ylabel="Y",
+            ylabel_fontsize=14,
+            tick_fontsize=10,
         )
-        assert ax.title.get_fontsize() == 20, f"Expected title fontsize 20, got {ax.title.get_fontsize()}"
+        assert (
+            ax.title.get_fontsize() == 20
+        ), f"Expected title fontsize 20, got {ax.title.get_fontsize()}"
         plt.close(fig)
 
     def test_no_kwargs_does_not_crash(self):
@@ -197,9 +211,23 @@ def test_stats(ts: TimeSeries, request):
 
 
 EXTENDED_STATS_INDEX = [
-    "count", "mean", "std", "cv", "skewness", "kurtosis",
-    "min", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "max",
-    "iqr", "mad",
+    "count",
+    "mean",
+    "std",
+    "cv",
+    "skewness",
+    "kurtosis",
+    "min",
+    "5%",
+    "10%",
+    "25%",
+    "50%",
+    "75%",
+    "90%",
+    "95%",
+    "max",
+    "iqr",
+    "mad",
 ]
 
 
@@ -241,6 +269,7 @@ class TestExtendedStats:
         assert result.loc["iqr", "Series1"] == pytest.approx(q75 - q25)
         # MAD
         from scipy.stats import median_abs_deviation
+
         assert result.loc["mad", "Series1"] == pytest.approx(median_abs_deviation(data))
 
     def test_extended_stats_cv_near_zero_mean(self):
@@ -477,9 +506,9 @@ class TestExtendedStatsEdgeCases:
         ts = TimeSeries(data)
         result = ts.extended_stats
         expected_cv = np.std(data, ddof=1) / np.mean(data)
-        assert result.loc["cv", "Series1"] == pytest.approx(expected_cv), (
-            f"Expected CV {expected_cv}, got {result.loc['cv', 'Series1']}"
-        )
+        assert result.loc["cv", "Series1"] == pytest.approx(
+            expected_cv
+        ), f"Expected CV {expected_cv}, got {result.loc['cv', 'Series1']}"
 
     def test_single_value(self):
         """A single-value series should produce std=0, NaN for CV, and consistent min/max."""
@@ -494,12 +523,14 @@ class TestExtendedStatsEdgeCases:
     def test_kurtosis_heavy_tails(self):
         """Kurtosis should be positive for heavy-tailed data (leptokurtic)."""
         np.random.seed(99)
-        data = np.concatenate([np.random.randn(100), np.array([10.0, -10.0, 15.0, -15.0])])
+        data = np.concatenate(
+            [np.random.randn(100), np.array([10.0, -10.0, 15.0, -15.0])]
+        )
         ts = TimeSeries(data)
         result = ts.extended_stats
-        assert result.loc["kurtosis", "Series1"] > 0, (
-            f"Expected positive kurtosis for heavy tails, got {result.loc['kurtosis', 'Series1']}"
-        )
+        assert (
+            result.loc["kurtosis", "Series1"] > 0
+        ), f"Expected positive kurtosis for heavy tails, got {result.loc['kurtosis', 'Series1']}"
 
     def test_stats_values_match_pandas_describe(self):
         """The stats property values should match pandas describe() output."""
@@ -507,12 +538,12 @@ class TestExtendedStatsEdgeCases:
         ts = TimeSeries(data)
         stats = ts.stats
         desc = ts.describe()
-        assert stats.loc["mean", "Series1"] == desc.loc["mean", "Series1"], (
-            "stats and describe() should produce identical mean"
-        )
-        assert stats.loc["std", "Series1"] == desc.loc["std", "Series1"], (
-            "stats and describe() should produce identical std"
-        )
+        assert (
+            stats.loc["mean", "Series1"] == desc.loc["mean", "Series1"]
+        ), "stats and describe() should produce identical mean"
+        assert (
+            stats.loc["std", "Series1"] == desc.loc["std", "Series1"]
+        ), "stats and describe() should produce identical std"
 
 
 class TestBoxPlotParameters:
@@ -695,16 +726,162 @@ class TestHistogramParameters:
         """2D data with a list of face colors should not trigger the 'Multiple columns' warning."""
         ts = TimeSeries(np.random.randn(50, 2), columns=["A", "B"])
         import warnings
+
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             fig, ax = plt.subplots()
             n, edges, fig2, ax2 = ts.histogram(
-                fig=fig, ax=ax,
+                fig=fig,
+                ax=ax,
                 color={"face": ["red", "blue"], "edge": "black", "alpha": 0.7},
             )
         multi_col_warnings = [x for x in w if "Multiple columns" in str(x.message)]
-        assert len(multi_col_warnings) == 0, (
-            "Should not warn about multiple columns when a color list is provided"
-        )
+        assert (
+            len(multi_col_warnings) == 0
+        ), "Should not warn about multiple columns when a color list is provided"
         assert isinstance(ax2, plt.Axes)
         plt.close(fig)
+
+
+class TestLMoments:
+    """Tests for the l_moments() method."""
+
+    def test_returns_expected_rows_default(self):
+        """Default nmom=5 should return rows L1, L2, t, t3, t4, t5."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(100))
+        result = ts.l_moments()
+        expected_rows = ["L1", "L2", "t", "t3", "t4", "t5"]
+        assert (
+            result.index.tolist() == expected_rows
+        ), f"Expected rows {expected_rows}, got {result.index.tolist()}"
+
+    def test_returns_expected_rows_nmom4(self):
+        """nmom=4 should return rows L1, L2, t, t3, t4 (no t5)."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(100))
+        result = ts.l_moments(nmom=4)
+        expected_rows = ["L1", "L2", "t", "t3", "t4"]
+        assert result.index.tolist() == expected_rows
+
+    def test_returns_expected_rows_nmom2(self):
+        """nmom=2 should return rows L1, L2, t only."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(100))
+        result = ts.l_moments(nmom=2)
+        expected_rows = ["L1", "L2", "t"]
+        assert result.index.tolist() == expected_rows
+
+    def test_columns_match(self):
+        """Columns in result should match the TimeSeries columns."""
+        ts = TimeSeries(np.random.randn(50, 3), columns=["A", "B", "C"])
+        result = ts.l_moments()
+        assert result.columns.tolist() == ["A", "B", "C"]
+
+    def test_l1_equals_mean(self):
+        """L1 (first L-moment) should equal the sample mean."""
+        data = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0])
+        ts = TimeSeries(data)
+        result = ts.l_moments(nmom=4)
+        assert result.loc["L1", "Series1"] == pytest.approx(
+            5.5
+        ), f"L1 should equal mean 5.5, got {result.loc['L1', 'Series1']}"
+
+    def test_symmetric_data_t3_near_zero(self):
+        """L-skewness (t3) should be near zero for symmetric data."""
+        data = np.array([-5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0])
+        ts = TimeSeries(data)
+        result = ts.l_moments(nmom=4)
+        assert result.loc["t3", "Series1"] == pytest.approx(
+            0.0, abs=0.05
+        ), f"L-skewness should be near 0 for symmetric data, got {result.loc['t3', 'Series1']}"
+
+    def test_l2_positive(self):
+        """L2 (L-scale) should be positive for non-constant data."""
+        np.random.seed(99)
+        ts = TimeSeries(np.random.randn(100))
+        result = ts.l_moments(nmom=4)
+        assert (
+            result.loc["L2", "Series1"] > 0
+        ), f"L2 should be positive, got {result.loc['L2', 'Series1']}"
+
+    def test_handles_nan(self):
+        """NaN values should be dropped before computing L-moments."""
+        data = np.array([1.0, 2.0, np.nan, 4.0, 5.0, 6.0, 7.0, 8.0])
+        ts = TimeSeries(data)
+        result = ts.l_moments(nmom=4)
+        assert not np.isnan(result.loc["L1", "Series1"]), "L1 should not be NaN"
+
+    def test_nmom_less_than_2_raises(self):
+        """nmom < 2 should raise ValueError."""
+        ts = TimeSeries(np.array([1.0, 2.0, 3.0]))
+        with pytest.raises(ValueError, match="nmom must be >= 2"):
+            ts.l_moments(nmom=1)
+
+
+class TestSummary:
+    """Tests for the summary() method."""
+
+    def test_returns_dataframe(self):
+        """summary() should return a pandas DataFrame."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(100))
+        result = ts.summary()
+        assert isinstance(result, DataFrame), f"Expected DataFrame, got {type(result)}"
+
+    def test_contains_all_expected_rows(self):
+        """summary() should contain both extended_stats rows and L-moment ratios."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(100))
+        result = ts.summary()
+        expected_rows = [
+            "count",
+            "mean",
+            "std",
+            "cv",
+            "skewness",
+            "kurtosis",
+            "min",
+            "max",
+            "iqr",
+            "mad",
+            "L-CV",
+            "L-skewness",
+            "L-kurtosis",
+        ]
+        assert (
+            result.index.tolist() == expected_rows
+        ), f"Expected rows {expected_rows}, got {result.index.tolist()}"
+
+    def test_columns_match(self):
+        """Columns in summary should match the TimeSeries columns."""
+        ts = TimeSeries(np.random.randn(50, 2), columns=["X", "Y"])
+        result = ts.summary()
+        assert result.columns.tolist() == ["X", "Y"]
+
+    def test_values_consistent_with_extended_stats(self):
+        """Values for shared rows should match extended_stats output."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(100))
+        summary = ts.summary()
+        estats = ts.extended_stats
+        for row in ["mean", "std", "cv", "skewness", "kurtosis"]:
+            assert summary.loc[row, "Series1"] == pytest.approx(
+                float(estats.loc[row, "Series1"])
+            ), f"Row '{row}' mismatch between summary and extended_stats"
+
+    def test_values_consistent_with_l_moments(self):
+        """L-moment ratio rows should match l_moments() output."""
+        np.random.seed(42)
+        ts = TimeSeries(np.random.randn(100))
+        summary = ts.summary()
+        lmom = ts.l_moments(nmom=4)
+        assert summary.loc["L-CV", "Series1"] == pytest.approx(
+            float(lmom.loc["t", "Series1"])
+        ), "L-CV should match l_moments().loc['t']"
+        assert summary.loc["L-skewness", "Series1"] == pytest.approx(
+            float(lmom.loc["t3", "Series1"])
+        ), "L-skewness should match l_moments().loc['t3']"
+        assert summary.loc["L-kurtosis", "Series1"] == pytest.approx(
+            float(lmom.loc["t4", "Series1"])
+        ), "L-kurtosis should match l_moments().loc['t4']"

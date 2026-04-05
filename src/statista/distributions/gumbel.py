@@ -340,8 +340,8 @@ class Gumbel(AbstractDistribution):
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
 
-        loc = parameters.loc
-        scale = parameters.scale
+        loc = parameters.loc  # type: ignore[union-attr]
+        scale = parameters.scale  # type: ignore[union-attr]
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -1111,14 +1111,14 @@ class Gumbel(AbstractDistribution):
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
 
-        scale = parameters.scale
+        scale = parameters.scale  # type: ignore[union-attr]
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
         if prob_non_exceed is None:
             prob_non_exceed = PlottingPosition.weibul(self.data)
 
-        qth = self._inv_cdf(prob_non_exceed, parameters)
+        qth = self._inv_cdf(prob_non_exceed, parameters)  # type: ignore[arg-type]
         y = [-np.log(-np.log(j)) for j in prob_non_exceed]
         std_error = [
             (scale / np.sqrt(len(self.data)))
@@ -1207,7 +1207,7 @@ class Gumbel(AbstractDistribution):
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
 
-        scale = parameters.scale
+        scale = parameters.scale  # type: ignore[union-attr]
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)

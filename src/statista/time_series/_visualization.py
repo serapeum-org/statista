@@ -1,20 +1,49 @@
 """Visualization mixin for TimeSeries."""
 
+from __future__ import annotations
+
 import warnings
-from typing import List, Literal, Tuple, Union
+from typing import TYPE_CHECKING, List, Literal, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 from matplotlib.collections import PolyCollection
 from matplotlib.figure import Figure
-from matplotlib.axes import Axes
 from pandas import DataFrame
 
 from statista.time_series._base import BOX_MEAN_PROP, VIOLIN_PROP
 
+if TYPE_CHECKING:
+    from pandas import Index
+
 
 class VisualizationMixin:
-    """Mixin providing visualization methods for TimeSeries."""
+    """Mixin providing visualization methods for TimeSeries.
+
+    This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
+    All attribute access (``self.columns``, ``self.values``, indexing) is provided by DataFrame
+    at runtime.
+    """
+
+    if TYPE_CHECKING:
+        columns: Index
+        values: np.ndarray
+        index: Index
+        ndim: int
+
+        @staticmethod
+        def _get_ax_fig(  # noqa: E704
+            n_subplots: int = 1, **kwargs: object
+        ) -> Tuple[Figure, Axes]: ...
+
+        @staticmethod
+        def _adjust_axes_labels(  # noqa: E704
+            ax: Axes, tick_labels: List[str] | None = None, **kwargs: object
+        ) -> Axes: ...
+
+        def __getitem__(self, key: str) -> DataFrame:  # noqa: E704
+            ...
 
     def box_plot(
         self, mean: bool = False, notch: bool = False, **kwargs
@@ -83,32 +112,32 @@ class VisualizationMixin:
         Examples:
             - Plot the box plot for a 1D time series:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100))
-                >>> fig, ax = ts.box_plot()
+                >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
+                >>> fig, ax = ts.box_plot()  # doctest: +SKIP
 
                 ```
                 ![box_plot_1d](./../_images/time_series/box_plot_1d.png)
 
             - Plot the box plot for a multiple time series:
                 ```python
-                >>> data_2d = np.random.randn(100, 4)
-                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])
-                >>> fig, ax = ts_2d.box_plot(mean=True, grid=True)
+                >>> data_2d = np.random.randn(100, 4)  # doctest: +SKIP
+                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])  # doctest: +SKIP
+                >>> fig, ax = ts_2d.box_plot(mean=True, grid=True)  # doctest: +SKIP
 
                 ```
                 ![box_plot_2d](./../_images/time_series/box_plot_2d.png)
                 ```python
-                >>> fig, ax = ts_2d.box_plot(grid=True, mean=True, color={"boxes": "#DC143C"})
+                >>> fig, ax = ts_2d.box_plot(grid=True, mean=True, color={"boxes": "#DC143C"})  # doctest: +SKIP
 
                 ```
                 ![box_plot_color](./../_images/time_series/box_plot_color.png)
                 ```python
-                >>> fig, ax = ts_2d.box_plot(xlabel='Custom X', ylabel='Custom Y', title='Custom Box Plot')
+                >>> fig, ax = ts_2d.box_plot(xlabel='Custom X', ylabel='Custom Y', title='Custom Box Plot')  # doctest: +SKIP
 
                 ```
                 ![box_plot_axes-label](./../_images/time_series/box_plot_axes-label.png)
                 ```python
-                >>> fig, ax = ts_2d.box_plot(notch=True)
+                >>> fig, ax = ts_2d.box_plot(notch=True)  # doctest: +SKIP
 
                 ```
                 ![box_plot_notch](./../_images/time_series/box_plot_notch.png)
@@ -215,45 +244,45 @@ class VisualizationMixin:
         Examples:
             - Plot the box plot for a 1D time series:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100))
-                >>> fig, ax = ts.violin()
+                >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
+                >>> fig, ax = ts.violin()  # doctest: +SKIP
 
                 ```
                 ![violin_1d](./../_images/time_series/violin_1d.png)
 
             - Plot the box plot for a multiple time series:
                 ```python
-                >>> data_2d = np.random.randn(100, 4)
-                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])
-                >>> fig, ax = ts_2d.violin()
+                >>> data_2d = np.random.randn(100, 4)  # doctest: +SKIP
+                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])  # doctest: +SKIP
+                >>> fig, ax = ts_2d.violin()  # doctest: +SKIP
 
                 ```
                 ![violin_2d](./../_images/time_series/violin_2d.png)
 
             - you can control the spacing between the violins using the `spacing` parameter:
                 ```python
-                >>> fig, ax = ts_2d.violin(spacing=2)
+                >>> fig, ax = ts_2d.violin(spacing=2)  # doctest: +SKIP
 
                 ```
                 ![violin_2d_spacing](./../_images/time_series/violin_2d_spacing.png)
 
             - You can change the title, xlabel, and ylabel using the respective parameters:
                 ```python
-                >>> fig, ax = ts_2d.violin(xlabel='Random Data', ylabel='Custom Y', title='Custom Box Plot')
+                >>> fig, ax = ts_2d.violin(xlabel='Random Data', ylabel='Custom Y', title='Custom Box Plot')  # doctest: +SKIP
 
                 ```
                 ![violin_labels_titles](./../_images/time_series/violin_labels_titles.png)
 
             - You can display the means, medians, and extrema using the respective parameters:
                 ```python
-                >>> fig, ax = ts_2d.violin(mean=True, median=True, extrema=True)
+                >>> fig, ax = ts_2d.violin(mean=True, median=True, extrema=True)  # doctest: +SKIP
 
                 ```
                 ![violin_means_medians_extrema](./../_images/time_series/violin_means_medians_extrema.png)
 
             - You can display the violins on the low side only using the `side` parameter:
                 ```python
-                >>> fig, ax = ts_2d.violin(side='low')
+                >>> fig, ax = ts_2d.violin(side='low')  # doctest: +SKIP
 
                 ```
                 ![violin_low_side](./../_images/time_series/violin_low_side.png)
@@ -274,10 +303,10 @@ class VisualizationMixin:
         )
         color = kwargs.get("color") if "color" in kwargs else VIOLIN_PROP
 
-        for pc in violin_parts["bodies"]:
-            pc.set_facecolor(color.get("face"))
-            pc.set_edgecolor(color.get("edge"))
-            pc.set_alpha(color.get("alpha"))
+        for pc in violin_parts["bodies"]:  # type: ignore[attr-defined]
+            pc.set_facecolor(color.get("face"))  # type: ignore[union-attr]
+            pc.set_edgecolor(color.get("edge"))  # type: ignore[union-attr]
+            pc.set_alpha(color.get("alpha"))  # type: ignore[union-attr]
 
         ax.xaxis.set_ticks(positions)
         # remove the ax from the kwargs to avoid passing it to the adjust_axes_labels method twice
@@ -339,23 +368,23 @@ class VisualizationMixin:
         Examples:
             - Plot the raincloud plot for a 1D time series, and use the `overlay` parameter to overlay the plots:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100))
-                >>> fig, ax = ts.raincloud()
+                >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
+                >>> fig, ax = ts.raincloud()  # doctest: +SKIP
 
                 ```
                 ![raincloud_1d](./../_images/time_series/raincloud_1d.png)
 
                 ```python
-                >>> fig, ax = ts.raincloud(overlay=False)
+                >>> fig, ax = ts.raincloud(overlay=False)  # doctest: +SKIP
 
                 ```
                 ![raincloud-overlay-false](./../_images/time_series/raincloud-overlay-false.png)
 
             - Plot the box plot for a multiple time series:
                 ```python
-                >>> data_2d = np.random.randn(100, 4)
-                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])
-                >>> fig, ax = ts_2d.raincloud(mean=True, grid=True)
+                >>> data_2d = np.random.randn(100, 4)  # doctest: +SKIP
+                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])  # doctest: +SKIP
+                >>> fig, ax = ts_2d.raincloud(mean=True, grid=True)  # doctest: +SKIP
 
                 ```
         """
@@ -495,8 +524,8 @@ class VisualizationMixin:
         Examples:
             - Plot the box plot for a 1D time series:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100))
-                >>> n_values, bin_edges, fig, ax = ts.histogram()
+                >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
+                >>> n_values, bin_edges, fig, ax = ts.histogram()  # doctest: +SKIP
                 >>> print(n_values) #doctest: +SKIP
                 [ 5.  8. 11. 12. 14. 17. 15.  9.  4.  5.]
                 >>> print(bin_edges) #doctest: +SKIP
@@ -507,9 +536,9 @@ class VisualizationMixin:
 
             - Plot the box plot for a multiple time series:
                 ```python
-                >>> data_2d = np.random.randn(100, 4)
-                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])
-                >>> n_values, bin_edges, fig, ax = ts_2d.histogram(legend=['A', 'B', 'C', 'D'])
+                >>> data_2d = np.random.randn(100, 4)  # doctest: +SKIP
+                >>> ts_2d = TimeSeries(data_2d, columns=['A', 'B', 'C', 'D'])  # doctest: +SKIP
+                >>> n_values, bin_edges, fig, ax = ts_2d.histogram(legend=['A', 'B', 'C', 'D'])  # doctest: +SKIP
                 >>> print(n_values) #doctest: +SKIP
                 [[ 0.  7.  9. 12. 20. 20. 19.  7.  5.  1.]
                  [ 1.  1.  9. 12. 20. 25. 13. 14.  5.  0.]
@@ -526,7 +555,7 @@ class VisualizationMixin:
         fig, ax = self._get_ax_fig(**kwargs)
 
         color = kwargs.get("color") if "color" in kwargs else VIOLIN_PROP
-        if len(self.columns) > 1 and not isinstance(color.get("face"), list):
+        if len(self.columns) > 1 and not isinstance(color.get("face"), list):  # type: ignore[union-attr]
             color = None
             warnings.warn(
                 "Multiple columns detected. Please provide a list of colors for each column, Otherwise the given"
@@ -535,9 +564,9 @@ class VisualizationMixin:
         n_values, bin_edges, _ = ax.hist(
             self.values,
             bins=bins,
-            color=color.get("face") if color else None,
-            edgecolor=color.get("edge") if color else None,
-            alpha=color.get("alpha") if color else None,
+            color=color.get("face") if color else None,  # type: ignore[union-attr,arg-type]
+            edgecolor=color.get("edge") if color else None,  # type: ignore[union-attr]
+            alpha=color.get("alpha") if color else None,  # type: ignore[union-attr]
         )
 
         kwargs.pop("ax", None)
@@ -554,7 +583,7 @@ class VisualizationMixin:
         )
 
         plt.show()
-        return n_values, bin_edges, fig, ax
+        return n_values, bin_edges, fig, ax  # type: ignore[return-value]
 
     def density(self, **kwargs) -> Tuple[Figure, Axes]:
         """
@@ -593,16 +622,16 @@ class VisualizationMixin:
         Examples:
             - Plot the KDE density plot for a 1D time series:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100))
-                >>> fig, ax = ts.density(title='Density Plot', xlabel='Random Values', ylabel='KDE density')
+                >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
+                >>> fig, ax = ts.density(title='Density Plot', xlabel='Random Values', ylabel='KDE density')  # doctest: +SKIP
 
                 ```
                 ![density-1d](./../_images/time_series/density-1d.png)
 
             - Plot the KDE density plot for a 2D time series:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100, 4))
-                >>> fig, ax = ts.density(title='Density Plot', xlabel='Random Values', ylabel='KDE density')
+                >>> ts = TimeSeries(np.random.randn(100, 4))  # doctest: +SKIP
+                >>> fig, ax = ts.density(title='Density Plot', xlabel='Random Values', ylabel='KDE density')  # doctest: +SKIP
 
                 ```
                 ![density-2d](./../_images/time_series/density-2d.png)
@@ -665,8 +694,8 @@ class VisualizationMixin:
         Examples:
             - Plot the rolling average and standard deviation for a 1D time series:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100))
-                >>> fig, ax = ts.rolling_statistics(
+                >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
+                >>> fig, ax = ts.rolling_statistics(  # doctest: +SKIP
                 ...    window=20, title='Rolling Statistics', xlabel='Random Values', ylabel='Random Y',
                 ...    legend=['Rolling Mean', 'Rolling Std']
                 ... )
@@ -676,8 +705,8 @@ class VisualizationMixin:
 
             - Plot the rolling average and standard deviation for a 2D time series:
                 ```python
-                >>> ts = TimeSeries(np.random.randn(100, 3))
-                >>> fig, ax = ts.rolling_statistics(
+                >>> ts = TimeSeries(np.random.randn(100, 3))  # doctest: +SKIP
+                >>> fig, ax = ts.rolling_statistics(  # doctest: +SKIP
                 ...    window=10, title='Rolling Statistics', xlabel='Random Values', ylabel='Random Y',
                 ... )
 
