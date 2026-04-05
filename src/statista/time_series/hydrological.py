@@ -74,6 +74,13 @@ class Hydrological(_TimeSeriesStub):
         for col in cols:
             data = np.sort(self[col].dropna().values)[::-1]  # Sort descending
             n = len(data)
+
+            # Validate non-empty data after removing NaN values
+            if n == 0:
+                raise ValueError(
+                    f"Column '{col}' contains no valid data after removing NaN values"
+                )
+
             ranks = np.arange(1, n + 1)
 
             if method == "weibull":

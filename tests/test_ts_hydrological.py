@@ -73,6 +73,15 @@ class TestFlowDurationCurve:
         fdc, _ = ts.flow_duration_curve(plot=False)
         assert "A" in fdc.columns and "B" in fdc.columns
 
+    def test_all_nan_raises_valueerror(self):
+        """Column with all NaN values should raise ValueError."""
+        data = np.full(50, np.nan)
+        ts = TimeSeries(data)
+        with pytest.raises(
+            ValueError, match="contains no valid data after removing NaN values"
+        ):
+            ts.flow_duration_curve(plot=False)
+
 
 class TestAnnualExtremes:
     """Tests for annual_extremes() method."""
