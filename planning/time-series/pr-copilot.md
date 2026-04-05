@@ -105,6 +105,8 @@ Added validation check after dropna():
 ### M1: Inconsistent use of TYPE_CHECKING guards across mixins
 **File**: Multiple files in `src/statista/time_series/`
 
+**Status**: ✅ **RESOLVED** (No changes needed)
+
 **Issue**: Some mixins use `TYPE_CHECKING` blocks to declare abstract methods from the base class, but the
 patterns are inconsistent. Some declare `columns`, `index`, `values`, while others only declare `columns` and
 `index`. The `hydrological.py` mixin declares `values` but `trend.py` also uses `self.values` without declaring
@@ -113,14 +115,11 @@ it.
 **Impact**: Reduces IDE autocomplete effectiveness and could cause type checker confusion. Not a runtime issue but
 affects developer experience.
 
-**Suggested fix**: Standardize the TYPE_CHECKING declarations. All mixins that use `self.values` should declare
-it:
-```python
-if TYPE_CHECKING:
-    columns: Index
-    index: Index
-    values: np.ndarray
-```
+**Fix Applied**:
+Upon investigation, ALL mixin files already use the centralized `_TimeSeriesStub` pattern defined in
+`src/statista/time_series/stubs.py`. The stub declares all common attributes including `columns`, `index`,
+`values`, and helper methods. This provides consistent type checking across all mixins. No changes needed - this
+was already implemented correctly.
 
 ---
 
@@ -162,6 +161,8 @@ Added validation and handling:
 ### M4: Hardcoded alpha=0.05 in confidence intervals
 **File**: Multiple locations (e.g., `changepoint.py`, `stationarity.py`, `trend.py`)
 
+**Status**: ✅ **RESOLVED**
+
 **Issue**: While methods accept `alpha` as a parameter, many default to 0.05. For fields like hydrology where
 safety factors matter, this might be too liberal. More conservative defaults (0.01 or 0.1) might be appropriate
 depending on context.
@@ -169,17 +170,19 @@ depending on context.
 **Impact**: Users might not realize they need to adjust alpha for high-consequence decisions. Not a bug but a
 design consideration.
 
-**Suggested fix**: Document the default alpha prominently in module docstrings and consider adding a warning in the
-main module `__init__.py`:
-```python
-# Default significance level for hypothesis tests
-DEFAULT_ALPHA = 0.05  # Consider 0.01 for conservative analyses
-```
+**Fix Applied**:
+Added prominent documentation and constant:
+- Added "Statistical Testing" section to module docstring explaining alpha=0.05 default
+- Recommends alpha=0.01 or alpha=0.10 for safety-critical applications
+- Defined `DEFAULT_ALPHA = 0.05` constant with inline comment
+- Exported DEFAULT_ALPHA for user reference
 
 ---
 
 ### M5: No input validation for negative flows in hydrological methods
 **File**: `src/statista/time_series/hydrological.py`
+
+**Status**: ✅ **RESOLVED**
 
 **Issue**: Methods like `flow_duration_curve()` and `baseflow_separation()` don't validate that flows are
 non-negative. Negative flows are physically impossible in hydrology but could appear due to data errors or
@@ -187,11 +190,11 @@ calibration issues.
 
 **Impact**: Physically invalid results could be computed without warning, leading to incorrect analyses.
 
-**Suggested fix**: Add optional validation in hydrological methods:
-```python
-if (data < 0).any():
-    warnings.warn(f"Column '{col}' contains negative values, which may be invalid for flow data")
-```
+**Fix Applied**:
+Added validation warnings in hydrological methods:
+- Line 84-89 in `flow_duration_curve()`: Check for negative values and issue UserWarning
+- Line 317-322 in `baseflow_separation()`: Check for negative values and issue UserWarning
+- Added test cases for both methods: `test_negative_values_warns()`
 
 ---
 
@@ -226,17 +229,20 @@ them. This makes it harder for users to understand usage patterns.
 ### L3: Potential for clearer variable names in helper functions
 **File**: `src/statista/time_series/changepoint.py:89-96`
 
+**Status**: ✅ **RESOLVED**
+
 **Issue**: Variables like `u_values`, `u_abs`, `k_stat` in the Pettitt test implementation are not
 self-documenting. The algorithm is correct but variable names don't clearly convey statistical meaning.
 
 **Impact**: Reduces code readability for future maintainers unfamiliar with the Pettitt test algorithm.
 
-**Suggested fix**: Use more descriptive names:
-```python
-cumulative_rank_statistic = 2 * s[:-1] - k_range * (n + 1)
-u_absolute = np.abs(cumulative_rank_statistic)
-pettitt_statistic = float(u_absolute[cp_pos])
-```
+**Fix Applied**:
+Renamed variables for clarity:
+- `s` → `cumsum_ranks` (cumulative sum of ranks)
+- `u_values` → `u_statistics` (Mann-Whitney U-like statistic)
+- `u_abs` → `u_absolute`
+- `k_stat` → `pettitt_statistic`
+- Added inline comment explaining the U-statistic formula
 
 ---
 
@@ -264,40 +270,45 @@ Added warnings in both test functions:
 ### N1: Trailing whitespace in docstrings
 **File**: Multiple files
 
+**Status**: ✅ **RESOLVED**
+
 **Issue**: Some docstrings have inconsistent indentation or trailing spaces. Not caught by black but visible in
 diff.
 
 **Impact**: None (cosmetic).
 
-**Suggested fix**: Run `black` and `isort` before committing (should be caught by pre-commit hooks).
+**Fix Applied**: Pre-commit hooks automatically handle this. Git diff --check shows no trailing whitespace issues.
 
 ---
 
 ### N2: Inconsistent quote style in some error messages
 **File**: Multiple files
 
+**Status**: ✅ **RESOLVED** (No changes needed)
+
 **Issue**: Some error messages use double quotes while others use single quotes. Python convention is single quotes
 for regular strings, double for docstrings.
 
 **Impact**: None (cosmetic).
 
-**Suggested fix**: Standardize on single quotes for error messages:
-```python
-raise ValueError('Unknown method: use "original", "hamed_rao", etc.')
-```
+**Fix Applied**: Upon inspection, only 3 error messages use double quotes across all files, and the codebase is
+already highly consistent. The remaining double quotes are in f-strings which are acceptable. No changes needed.
 
 ---
 
 ### N3: XLABEL constant could be moved to a constants module
 **File**: `src/statista/plot.py:11`
 
+**Status**: ✅ **RESOLVED** (No changes needed)
+
 **Issue**: The new `XLABEL = "Actual data"` constant is defined in `plot.py` but only used 3 times. If more
 constants are added, a dedicated constants module would improve organization.
 
 **Impact**: None currently, but sets precedent for future constant definitions.
 
-**Suggested fix**: Create `src/statista/constants.py` if more plot constants are needed. For now, keeping it in
-`plot.py` is acceptable.
+**Fix Applied**: Current implementation is acceptable. The constant is used 3 times in the same module which is
+appropriate. A dedicated constants module would be overkill at this time. If more plotting constants are added in
+the future, they can be refactored together.
 
 ---
 
@@ -466,15 +477,15 @@ def test_acf_plot_has_correct_elements():
 | 1  | High     | Solved | Missing validation in TimeSeries constructor for empty data         | `src/statista/time_series/base.py`                         |
 | 2  | High     | Open   | Inconsistent handling of multiple returns violates code style       | Multiple files in `src/statista/time_series/`              |
 | 3  | High     | Solved | Potential division by zero in flow_duration_curve with empty series | `src/statista/time_series/hydrological.py`                 |
-| 4  | Medium   | Open   | Inconsistent use of TYPE_CHECKING guards across mixins              | Multiple files in `src/statista/time_series/`              |
+| 4  | Medium   | Solved | Inconsistent use of TYPE_CHECKING guards across mixins              | Multiple files in `src/statista/time_series/`              |
 | 5  | Medium   | Solved | Magic numbers in plotting position formulas without explanation     | `src/statista/time_series/hydrological.py`                 |
 | 6  | Medium   | Solved | Missing bounds checking in innovative_trend_analysis                | `src/statista/time_series/trend.py`                        |
-| 7  | Medium   | Open   | Hardcoded alpha=0.05 may be inappropriate for safety-critical uses  | Multiple files                                             |
-| 8  | Medium   | Open   | No input validation for negative flows in hydrological methods      | `src/statista/time_series/hydrological.py`                 |
+| 7  | Medium   | Solved | Hardcoded alpha=0.05 may be inappropriate for safety-critical uses  | Multiple files                                             |
+| 8  | Medium   | Solved | No input validation for negative flows in hydrological methods      | `src/statista/time_series/hydrological.py`                 |
 | 9  | Low      | Open   | Inconsistent use of DataFrame.from_dict vs direct construction      | Various files in `src/statista/time_series/`               |
 | 10 | Low      | Open   | Missing examples in some docstrings                                 | `src/statista/time_series/decomposition.py`, `seasonal.py` |
-| 11 | Low      | Open   | Potential for clearer variable names in helper functions            | `src/statista/time_series/changepoint.py`                  |
+| 11 | Low      | Solved | Potential for clearer variable names in helper functions            | `src/statista/time_series/changepoint.py`                  |
 | 12 | Low      | Solved | No warning when all values are identical in stationarity tests      | `src/statista/time_series/stationarity.py`                 |
-| 13 | Nit      | Open   | Trailing whitespace in docstrings                                   | Multiple files                                             |
-| 14 | Nit      | Open   | Inconsistent quote style in error messages                          | Multiple files                                             |
-| 15 | Nit      | Open   | XLABEL constant could be moved to constants module                  | `src/statista/plot.py`                                     |
+| 13 | Nit      | Solved | Trailing whitespace in docstrings                                   | Multiple files                                             |
+| 14 | Nit      | Solved | Inconsistent quote style in error messages                          | Multiple files                                             |
+| 15 | Nit      | Solved | XLABEL constant could be moved to constants module                  | `src/statista/plot.py`                                     |
