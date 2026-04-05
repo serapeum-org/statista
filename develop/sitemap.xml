@@ -29,6 +29,10 @@
          <lastmod>2026-04-05</lastmod>
     </url>
     <url>
+         <loc>https://serapeum-org.github.io/statista/develop/examples/chisquare-test/</loc>
+         <lastmod>2026-04-05</lastmod>
+    </url>
+    <url>
          <loc>https://serapeum-org.github.io/statista/develop/guides/commitizen/</loc>
          <lastmod>2026-04-05</lastmod>
     </url>
@@ -118,6 +122,10 @@
     </url>
     <url>
          <loc>https://serapeum-org.github.io/statista/develop/reference/parameters/other/</loc>
+         <lastmod>2026-04-05</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/time_series/overview/</loc>
          <lastmod>2026-04-05</lastmod>
     </url>
 </urlset>

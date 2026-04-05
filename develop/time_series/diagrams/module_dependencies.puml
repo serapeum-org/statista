@@ -1,0 +1,45 @@
+@startuml Module Dependencies
+
+skinparam componentFontSize 12
+skinparam packageFontSize 14
+skinparam arrowThickness 2
+
+package "statista" {
+    component [stat_result.py\n---\nStatTestResult\nTrendTestResult\nChangePointResult] as SR
+
+    package "time_series/" {
+        component [__init__.py\n---\nTimeSeries\n(composed class)] as INIT
+        component [_base.py\n---\nTimeSeriesBase\n_get_ax_fig\n_adjust_axes_labels] as BASE
+        component [_descriptive.py\n---\nDescriptiveMixin\nstats, extended_stats] as DESC
+        component [_visualization.py\n---\nVisualizationMixin\nbox, violin, raincloud\nhistogram, density, rolling] as VIZ
+    }
+}
+
+package "External Dependencies" {
+    component [pandas.DataFrame] as PD
+    component [numpy] as NP
+    component [scipy.stats] as SP
+    component [matplotlib] as MPL
+}
+
+INIT --> BASE : imports TimeSeriesBase
+INIT --> DESC : imports DescriptiveMixin
+INIT --> VIZ  : imports VisualizationMixin
+VIZ  --> BASE : imports constants
+
+BASE --> PD   : extends
+BASE --> NP   : uses
+BASE --> MPL  : uses
+DESC --> NP   : uses
+DESC --> SP   : uses (skew, kurtosis, MAD)
+VIZ  --> NP   : uses
+VIZ  --> MPL  : uses (pyplot, collections)
+
+note right of SR
+    Not yet consumed by time_series.
+    Will be used as return types in
+    future phases (stationarity,
+    trend, change point).
+end note
+
+@enduml
