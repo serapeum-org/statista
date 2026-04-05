@@ -236,6 +236,23 @@ class Trend(_TimeSeriesStub):
 
         data = np.sort(self[column].dropna().values)
         n = len(data)
+        
+        # Validate minimum sample size
+        if n < 20:
+            raise ValueError(
+                f"Innovative trend analysis requires at least 20 observations, got {n}"
+            )
+        
+        # Handle odd-length series
+        if n % 2 != 0:
+            import warnings
+            data = data[:-1]
+            n = len(data)
+            warnings.warn(
+                f"Column '{column}' has odd length. Last observation dropped for analysis.",
+                UserWarning
+            )
+        
         mid = n // 2
 
         first_half = data[:mid]

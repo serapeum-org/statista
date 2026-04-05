@@ -280,3 +280,18 @@ class TestInnovativeTrendAnalysis:
         result_df, _ = ts.innovative_trend_analysis(column="B")
         assert result_df.index[0] == "B"
         plt.close("all")
+
+    def test_minimum_sample_size_raises(self):
+        """Should raise ValueError for n < 20."""
+        ts = TimeSeries(np.random.randn(15))
+        with pytest.raises(ValueError, match="requires at least 20 observations"):
+            ts.innovative_trend_analysis()
+
+    def test_odd_length_warns_and_drops_last(self):
+        """Odd-length series should warn and drop last value."""
+        data = np.arange(51, dtype=float)  # Odd length
+        ts = TimeSeries(data)
+        with pytest.warns(UserWarning, match="odd length.*Last observation dropped"):
+            result_df, (fig, ax) = ts.innovative_trend_analysis()
+        plt.close(fig)
+        # Should complete without error
