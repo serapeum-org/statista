@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class DecompositionMixin:
-    """Mixin providing time series decomposition and smoothing methods.
+class Decomposition:
+    """Time series decomposition and smoothing methods.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     """

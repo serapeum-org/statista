@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class ChangePointMixin:
-    """Mixin providing change point detection methods for TimeSeries.
+class ChangePoint:
+    """Change point detection methods for TimeSeries.
 
     Implements Pettitt, SNHT, and Buishand range tests from scratch following
     the algorithms in pyhomogeneity (Moges et al., 2020). All tests detect a

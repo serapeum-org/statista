@@ -12,8 +12,8 @@ from scipy.stats import median_abs_deviation, skew
 from statista.parameters import Lmoments
 
 
-class DescriptiveMixin:
-    """Mixin providing descriptive statistical methods for TimeSeries.
+class Descriptive:
+    """Descriptive statistical methods for TimeSeries.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     All attribute access (``self.columns``, ``self.describe()``, indexing) is provided by DataFrame

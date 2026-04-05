@@ -11,8 +11,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class StationarityMixin:
-    """Mixin providing stationarity tests for TimeSeries.
+class Stationarity:
+    """Stationarity tests for TimeSeries.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     """

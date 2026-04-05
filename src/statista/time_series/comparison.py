@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class ComparisonMixin:
-    """Mixin providing comparison, anomaly, and regime analysis methods.
+class Comparison:
+    """Comparison, anomaly, and regime analysis methods.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     """

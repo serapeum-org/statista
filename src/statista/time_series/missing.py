@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class MissingDataMixin:
-    """Mixin providing missing data diagnostics and outlier detection for TimeSeries.
+class MissingData:
+    """Missing data diagnostics and outlier detection for TimeSeries.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     All attribute access (``self.columns``, indexing) is provided by DataFrame at runtime.

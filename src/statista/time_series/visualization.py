@@ -18,8 +18,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class VisualizationMixin:
-    """Mixin providing visualization methods for TimeSeries.
+class Visualization:
+    """Visualization methods for TimeSeries.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     All attribute access (``self.columns``, ``self.values``, indexing) is provided by DataFrame

@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class CorrelationMixin:
-    """Mixin providing autocorrelation and dependence analysis for TimeSeries.
+class Correlation:
+    """Autocorrelation and dependence analysis for TimeSeries.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     """

@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class DistributionMixin:
-    """Mixin providing distribution fitting, normality tests, and diagnostic plots.
+class Distribution:
+    """Distribution fitting, normality tests, and diagnostic plots.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     """

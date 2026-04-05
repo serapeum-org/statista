@@ -18,8 +18,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class TrendMixin:
-    """Mixin providing trend detection methods for TimeSeries.
+class Trend:
+    """Trend detection methods for TimeSeries.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     """

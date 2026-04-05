@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class HydrologicalMixin:
-    """Mixin providing hydrology-specific analysis methods for TimeSeries.
+class Hydrological:
+    """Hydrology-specific analysis methods for TimeSeries.
 
     Implements flow duration curves, baseflow separation, annual extremes, and
     hydrological indices commonly used in water resources engineering.

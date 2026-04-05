@@ -16,8 +16,8 @@ if TYPE_CHECKING:
     from pandas import Index
 
 
-class SeasonalMixin:
-    """Mixin providing seasonal and periodic analysis methods for TimeSeries.
+class Seasonal:
+    """Seasonal and periodic analysis methods for TimeSeries.
 
     This mixin is designed to be composed with ``TimeSeriesBase`` (a ``pandas.DataFrame`` subclass).
     """

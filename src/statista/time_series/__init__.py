@@ -17,33 +17,33 @@ https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot
 """
 
 from statista.time_series.base import BOX_MEAN_PROP, VIOLIN_PROP, TimeSeriesBase
-from statista.time_series.changepoint import ChangePointMixin
-from statista.time_series.comparison import ComparisonMixin
-from statista.time_series.correlation import CorrelationMixin
-from statista.time_series.decomposition import DecompositionMixin
-from statista.time_series.descriptive import DescriptiveMixin
-from statista.time_series.distribution import DistributionMixin
-from statista.time_series.hydrological import HydrologicalMixin
-from statista.time_series.missing import MissingDataMixin
-from statista.time_series.seasonal import SeasonalMixin
-from statista.time_series.stationarity import StationarityMixin
-from statista.time_series.trend import TrendMixin
-from statista.time_series.visualization import VisualizationMixin
+from statista.time_series.changepoint import ChangePoint
+from statista.time_series.comparison import Comparison
+from statista.time_series.correlation import Correlation
+from statista.time_series.decomposition import Decomposition
+from statista.time_series.descriptive import Descriptive
+from statista.time_series.distribution import Distribution
+from statista.time_series.hydrological import Hydrological
+from statista.time_series.missing import MissingData
+from statista.time_series.seasonal import Seasonal
+from statista.time_series.stationarity import Stationarity
+from statista.time_series.trend import Trend
+from statista.time_series.visualization import Visualization
 
 
 class TimeSeries(
-    DescriptiveMixin,
-    VisualizationMixin,
-    MissingDataMixin,
-    CorrelationMixin,
-    StationarityMixin,
-    TrendMixin,
-    DistributionMixin,
-    ChangePointMixin,
-    DecompositionMixin,
-    SeasonalMixin,
-    HydrologicalMixin,
-    ComparisonMixin,
+    Descriptive,
+    Visualization,
+    MissingData,
+    Correlation,
+    Stationarity,
+    Trend,
+    Distribution,
+    ChangePoint,
+    Decomposition,
+    Seasonal,
+    Hydrological,
+    Comparison,
     TimeSeriesBase,
 ):
     """A class to represent and analyze time series data using pandas DataFrame.
