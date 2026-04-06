@@ -117,7 +117,20 @@ nav:
       - Extreme Value: reference/parameters/extreme-value.md
       - Normal Family: reference/parameters/normal-family.md
       - Other: reference/parameters/other.md
-    - Time Series: reference/time-series-class.md
+    - Time Series:
+      - Overview: reference/time-series/index.md
+      - Descriptive: reference/time-series/descriptive.md
+      - Visualization: reference/time-series/visualization.md
+      - Missing Data: reference/time-series/missing.md
+      - Correlation: reference/time-series/correlation.md
+      - Stationarity: reference/time-series/stationarity.md
+      - Trend: reference/time-series/trend.md
+      - Distribution: reference/time-series/distribution.md
+      - Change Point: reference/time-series/changepoint.md
+      - Decomposition: reference/time-series/decomposition.md
+      - Seasonal: reference/time-series/seasonal.md
+      - Hydrological: reference/time-series/hydrological.md
+      - Comparison: reference/time-series/comparison.md
     - Extreme Value Analysis: reference/eva-class.md
     - Confidence Interval: reference/confidence-interval.md
     - Descriptors: reference/descriptors-module.md
