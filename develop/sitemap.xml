@@ -125,7 +125,59 @@
          <lastmod>2026-04-06</lastmod>
     </url>
     <url>
-         <loc>https://serapeum-org.github.io/statista/develop/time_series/overview/</loc>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/changepoint/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/comparison/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/correlation/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/decomposition/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/descriptive/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/distribution/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/hydrological/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/missing/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/seasonal/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/stationarity/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/trend/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time-series/visualization/</loc>
+         <lastmod>2026-04-06</lastmod>
+    </url>
+    <url>
+         <loc>https://serapeum-org.github.io/statista/develop/reference/time_series/overview/</loc>
          <lastmod>2026-04-06</lastmod>
     </url>
 </urlset>
