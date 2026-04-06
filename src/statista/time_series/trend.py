@@ -53,7 +53,8 @@ class Trend(_TimeSeriesStub):
                 slope, intercept.
 
         Examples:
-            ```python
+            Detect a strong increasing trend in a linear signal with noise:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
@@ -62,8 +63,31 @@ class Trend(_TimeSeriesStub):
             >>> result = ts.mann_kendall()
             >>> result.loc["Series1", "trend"]
             'increasing'
+            >>> round(float(result.loc["Series1", "z"]), 4)
+            9.1177
+            >>> round(float(result.loc["Series1", "tau"]), 4)
+            0.8906
 
-            ```
+            Verify no trend in pure random noise:
+
+            >>> np.random.seed(42)
+            >>> ts_noise = TimeSeries(np.random.randn(50))
+            >>> result_noise = ts_noise.mann_kendall()
+            >>> result_noise.loc["Series1", "trend"]
+            'no trend'
+            >>> round(float(result_noise.loc["Series1", "p_value"]), 4)
+            0.1701
+
+            Use the Hamed-Rao autocorrelation correction:
+
+            >>> np.random.seed(42)
+            >>> data_ac = np.arange(50, dtype=float) + np.random.randn(50) * 3
+            >>> ts_ac = TimeSeries(data_ac)
+            >>> result_ac = ts_ac.mann_kendall(method="hamed_rao")
+            >>> result_ac.loc["Series1", "trend"]
+            'increasing'
+            >>> round(float(result_ac.loc["Series1", "z"]), 4)
+            9.1177
 
         References:
             Mann, H.B. (1945). Nonparametric tests against trend. Econometrica, 13(3), 245-259.
@@ -107,17 +131,36 @@ class Trend(_TimeSeriesStub):
                 slope_upper_ci.
 
         Examples:
-            ```python
+            Estimate the slope of a linear signal (true slope = 2.0):
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> data = np.arange(50, dtype=float) * 2 + np.random.randn(50) * 3
             >>> ts = TimeSeries(data)
             >>> result = ts.sens_slope()
-            >>> abs(result.loc["Series1", "slope"] - 2.0) < 0.5
-            True
+            >>> round(float(result.loc["Series1", "slope"]), 4)
+            1.9629
+            >>> round(float(result.loc["Series1", "intercept"]), 4)
+            -0.6347
 
-            ```
+            Check confidence interval bounds on the slope:
+
+            >>> round(float(result.loc["Series1", "slope_lower_ci"]), 4)
+            1.9046
+            >>> round(float(result.loc["Series1", "slope_upper_ci"]), 4)
+            2.0217
+
+            Weaker trend with more noise (true slope = 0.5):
+
+            >>> np.random.seed(42)
+            >>> data2 = np.arange(30, dtype=float) * 0.5 + np.random.randn(30) * 2
+            >>> ts2 = TimeSeries(data2)
+            >>> result2 = ts2.sens_slope()
+            >>> round(float(result2.loc["Series1", "slope"]), 4)
+            0.4304
+            >>> round(float(result2.loc["Series1", "intercept"]), 4)
+            0.0259
 
         References:
             Sen, P.K. (1968). Estimates of the regression coefficient based on Kendall's tau.
@@ -158,17 +201,35 @@ class Trend(_TimeSeriesStub):
             TimeSeries: New TimeSeries with the trend removed. Same index as original.
 
         Examples:
-            ```python
+            Remove a linear trend (result has zero mean):
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> data = np.arange(100, dtype=float) + np.random.randn(100) * 5
             >>> ts = TimeSeries(data)
             >>> detrended = ts.detrend(method="linear")
-            >>> abs(detrended.values.mean()) < 5.0
-            True
+            >>> round(float(detrended.values.mean()), 4)
+            0.0
+            >>> round(float(detrended.values.std()), 4)
+            4.5136
 
-            ```
+            Remove trend using robust Sen's slope estimator:
+
+            >>> np.random.seed(42)
+            >>> data2 = np.arange(50, dtype=float) * 2 + np.random.randn(50) * 3
+            >>> ts2 = TimeSeries(data2)
+            >>> detrended2 = ts2.detrend(method="sens")
+            >>> round(float(detrended2.values.mean()), 4)
+            0.8666
+
+            Subtract the mean (constant detrending):
+
+            >>> np.random.seed(42)
+            >>> ts3 = TimeSeries(np.random.randn(50) + 10)
+            >>> detrended3 = ts3.detrend(method="constant")
+            >>> round(float(detrended3.values.mean()), 4)
+            0.0
         """
         from statista.time_series import TimeSeries
 
@@ -219,13 +280,10 @@ class Trend(_TimeSeriesStub):
                 results_df has columns: column, trend_indicator (positive = increasing).
 
         Examples:
-            ```python
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
             >>> ts = TimeSeries(np.arange(100, dtype=float))  # doctest: +SKIP
             >>> result_df, (fig, ax) = ts.innovative_trend_analysis()  # doctest: +SKIP
-
-            ```
 
         References:
             Sen, Z. (2012). Innovative Trend Analysis Methodology. Journal of Hydrologic

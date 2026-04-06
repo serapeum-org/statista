@@ -45,16 +45,30 @@ class Correlation(_TimeSeriesStub):
                 For multi-column: acf_values is a dict mapping column names to arrays.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            ACF of white noise (lag-0 is always 1.0, other lags near zero):
+
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(200))
             >>> acf_vals, _ = ts.acf(nlags=10, plot=False)
-            >>> abs(acf_vals[0] - 1.0) < 1e-10
-            True
+            >>> round(float(acf_vals[0]), 4)
+            1.0
+            >>> round(float(acf_vals[1]), 4)
+            -0.0516
+            >>> len(acf_vals)
+            11
 
-            ```
+            ACF of real hydrological data:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> acf_vals, _ = ts.acf(nlags=5, plot=False)
+            >>> round(float(acf_vals[0]), 4)
+            1.0
+            >>> round(float(acf_vals[1]), 4)
+            0.2324
         """
         cols = _resolve_columns(self.columns, column)
 
@@ -102,16 +116,30 @@ class Correlation(_TimeSeriesStub):
             tuple: (pacf_values, (fig, ax)) or (pacf_values, None) if plot=False.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            PACF of white noise (lag-0 is always 1.0):
+
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(200))
             >>> pacf_vals, _ = ts.pacf(nlags=10, plot=False)
-            >>> abs(pacf_vals[0] - 1.0) < 1e-10
-            True
+            >>> round(float(pacf_vals[0]), 4)
+            1.0
+            >>> round(float(pacf_vals[1]), 4)
+            -0.0516
+            >>> round(float(pacf_vals[2]), 4)
+            -0.0416
 
-            ```
+            PACF of real hydrological data:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> pacf_vals, _ = ts.pacf(nlags=5, plot=False)
+            >>> round(float(pacf_vals[0]), 4)
+            1.0
+            >>> round(float(pacf_vals[1]), 4)
+            0.2324
         """
         cols = _resolve_columns(self.columns, column)
 
@@ -159,17 +187,29 @@ class Correlation(_TimeSeriesStub):
             tuple: (ccf_values, (fig, ax)) or (ccf_values, None) if plot=False.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Cross-correlation between independent random series (near zero):
+
             >>> np.random.seed(42)
             >>> data = np.column_stack([np.random.randn(100), np.random.randn(100)])
             >>> ts = TimeSeries(data, columns=["A", "B"])
-            >>> ccf_vals, _ = ts.cross_correlation("A", "B", nlags=10, plot=False)
-            >>> len(ccf_vals) > 0
-            True
+            >>> ccf_vals, _ = ts.cross_correlation("A", "B", nlags=5, plot=False)
+            >>> round(float(ccf_vals[0]), 4)
+            -0.1364
+            >>> len(ccf_vals)
+            6
 
-            ```
+            Cross-correlation between correlated series (strong at lag 0):
+
+            >>> np.random.seed(42)
+            >>> x = np.random.randn(100)
+            >>> y = 0.8 * x + 0.2 * np.random.randn(100)
+            >>> ts = TimeSeries(np.column_stack([x, y]), columns=["X", "Y"])
+            >>> ccf_vals, _ = ts.cross_correlation("X", "Y", nlags=5, plot=False)
+            >>> round(float(ccf_vals[0]), 4)
+            0.9655
         """
         x = self[col_x].dropna().values
         y = self[col_y].dropna().values
@@ -231,13 +271,17 @@ class Correlation(_TimeSeriesStub):
             tuple: (Figure, Axes)
 
         Examples:
-            ```python
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
+            >>> np.random.seed(42)  # doctest: +SKIP
             >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
             >>> fig, ax = ts.lag_plot(lag=1)  # doctest: +SKIP
 
-            ```
+            Using real data with lag 2:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")  # doctest: +SKIP
+            >>> ts = TimeSeries(data)  # doctest: +SKIP
+            >>> fig, ax = ts.lag_plot(lag=2)  # doctest: +SKIP
         """
         if column is None:
             column = self.columns[0]
@@ -294,16 +338,28 @@ class Correlation(_TimeSeriesStub):
             tuple: (corr_df, pvalue_df, (fig, ax)) or (corr_df, pvalue_df, None) if plot=False.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Pearson correlation matrix for three independent series:
+
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(100, 3), columns=["A", "B", "C"])
             >>> corr, pvals, _ = ts.correlation_matrix(plot=False)
-            >>> corr.loc["A", "A"]
+            >>> round(float(corr.loc["A", "A"]), 4)
             1.0
+            >>> round(float(corr.loc["A", "B"]), 4)
+            -0.0486
+            >>> round(float(pvals.loc["A", "B"]), 4)
+            0.6309
 
-            ```
+            Spearman rank correlation on the same data:
+
+            >>> corr_s, pvals_s, _ = ts.correlation_matrix(method="spearman", plot=False)
+            >>> round(float(corr_s.loc["A", "B"]), 4)
+            -0.0662
+            >>> round(float(pvals_s.loc["A", "B"]), 4)
+            0.5131
         """
         corr_funcs = {"pearson": pearsonr, "spearman": spearmanr, "kendall": kendalltau}
         if method not in corr_funcs:
@@ -390,16 +446,30 @@ class Correlation(_TimeSeriesStub):
             pandas.DataFrame: With columns ``lb_stat`` and ``lb_pvalue`` for each lag.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            White noise should produce non-significant p-values:
+
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(200))
             >>> result = ts.ljung_box(lags=5)
-            >>> "lb_stat" in result.columns
-            True
+            >>> result.shape
+            (5, 2)
+            >>> round(float(result.iloc[0]["lb_stat"]), 4)
+            0.5399
+            >>> round(float(result.iloc[0]["lb_pvalue"]), 4)
+            0.4625
 
-            ```
+            Real hydrological data:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> result = ts.ljung_box(lags=5)
+            >>> round(float(result.iloc[0]["lb_stat"]), 4)
+            1.6264
+            >>> round(float(result.iloc[0]["lb_pvalue"]), 4)
+            0.2022
 
         References:
             Ljung, G. M. and Box, G. E. P. (1978). On a measure of lack of fit in time series models.

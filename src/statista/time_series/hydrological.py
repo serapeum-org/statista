@@ -53,16 +53,25 @@ class Hydrological(_TimeSeriesStub):
                 or one value column per series.
 
         Examples:
-            ```python
+            Compute a flow duration curve from absolute random flow data:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.abs(np.random.randn(365)) * 100)
             >>> fdc, _ = ts.flow_duration_curve(plot=False)
-            >>> "exceedance_pct" in fdc.columns
-            True
+            >>> list(fdc.columns)
+            ['value', 'exceedance_pct']
+            >>> round(float(fdc["value"].iloc[0]), 4)
+            385.2731
+            >>> round(float(fdc["exceedance_pct"].iloc[0]), 4)
+            0.2732
 
-            ```
+            Use the Gringorten plotting position for GEV-distributed extremes:
+
+            >>> fdc2, _ = ts.flow_duration_curve(plot=False, method="gringorten")
+            >>> round(float(fdc2["exceedance_pct"].iloc[0]), 4)
+            0.1534
 
         References:
             Vogel, R.M. and Fennessey, N.M. (1994). Flow-Duration Curves. I: New Interpretation
@@ -165,7 +174,8 @@ class Hydrological(_TimeSeriesStub):
             ValueError: If kind is not "max" or "min".
 
         Examples:
-            ```python
+            Extract annual maximum series from two years of daily data:
+
             >>> import numpy as np
             >>> import pandas as pd
             >>> from statista.time_series import TimeSeries
@@ -173,10 +183,16 @@ class Hydrological(_TimeSeriesStub):
             >>> idx = pd.date_range("2000-01-01", periods=730, freq="D")
             >>> ts = TimeSeries(np.random.randn(730), index=idx)
             >>> ams = ts.annual_extremes(kind="max")
-            >>> ams.shape[0] >= 1
-            True
+            >>> ams.shape[0]
+            3
+            >>> [round(float(v), 4) for v in ams.values.flatten()]
+            [3.8527, 3.0789, 1.7548]
 
-            ```
+            Extract annual minimum series:
+
+            >>> amn = ts.annual_extremes(kind="min")
+            >>> [round(float(v), 4) for v in amn.values.flatten()]
+            [-3.2413, -2.6969, -2.0819]
         """
         from statista.time_series import TimeSeries
 
@@ -220,15 +236,22 @@ class Hydrological(_TimeSeriesStub):
                 value, exceedance_probability, return_period.
 
         Examples:
-            ```python
+            Compute exceedance probability and return periods using Weibull:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> ts = TimeSeries(np.array([10.0, 20.0, 30.0, 40.0, 50.0]))
             >>> result = ts.exceedance_probability()
-            >>> "return_period" in result.columns
-            True
+            >>> [round(float(v), 4) for v in result["exceedance_probability"].values]
+            [0.1667, 0.3333, 0.5, 0.6667, 0.8333]
+            >>> [round(float(v), 1) for v in result["return_period"].values]
+            [6.0, 3.0, 2.0, 1.5, 1.2]
 
-            ```
+            Use Gringorten plotting positions (better for GEV):
+
+            >>> result2 = ts.exceedance_probability(method="gringorten")
+            >>> [round(float(v), 4) for v in result2["exceedance_probability"].values]
+            [0.1094, 0.3047, 0.5, 0.6953, 0.8906]
         """
         cols = [column] if column is not None else list(self.columns)
         frames = []
@@ -290,16 +313,24 @@ class Hydrological(_TimeSeriesStub):
                 separation_df has columns: total_flow, baseflow, quickflow.
 
         Examples:
-            ```python
+            Separate baseflow using Lyne-Hollick digital filter:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.abs(np.random.randn(200)) * 10 + 5)
             >>> result, _ = ts.baseflow_separation(plot=False)
-            >>> "baseflow" in result.columns
-            True
+            >>> list(result.columns)
+            ['total_flow', 'baseflow', 'quickflow']
+            >>> round(float(result["baseflow"].mean()), 4)
+            7.5446
+            >>> round(float(result["quickflow"].mean()), 4)
+            4.8504
 
-            ```
+            First time step has zero quickflow (baseflow equals total flow):
+
+            >>> round(float(result["quickflow"].iloc[0]), 4)
+            0.0
 
         References:
             Lyne, V. and Hollick, M. (1979). Stochastic time-variable rainfall-runoff
@@ -385,16 +416,21 @@ class Hydrological(_TimeSeriesStub):
             pandas.DataFrame: One row per column with: bfi value.
 
         Examples:
-            ```python
+            Compute baseflow index using the Lyne-Hollick filter:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.abs(np.random.randn(200)) * 10 + 5)
             >>> result = ts.baseflow_index()
-            >>> 0.0 <= result.loc["Series1", "bfi"] <= 1.0
-            True
+            >>> round(float(result.loc["Series1", "bfi"]), 4)
+            0.6087
 
-            ```
+            Compare with Eckhardt two-parameter filter:
+
+            >>> result2 = ts.baseflow_index(method="eckhardt")
+            >>> round(float(result2.loc["Series1", "bfi"]), 4)
+            0.6909
         """
         cols = [column] if column is not None else list(self.columns)
         rows = []
@@ -424,15 +460,29 @@ class Hydrological(_TimeSeriesStub):
             pandas.DataFrame: One row per column with: flashiness value.
 
         Examples:
-            ```python
+            Highly flashy (alternating) flow pattern:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> ts = TimeSeries(np.array([10.0, 50.0, 10.0, 50.0, 10.0]))
             >>> result = ts.flashiness_index()
-            >>> result.loc["Series1", "flashiness"] > 0
-            True
+            >>> round(float(result.loc["Series1", "flashiness"]), 4)
+            1.2308
 
-            ```
+            Steady flow has zero flashiness:
+
+            >>> ts2 = TimeSeries(np.array([10.0, 10.0, 10.0, 10.0, 10.0]))
+            >>> result2 = ts2.flashiness_index()
+            >>> round(float(result2.loc["Series1", "flashiness"]), 4)
+            0.0
+
+            Random flow with moderate flashiness:
+
+            >>> np.random.seed(42)
+            >>> ts3 = TimeSeries(np.abs(np.random.randn(100)) * 10 + 5)
+            >>> result3 = ts3.flashiness_index()
+            >>> round(float(result3.loc["Series1", "flashiness"]), 4)
+            0.5231
 
         References:
             Baker, D.B. et al. (2004). A new flashiness index: characteristics and
@@ -479,17 +529,27 @@ class Hydrological(_TimeSeriesStub):
                 recession_constant_k, r_squared.
 
         Examples:
-            ```python
+            Fit a recession curve to exponential decay with small noise:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> q = 100 * np.exp(-np.arange(50) / 15.0) + np.random.randn(50) * 0.5
             >>> ts = TimeSeries(np.abs(q))
             >>> result, _ = ts.recession_analysis(min_length=3, plot=False)
-            >>> len(result) >= 1
-            True
+            >>> len(result)
+            5
+            >>> round(float(result.iloc[0]["recession_constant_k"]), 4)
+            14.8596
+            >>> round(float(result.iloc[0]["r_squared"]), 4)
+            0.9996
 
-            ```
+            The first segment spans from the start of the decay:
+
+            >>> int(result.iloc[0]["start_index"])
+            0
+            >>> int(result.iloc[0]["length"])
+            31
 
         References:
             Tallaksen, L.M. (1995). A review of baseflow recession analysis.

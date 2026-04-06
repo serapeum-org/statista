@@ -44,13 +44,18 @@ class Distribution(_TimeSeriesStub):
             tuple: (Figure, Axes)
 
         Examples:
-            ```python
+            Basic QQ plot against a normal distribution:
+
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
+            >>> np.random.seed(42)  # doctest: +SKIP
             >>> ts = TimeSeries(np.random.randn(200))  # doctest: +SKIP
             >>> fig, ax = ts.qq_plot()  # doctest: +SKIP
 
-            ```
+            QQ plot against an exponential distribution:
+
+            >>> ts2 = TimeSeries(np.random.exponential(2, 200))  # doctest: +SKIP
+            >>> fig, ax = ts2.qq_plot(distribution="expon")  # doctest: +SKIP
 
         References:
             Wilk, M.B. and Gnanadesikan, R. (1968). Probability plotting methods for the
@@ -108,7 +113,7 @@ class Distribution(_TimeSeriesStub):
         """Probability-Probability plot.
 
         Plots the empirical CDF against the theoretical CDF at each data point.
-        Complementary to QQ plot — PP emphasizes the center of the distribution,
+        Complementary to QQ plot -- PP emphasizes the center of the distribution,
         QQ emphasizes the tails.
 
         Args:
@@ -120,13 +125,18 @@ class Distribution(_TimeSeriesStub):
             tuple: (Figure, Axes)
 
         Examples:
-            ```python
+            Basic PP plot against a normal distribution:
+
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
+            >>> np.random.seed(42)  # doctest: +SKIP
             >>> ts = TimeSeries(np.random.randn(200))  # doctest: +SKIP
             >>> fig, ax = ts.pp_plot()  # doctest: +SKIP
 
-            ```
+            PP plot against a Gumbel distribution:
+
+            >>> ts2 = TimeSeries(np.random.gumbel(0, 1, 200))  # doctest: +SKIP
+            >>> fig, ax = ts2.pp_plot(distribution="gumbel_r")  # doctest: +SKIP
         """
         if column is None:
             column = self.columns[0]
@@ -190,16 +200,39 @@ class Distribution(_TimeSeriesStub):
                 is_normal, conclusion.
 
         Examples:
-            ```python
+            Test normally distributed data (Shapiro-Wilk auto-selected for n < 5000):
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(200))
             >>> result = ts.normality_test()
-            >>> result.loc["Series1", "is_normal"]
+            >>> result.loc["Series1", "test_name"]
+            'Shapiro-Wilk'
+            >>> round(float(result.loc["Series1", "statistic"]), 4)
+            0.9956
+            >>> round(float(result.loc["Series1", "p_value"]), 4)
+            0.829
+            >>> bool(result.loc["Series1", "is_normal"])
             True
 
-            ```
+            Test non-normal data (exponential distribution fails normality):
+
+            >>> np.random.seed(42)
+            >>> ts2 = TimeSeries(np.random.exponential(2, 200))
+            >>> result2 = ts2.normality_test()
+            >>> result2.loc["Series1", "conclusion"]
+            'Non-normal'
+            >>> round(float(result2.loc["Series1", "statistic"]), 4)
+            0.8522
+
+            Use Jarque-Bera test explicitly:
+
+            >>> np.random.seed(42)
+            >>> ts3 = TimeSeries(np.random.randn(200))
+            >>> result3 = ts3.normality_test(method="jarque_bera")
+            >>> round(float(result3.loc["Series1", "p_value"]), 4)
+            0.7464
         """
         rows = []
 
@@ -268,7 +301,7 @@ class Distribution(_TimeSeriesStub):
     ) -> tuple[Figure, Axes]:
         """Step-function plot of the empirical CDF.
 
-        Simpler than KDE — no bandwidth choice needed. Shows the actual data
+        Simpler than KDE -- no bandwidth choice needed. Shows the actual data
         distribution as a monotonically increasing step function.
 
         Args:
@@ -279,13 +312,19 @@ class Distribution(_TimeSeriesStub):
             tuple: (Figure, Axes)
 
         Examples:
-            ```python
+            Plot the empirical CDF of normally distributed data:
+
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
+            >>> np.random.seed(42)  # doctest: +SKIP
             >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
             >>> fig, ax = ts.empirical_cdf()  # doctest: +SKIP
 
-            ```
+            Overlay multiple columns on one plot:
+
+            >>> data = np.column_stack([np.random.randn(100), np.random.randn(100) + 2])  # doctest: +SKIP
+            >>> ts2 = TimeSeries(data, columns=["A", "B"])  # doctest: +SKIP
+            >>> fig, ax = ts2.empirical_cdf()  # doctest: +SKIP
         """
         cols = [column] if column is not None else list(self.columns)
 
@@ -319,7 +358,7 @@ class Distribution(_TimeSeriesStub):
         (GEV, Gumbel, Exponential, Normal) and selects the best by KS test.
 
         Args:
-            method: Parameter estimation method — "lmoments", "mle", or "mm".
+            method: Parameter estimation method -- "lmoments", "mle", or "mm".
                 Default "lmoments".
 
         Returns:
@@ -327,16 +366,22 @@ class Distribution(_TimeSeriesStub):
                 shape, ks_statistic, ks_p_value.
 
         Examples:
-            ```python
-            >>> import numpy as np
-            >>> from statista.time_series import TimeSeries
-            >>> np.random.seed(42)
-            >>> ts = TimeSeries(np.random.randn(200))
-            >>> result = ts.fit_distributions(method="mle")
-            >>> "best_distribution" in result.columns
-            True
+            Fit distributions using MLE and inspect the best fit:
 
-            ```
+            >>> import numpy as np  # doctest: +SKIP
+            >>> from statista.time_series import TimeSeries  # doctest: +SKIP
+            >>> np.random.seed(42)  # doctest: +SKIP
+            >>> ts = TimeSeries(np.random.randn(200))  # doctest: +SKIP
+            >>> result = ts.fit_distributions(method="mle")  # doctest: +SKIP
+            >>> result.loc["Series1", "best_distribution"]  # doctest: +SKIP
+            'Normal'
+            >>> round(float(result.loc["Series1", "ks_p_value"]), 4)  # doctest: +SKIP
+            0.9997
+
+            Check that the result DataFrame has the expected columns:
+
+            >>> sorted(result.columns.tolist())  # doctest: +SKIP
+            ['best_distribution', 'ks_p_value', 'ks_statistic', 'loc', 'scale', 'shape']
         """
         from statista.distributions import Distributions
 

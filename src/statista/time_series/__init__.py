@@ -55,10 +55,59 @@ class TimeSeries(
     Comparison,
     TimeSeriesBase,
 ):
-    """A class to represent and analyze time series data using pandas DataFrame.
+    """A pandas DataFrame subclass with 53 statistical analysis methods.
 
-    Inherits from `pandas.DataFrame` and adds additional methods for statistical-analysis and visualization specific
-    to time series data. See ``TimeSeriesBase`` for constructor documentation.
+    ``TimeSeries`` extends ``pandas.DataFrame`` with methods for descriptive
+    statistics, autocorrelation, stationarity testing, trend detection, change
+    point analysis, distribution fitting, decomposition, seasonal analysis,
+    hydrological signatures, and comparison/anomaly detection.
+
+    Accepts 1D arrays, 2D arrays, lists, dicts, or DataFrames as input.
+    Column names are auto-generated as Series1, Series2, ... unless provided.
+
+    Args:
+        data: Input data — numpy array (1D or 2D), list, dict, or DataFrame.
+        index: Index for the time series. If None, uses default RangeIndex.
+        columns: Column names. If None, auto-generated or preserved from DataFrame.
+
+    Examples:
+        - Create from a 1D array and inspect statistics:
+            ```python
+            >>> import numpy as np
+            >>> from statista.time_series import TimeSeries
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> ts.shape
+            (27, 1)
+            >>> round(float(ts.extended_stats.loc["mean", "Series1"]), 2)
+            16.93
+
+            ```
+        - Create from a 2D array with named columns:
+            ```python
+            >>> import numpy as np
+            >>> from statista.time_series import TimeSeries
+            >>> np.random.seed(42)
+            >>> ts = TimeSeries(
+            ...     np.column_stack([np.random.randn(100), np.random.randn(100) * 2]),
+            ...     columns=["Flow", "Temp"],
+            ... )
+            >>> ts.columns.tolist()
+            ['Flow', 'Temp']
+            >>> ts.shape
+            (100, 2)
+
+            ```
+        - Create from a Python list:
+            ```python
+            >>> from statista.time_series import TimeSeries
+            >>> ts = TimeSeries([10.0, 20.0, 30.0, 40.0, 50.0])
+            >>> ts.shape
+            (5, 1)
+            >>> float(ts.extended_stats.loc["mean", "Series1"])
+            30.0
+
+            ```
     """
 
     @property

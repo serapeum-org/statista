@@ -37,7 +37,8 @@ class Seasonal(_TimeSeriesStub):
             TypeError: If the index is not a DatetimeIndex.
 
         Examples:
-            ```python
+            Compute monthly statistics from two years of daily data:
+
             >>> import numpy as np
             >>> import pandas as pd
             >>> from statista.time_series import TimeSeries
@@ -45,10 +46,19 @@ class Seasonal(_TimeSeriesStub):
             >>> idx = pd.date_range("2000-01-01", periods=730, freq="D")
             >>> ts = TimeSeries(np.random.randn(730), index=idx)
             >>> result = ts.monthly_stats()
-            >>> result.shape[0] == 12
-            True
+            >>> result.shape[0]
+            12
+            >>> sorted(result.columns.tolist())
+            ['cv', 'max', 'mean', 'median', 'min', 'skewness', 'std']
+            >>> round(float(result.loc[1, "mean"]), 4)
+            -0.0473
+            >>> round(float(result.loc[1, "std"]), 4)
+            1.0097
 
-            ```
+            Access statistics for a specific month (July):
+
+            >>> round(float(result.loc[7, "mean"]), 4)
+            0.0745
         """
         import pandas as pd
         from scipy.stats import skew
@@ -106,13 +116,17 @@ class Seasonal(_TimeSeriesStub):
             tuple: (Figure, Axes)
 
         Examples:
-            ```python
+            Monthly subseries plot for a sinusoidal signal:
+
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
             >>> ts = TimeSeries(np.sin(np.arange(120) * 2 * np.pi / 12))  # doctest: +SKIP
             >>> fig, ax = ts.seasonal_subseries(period=12)  # doctest: +SKIP
 
-            ```
+            Quarterly subseries (4 seasons per cycle):
+
+            >>> ts2 = TimeSeries(np.random.randn(100))  # doctest: +SKIP
+            >>> fig, ax = ts2.seasonal_subseries(period=4)  # doctest: +SKIP
         """
         if column is None:
             column = self.columns[0]
@@ -166,15 +180,21 @@ class Seasonal(_TimeSeriesStub):
             TypeError: If the index is not a DatetimeIndex.
 
         Examples:
-            ```python
+            Overlay two years of daily data on one Jan-Dec axis:
+
             >>> import numpy as np  # doctest: +SKIP
             >>> import pandas as pd  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
+            >>> np.random.seed(42)  # doctest: +SKIP
             >>> idx = pd.date_range("2000-01-01", periods=730, freq="D")  # doctest: +SKIP
             >>> ts = TimeSeries(np.random.randn(730), index=idx)  # doctest: +SKIP
             >>> fig, ax = ts.annual_cycle()  # doctest: +SKIP
 
-            ```
+            Annual cycle with seasonal signal:
+
+            >>> seasonal = np.sin(np.arange(730) * 2 * np.pi / 365)  # doctest: +SKIP
+            >>> ts2 = TimeSeries(seasonal, index=idx)  # doctest: +SKIP
+            >>> fig, ax = ts2.annual_cycle()  # doctest: +SKIP
         """
         import pandas as pd
 
@@ -249,7 +269,8 @@ class Seasonal(_TimeSeriesStub):
             tuple: (frequencies, power, (fig, ax)) or (frequencies, power, None).
 
         Examples:
-            ```python
+            Detect a period-50 sinusoidal signal using Welch's method:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
@@ -257,10 +278,22 @@ class Seasonal(_TimeSeriesStub):
             >>> data = np.sin(2 * np.pi * t / 50) + np.random.randn(500) * 0.5
             >>> ts = TimeSeries(data)
             >>> freqs, power, _ = ts.periodogram(plot=False)
-            >>> len(freqs) > 0
-            True
+            >>> len(freqs)
+            129
+            >>> peak_idx = np.argmax(power[1:]) + 1
+            >>> round(float(freqs[peak_idx]), 4)
+            0.0195
+            >>> round(float(1.0 / freqs[peak_idx]), 1)
+            51.2
 
-            ```
+            Use the raw periodogram method for finer frequency resolution:
+
+            >>> freqs2, power2, _ = ts.periodogram(method="periodogram", plot=False)
+            >>> len(freqs2)
+            251
+            >>> peak_idx2 = np.argmax(power2[1:]) + 1
+            >>> round(float(freqs2[peak_idx2]), 2)
+            0.02
         """
         if column is None:
             column = self.columns[0]
@@ -332,7 +365,8 @@ class Seasonal(_TimeSeriesStub):
                 combined_s, combined_var_s, per_season_s (list).
 
         Examples:
-            ```python
+            Detect an increasing trend in data with seasonal component:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
@@ -342,8 +376,20 @@ class Seasonal(_TimeSeriesStub):
             >>> result = ts.seasonal_mann_kendall(period=12)
             >>> result.loc["Series1", "trend"]
             'increasing'
+            >>> round(float(result.loc["Series1", "z"]), 4)
+            10.7669
+            >>> round(float(result.loc["Series1", "combined_s"]), 1)
+            418.0
 
-            ```
+            No trend detected in pure noise:
+
+            >>> np.random.seed(42)
+            >>> ts2 = TimeSeries(np.random.randn(120))
+            >>> result2 = ts2.seasonal_mann_kendall(period=12)
+            >>> result2.loc["Series1", "trend"]
+            'no trend'
+            >>> round(float(result2.loc["Series1", "p_value"]), 4)
+            0.5186
 
         References:
             Hirsch, R.M., Slack, J.R. and Smith, R.A. (1982). Techniques of trend

@@ -42,13 +42,23 @@ class Comparison(_TimeSeriesStub):
                 anomaly_ts is a TimeSeries of deviations.
 
         Examples:
-            ```python
-            >>> import numpy as np  # doctest: +SKIP
-            >>> from statista.time_series import TimeSeries  # doctest: +SKIP
-            >>> ts = TimeSeries(np.random.randn(100))  # doctest: +SKIP
-            >>> anom, (fig, ax) = ts.anomaly()  # doctest: +SKIP
+            Compute anomaly (deviation from mean) without plotting:
 
-            ```
+            >>> import numpy as np
+            >>> from statista.time_series import TimeSeries
+            >>> np.random.seed(42)
+            >>> ts = TimeSeries(np.random.randn(100))
+            >>> anom, _ = ts.anomaly(plot=False)
+            >>> round(float(anom.values.mean()), 4)
+            -0.0
+            >>> [round(float(v), 4) for v in anom.values.flatten()[:3]]
+            [0.6006, -0.0344, 0.7515]
+
+            Anomaly relative to the median:
+
+            >>> anom2, _ = ts.anomaly(reference="median", plot=False)
+            >>> [round(float(v), 4) for v in anom2.values.flatten()[:3]]
+            [0.6237, -0.0113, 0.7746]
         """
         from statista.time_series import TimeSeries
 
@@ -122,7 +132,8 @@ class Comparison(_TimeSeriesStub):
             TypeError: If the index is not a DatetimeIndex.
 
         Examples:
-            ```python
+            Remove the seasonal cycle from two years of daily data:
+
             >>> import numpy as np
             >>> import pandas as pd
             >>> from statista.time_series import TimeSeries
@@ -130,10 +141,12 @@ class Comparison(_TimeSeriesStub):
             >>> idx = pd.date_range("2000-01-01", periods=730, freq="D")
             >>> ts = TimeSeries(np.random.randn(730), index=idx)
             >>> sa = ts.standardized_anomaly()
-            >>> abs(sa.values.mean()) < 0.5
-            True
-
-            ```
+            >>> sa.shape
+            (730, 1)
+            >>> round(float(sa.values.mean()), 4)
+            -0.0
+            >>> round(float(sa.values.std()), 4)
+            0.9917
         """
         import pandas as pd
 
@@ -185,17 +198,22 @@ class Comparison(_TimeSeriesStub):
                 dmc_df has columns: cumsum_x, cumsum_y.
 
         Examples:
-            ```python
+            Check consistency between two correlated series:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> data = np.column_stack([np.random.randn(100), np.random.randn(100) * 2])
             >>> ts = TimeSeries(data, columns=["A", "B"])
             >>> dmc, _ = ts.double_mass_curve("A", "B", plot=False)
-            >>> "cumsum_A" in dmc.columns
-            True
-
-            ```
+            >>> list(dmc.columns)
+            ['cumsum_A', 'cumsum_B']
+            >>> dmc.shape
+            (100, 2)
+            >>> round(float(dmc["cumsum_A"].iloc[0]), 4)
+            0.4967
+            >>> round(float(dmc["cumsum_A"].iloc[-1]), 4)
+            -10.3847
         """
         x = self[col_x].dropna().values
         y = self[col_y].dropna().values
@@ -254,17 +272,25 @@ class Comparison(_TimeSeriesStub):
                 relative_change_pct and mann_whitney_p.
 
         Examples:
-            ```python
+            Compare regimes before and after a shift at index 50:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> data = np.concatenate([np.random.randn(50), np.random.randn(50) + 3])
             >>> ts = TimeSeries(data)
             >>> result = ts.regime_comparison(split_at=50)
-            >>> result.loc["mean", "after"] > result.loc["mean", "before"]
-            True
+            >>> round(float(result.loc["mean", "before"]), 4)
+            -0.2255
+            >>> round(float(result.loc["mean", "after"]), 4)
+            3.0178
+            >>> round(float(result.loc["std", "before"]), 4)
+            0.9337
 
-            ```
+            The Mann-Whitney U test detects a significant difference:
+
+            >>> float(result.loc["mann_whitney_U", "after"]) < 0.001
+            True
 
         References:
             Mann, H.B. and Whitney, D.R. (1947). On a test of whether one of two random

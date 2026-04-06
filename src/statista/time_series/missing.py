@@ -33,20 +33,50 @@ class MissingData(_TimeSeriesStub):
                 valid_count, longest_gap, n_gaps, mean_gap_length, first_valid, last_valid.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Basic usage with a small array containing two gaps:
+
             >>> data = np.array([1.0, np.nan, np.nan, 4.0, 5.0, np.nan, 7.0])
             >>> ts = TimeSeries(data)
             >>> result = ts.missing_summary()
             >>> int(result.loc["Series1", "missing_count"])
             3
+            >>> round(float(result.loc["Series1", "missing_pct"]), 4)
+            42.8571
             >>> int(result.loc["Series1", "longest_gap"])
             2
             >>> int(result.loc["Series1", "n_gaps"])
             2
+            >>> round(float(result.loc["Series1", "mean_gap_length"]), 1)
+            1.5
 
-            ```
+            Real data with no missing values:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> result = ts.missing_summary()
+            >>> int(result.loc["Series1", "missing_count"])
+            0
+            >>> int(result.loc["Series1", "total_count"])
+            27
+
+            Random data with inserted gaps:
+
+            >>> np.random.seed(42)
+            >>> data = np.random.randn(50)
+            >>> data[5:10] = np.nan
+            >>> data[20:23] = np.nan
+            >>> data[40] = np.nan
+            >>> ts = TimeSeries(data)
+            >>> result = ts.missing_summary()
+            >>> int(result.loc["Series1", "missing_count"])
+            9
+            >>> int(result.loc["Series1", "longest_gap"])
+            5
+            >>> int(result.loc["Series1", "n_gaps"])
+            3
         """
         rows = {}
         for col in self.columns:
@@ -88,9 +118,11 @@ class MissingData(_TimeSeriesStub):
                 Sorted by gap_length descending.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Two gaps of different lengths (sorted longest first):
+
             >>> data = np.array([1.0, np.nan, np.nan, 4.0, np.nan, 6.0])
             >>> ts = TimeSeries(data)
             >>> gaps = ts.gap_analysis()
@@ -98,8 +130,26 @@ class MissingData(_TimeSeriesStub):
             2
             >>> int(gaps.iloc[0]["gap_length"])
             2
+            >>> int(gaps.iloc[1]["gap_length"])
+            1
 
-            ```
+            Multiple gaps including one at the end of the series:
+
+            >>> data = np.array([1.0, np.nan, np.nan, np.nan, 5.0, np.nan, 7.0, 8.0, np.nan, np.nan])
+            >>> ts = TimeSeries(data)
+            >>> gaps = ts.gap_analysis()
+            >>> len(gaps)
+            3
+            >>> [int(gaps.iloc[i]["gap_length"]) for i in range(3)]
+            [3, 2, 1]
+
+            Data with no gaps returns an empty DataFrame:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> gaps = ts.gap_analysis()
+            >>> len(gaps)
+            0
         """
         cols = [column] if column is not None else list(self.columns)
         records = []
@@ -161,19 +211,35 @@ class MissingData(_TimeSeriesStub):
                 Values are completeness percentages (0-100).
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> import pandas as pd
             >>> from statista.time_series import TimeSeries
+
+            Yearly completeness with 10 missing days:
+
+            >>> np.random.seed(42)
             >>> idx = pd.date_range("2000-01-01", periods=365, freq="D")
             >>> data = np.random.randn(365)
             >>> data[10:20] = np.nan
             >>> ts = TimeSeries(data, index=idx)
             >>> report = ts.completeness_report(freq="YE")
-            >>> report.shape[0] >= 1
-            True
+            >>> report.shape[0]
+            1
+            >>> round(float(report.iloc[0, 0]), 4)
+            97.2603
 
-            ```
+            Monthly completeness for a 60-day window with a gap in January:
+
+            >>> np.random.seed(42)
+            >>> idx = pd.date_range("2020-01-01", periods=60, freq="D")
+            >>> data = np.random.randn(60)
+            >>> data[5:15] = np.nan
+            >>> ts = TimeSeries(data, index=idx)
+            >>> report = ts.completeness_report(freq="ME")
+            >>> round(float(report.iloc[0, 0]), 4)
+            67.7419
+            >>> round(float(report.iloc[1, 0]), 4)
+            100.0
         """
         result = self.resample(freq).apply(lambda x: x.notna().mean() * 100)
         return DataFrame(result)
@@ -201,16 +267,35 @@ class MissingData(_TimeSeriesStub):
                 True indicates an outlier.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Z-score method detects the extreme value at index 3:
+
             >>> data = np.array([1.0, 2.0, 3.0, 100.0, 2.5, 1.5])
             >>> ts = TimeSeries(data)
             >>> outliers = ts.detect_outliers(method="zscore", threshold=2.0)
             >>> bool(outliers.loc[3, "Series1"])
             True
+            >>> int(outliers.sum().iloc[0])
+            1
 
-            ```
+            IQR method on the same data:
+
+            >>> outliers_iqr = ts.detect_outliers(method="iqr", threshold=1.5)
+            >>> bool(outliers_iqr.loc[3, "Series1"])
+            True
+            >>> int(outliers_iqr.sum().iloc[0])
+            1
+
+            Random data with injected extreme values:
+
+            >>> np.random.seed(42)
+            >>> data = np.concatenate([np.random.randn(100), [10.0, -10.0]])
+            >>> ts = TimeSeries(data)
+            >>> outliers = ts.detect_outliers(method="zscore", threshold=2.0)
+            >>> int(outliers.sum().iloc[0])
+            2
         """
         cols = [column] if column is not None else list(self.columns)
         result = DataFrame(index=self.index, columns=cols, dtype=bool)
@@ -267,14 +352,18 @@ class MissingData(_TimeSeriesStub):
             tuple: (Figure, Axes)
 
         Examples:
-            ```python
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
+            >>> np.random.seed(42)  # doctest: +SKIP
             >>> data = np.concatenate([np.random.randn(100), [10.0, -10.0]])  # doctest: +SKIP
             >>> ts = TimeSeries(data)  # doctest: +SKIP
             >>> fig, ax = ts.outlier_plot(method="zscore", threshold=2.5)  # doctest: +SKIP
 
-            ```
+            Using IQR method:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")  # doctest: +SKIP
+            >>> ts = TimeSeries(data)  # doctest: +SKIP
+            >>> fig, ax = ts.outlier_plot(method="iqr", threshold=1.5)  # doctest: +SKIP
         """
         if column is None and len(self.columns) == 1:
             column = self.columns[0]

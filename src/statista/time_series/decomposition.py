@@ -54,7 +54,8 @@ class Decomposition(_TimeSeriesStub):
             ValueError: If period is None or data length < 2 * period.
 
         Examples:
-            ```python
+            Decompose a synthetic monthly series with trend and seasonality:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
@@ -64,10 +65,27 @@ class Decomposition(_TimeSeriesStub):
             >>> data = trend + seasonal + np.random.randn(120) * 0.5
             >>> ts = TimeSeries(data)
             >>> result, _ = ts.classical_decompose(period=12, plot=False)
-            >>> "trend" in result.columns
-            True
+            >>> list(result.columns)
+            ['observed', 'trend', 'seasonal', 'residual']
+            >>> result.shape
+            (120, 4)
+            >>> round(float(result["trend"].dropna().mean()), 4)
+            5.8866
 
-            ```
+            Verify seasonal component captures the pattern:
+
+            >>> round(float(result["seasonal"].std()), 4)
+            3.495
+
+            Decompose a shorter series with stronger trend:
+
+            >>> np.random.seed(42)
+            >>> t2 = np.arange(48)
+            >>> data2 = 10 + 0.5 * t2 + 3 * np.sin(2 * np.pi * t2 / 12) + np.random.randn(48) * 0.3
+            >>> ts2 = TimeSeries(data2)
+            >>> result2, _ = ts2.classical_decompose(period=12, plot=False)
+            >>> round(float(result2["trend"].iloc[24]), 4)
+            21.3941
 
         References:
             Persons, W.M. (1919). Indices of business conditions.
@@ -160,16 +178,37 @@ class Decomposition(_TimeSeriesStub):
             TimeSeries: New TimeSeries with smoothed values. Same index as original.
 
         Examples:
-            ```python
+            Moving average smoothing (NaN at edges where window is incomplete):
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(100))
             >>> smoothed = ts.smooth(method="moving_average", window=10)
-            >>> smoothed.shape == ts.shape
-            True
+            >>> smoothed.shape
+            (100, 1)
+            >>> round(float(smoothed.dropna().iloc[0, 0]), 4)
+            0.4481
 
-            ```
+            Exponential weighted moving average (no NaN values):
+
+            >>> np.random.seed(42)
+            >>> ts2 = TimeSeries(np.random.randn(100))
+            >>> smoothed2 = ts2.smooth(method="exponential", window=10)
+            >>> round(float(smoothed2.iloc[0, 0]), 4)
+            0.4967
+            >>> round(float(smoothed2.iloc[2, 0]), 4)
+            0.3486
+
+            Savitzky-Golay filter preserves peaks better (reduces std less aggressively):
+
+            >>> np.random.seed(42)
+            >>> ts3 = TimeSeries(np.random.randn(100))
+            >>> smoothed3 = ts3.smooth(method="savgol", window=11, polyorder=2)
+            >>> round(float(smoothed3.iloc[0, 0]), 4)
+            0.2353
+            >>> round(float(smoothed3.values.std() / ts3.values.std()), 4)
+            0.4354
         """
         from statista.time_series import TimeSeries
 
@@ -232,13 +271,10 @@ class Decomposition(_TimeSeriesStub):
             tuple: (Figure, Axes)
 
         Examples:
-            ```python
             >>> import numpy as np  # doctest: +SKIP
             >>> from statista.time_series import TimeSeries  # doctest: +SKIP
             >>> ts = TimeSeries(np.random.randn(200))  # doctest: +SKIP
             >>> fig, ax = ts.envelope(window=20)  # doctest: +SKIP
-
-            ```
         """
         if column is None:
             column = self.columns[0]

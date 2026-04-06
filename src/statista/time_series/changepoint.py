@@ -44,17 +44,32 @@ class ChangePoint(_TimeSeriesStub):
                 statistic, p_value, mean_before, mean_after, conclusion.
 
         Examples:
-            ```python
+            Detect a change point in a series with a mean shift at index 50:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> data = np.concatenate([np.random.randn(50), np.random.randn(50) + 3])
             >>> ts = TimeSeries(data)
             >>> result = ts.pettitt_test()
-            >>> 40 <= result.loc["Series1", "change_point_index"] <= 60
-            True
+            >>> result.loc["Series1", "conclusion"]
+            'Inhomogeneous'
+            >>> int(result.loc["Series1", "change_point_index"])
+            49
+            >>> round(float(result.loc["Series1", "mean_before"]), 4)
+            -0.2255
+            >>> round(float(result.loc["Series1", "mean_after"]), 4)
+            3.0178
 
-            ```
+            Confirm homogeneity in pure random noise:
+
+            >>> np.random.seed(42)
+            >>> ts_noise = TimeSeries(np.random.randn(100))
+            >>> result_noise = ts_noise.pettitt_test()
+            >>> result_noise.loc["Series1", "conclusion"]
+            'Homogeneous'
+            >>> round(float(result_noise.loc["Series1", "p_value"]), 4)
+            0.5597
 
         References:
             Pettitt, A.N. (1979). A non-parametric approach to the change-point problem.
@@ -123,7 +138,8 @@ class ChangePoint(_TimeSeriesStub):
                 statistic, p_value, mean_before, mean_after, conclusion.
 
         Examples:
-            ```python
+            Detect a shift in a series with a mean change at index 50:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
@@ -132,8 +148,22 @@ class ChangePoint(_TimeSeriesStub):
             >>> result = ts.snht_test()
             >>> result.loc["Series1", "conclusion"]
             'Inhomogeneous'
+            >>> int(result.loc["Series1", "change_point_index"])
+            49
+            >>> round(float(result.loc["Series1", "statistic"]), 4)
+            75.8692
+            >>> round(float(result.loc["Series1", "mean_before"]), 4)
+            -0.2255
 
-            ```
+            Verify a homogeneous series is not flagged:
+
+            >>> np.random.seed(42)
+            >>> ts_noise = TimeSeries(np.random.randn(100))
+            >>> result_noise = ts_noise.snht_test()
+            >>> result_noise.loc["Series1", "conclusion"]
+            'Homogeneous'
+            >>> round(float(result_noise.loc["Series1", "p_value"]), 4)
+            0.1
 
         References:
             Alexandersson, H. (1986). A homogeneity test applied to precipitation data.
@@ -209,7 +239,8 @@ class ChangePoint(_TimeSeriesStub):
                 statistic, p_value, mean_before, mean_after, conclusion.
 
         Examples:
-            ```python
+            Detect a change point using the Buishand range statistic:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
@@ -218,8 +249,20 @@ class ChangePoint(_TimeSeriesStub):
             >>> result = ts.buishand_range_test()
             >>> result.loc["Series1", "conclusion"]
             'Inhomogeneous'
+            >>> int(result.loc["Series1", "change_point_index"])
+            49
+            >>> round(float(result.loc["Series1", "statistic"]), 4)
+            4.3551
 
-            ```
+            Verify a homogeneous series passes the test:
+
+            >>> np.random.seed(42)
+            >>> ts_noise = TimeSeries(np.random.randn(100))
+            >>> result_noise = ts_noise.buishand_range_test()
+            >>> result_noise.loc["Series1", "conclusion"]
+            'Homogeneous'
+            >>> round(float(result_noise.loc["Series1", "p_value"]), 4)
+            0.0819
 
         References:
             Buishand, T.A. (1982). Some methods for testing the homogeneity of rainfall
@@ -298,16 +341,32 @@ class ChangePoint(_TimeSeriesStub):
                 cusum_df has the cumulative sums with same index as input.
 
         Examples:
-            ```python
+            Compute CUSUM of deviations from the mean (no plot):
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(100))
             >>> cusum_df, _ = ts.cusum(plot=False)
-            >>> cusum_df.shape[0] == 100
-            True
+            >>> cusum_df.shape[0]
+            100
+            >>> round(float(cusum_df.iloc[0, 0]), 4)
+            0.6006
+            >>> round(float(cusum_df.iloc[:, 0].abs().max()), 4)
+            6.5078
 
-            ```
+            CUSUM on a series with a mean shift:
+
+            >>> np.random.seed(42)
+            >>> data = np.concatenate([np.random.randn(50), np.random.randn(50) + 3])
+            >>> ts2 = TimeSeries(data)
+            >>> cusum_df2, _ = ts2.cusum(plot=False)
+            >>> round(float(cusum_df2.iloc[-1, 0]), 4)
+            0.0
+
+            Plot-based usage (creates a figure):  # doctest: +SKIP
+
+            >>> ts.cusum(plot=True)  # doctest: +SKIP
         """
         if column is None:
             column = self.columns[0]
@@ -382,17 +441,28 @@ class ChangePoint(_TimeSeriesStub):
             pandas.DataFrame: One row per column with test results and confirmation status.
 
         Examples:
-            ```python
+            All three tests agree on a change point at index 49:
+
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
             >>> np.random.seed(42)
             >>> data = np.concatenate([np.random.randn(50), np.random.randn(50) + 3])
             >>> ts = TimeSeries(data)
             >>> result = ts.homogeneity_summary()
-            >>> "confirmed" in result.columns
+            >>> bool(result.loc["Series1", "confirmed"])
             True
+            >>> int(result.loc["Series1", "pettitt_cp"])
+            49
+            >>> int(result.loc["Series1", "snht_cp"])
+            49
 
-            ```
+            Homogeneous series is not confirmed as having a change point:
+
+            >>> np.random.seed(42)
+            >>> ts_noise = TimeSeries(np.random.randn(100))
+            >>> result_noise = ts_noise.homogeneity_summary()
+            >>> bool(result_noise.loc["Series1", "confirmed"])
+            False
         """
         pettitt = self.pettitt_test(alpha=alpha)
         snht = self.snht_test(alpha=alpha)

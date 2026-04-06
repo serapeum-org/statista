@@ -44,16 +44,39 @@ class Stationarity(_TimeSeriesStub):
                 n_obs, crit_1%, crit_5%, crit_10%, conclusion.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Stationary white noise rejects the null (p < 0.05):
+
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(200))
             >>> result = ts.adf_test()
-            >>> result.loc["Series1", "p_value"] < 0.05
-            True
+            >>> round(float(result.loc["Series1", "statistic"]), 4)
+            -3.309
+            >>> round(float(result.loc["Series1", "p_value"]), 4)
+            0.0187
+            >>> result.loc["Series1", "conclusion"]
+            'Stationary'
 
-            ```
+            Non-stationary random walk fails to reject:
+
+            >>> np.random.seed(10)
+            >>> rw = np.cumsum(np.random.randn(200))
+            >>> ts_rw = TimeSeries(rw)
+            >>> result_rw = ts_rw.adf_test()
+            >>> round(float(result_rw.loc["Series1", "p_value"]), 4)
+            0.2937
+            >>> result_rw.loc["Series1", "conclusion"]
+            'Non-stationary'
+
+            Real hydrological data:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> result = ts.adf_test()
+            >>> round(float(result.loc["Series1", "statistic"]), 4)
+            -2.0713
 
         References:
             Dickey, D.A. and Fuller, W.A. (1979). Distribution of the estimators for
@@ -99,16 +122,39 @@ class Stationarity(_TimeSeriesStub):
                 crit_10%, crit_5%, crit_2.5%, crit_1%, conclusion.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Stationary white noise does not reject the null (p > 0.05):
+
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(200))
             >>> result = ts.kpss_test()
-            >>> result.loc["Series1", "p_value"] > 0.05
-            True
+            >>> round(float(result.loc["Series1", "statistic"]), 4)
+            0.1974
+            >>> round(float(result.loc["Series1", "p_value"]), 1)
+            0.1
+            >>> result.loc["Series1", "conclusion"]
+            'Stationary'
 
-            ```
+            Non-stationary random walk rejects the null:
+
+            >>> np.random.seed(10)
+            >>> rw = np.cumsum(np.random.randn(200))
+            >>> ts_rw = TimeSeries(rw)
+            >>> result_rw = ts_rw.kpss_test()
+            >>> round(float(result_rw.loc["Series1", "statistic"]), 4)
+            2.8977
+            >>> result_rw.loc["Series1", "conclusion"]
+            'Non-stationary'
+
+            Real hydrological data:
+
+            >>> data = np.loadtxt("examples/data/time_series1.txt")
+            >>> ts = TimeSeries(data)
+            >>> result = ts.kpss_test()
+            >>> round(float(result.loc["Series1", "statistic"]), 4)
+            0.1003
 
         References:
             Kwiatkowski, D., Phillips, P.C.B., Schmidt, P. and Shin, Y. (1992).
@@ -151,16 +197,29 @@ class Stationarity(_TimeSeriesStub):
                 kpss_stat, kpss_pvalue, diagnosis.
 
         Examples:
-            ```python
             >>> import numpy as np
             >>> from statista.time_series import TimeSeries
+
+            Stationary white noise (ADF rejects, KPSS does not):
+
             >>> np.random.seed(42)
             >>> ts = TimeSeries(np.random.randn(200))
             >>> result = ts.stationarity_summary()
             >>> result.loc["Series1", "diagnosis"]
             'Stationary'
+            >>> round(float(result.loc["Series1", "adf_stat"]), 4)
+            -3.309
+            >>> round(float(result.loc["Series1", "kpss_stat"]), 4)
+            0.1974
 
-            ```
+            Non-stationary random walk (ADF fails to reject, KPSS rejects):
+
+            >>> np.random.seed(10)
+            >>> rw = np.cumsum(np.random.randn(200))
+            >>> ts_rw = TimeSeries(rw)
+            >>> result_rw = ts_rw.stationarity_summary()
+            >>> result_rw.loc["Series1", "diagnosis"]
+            'Non-stationary (unit root)'
         """
         adf_df = self.adf_test()
         kpss_df = self.kpss_test()
