@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
@@ -92,7 +93,6 @@ class Hydrological(_TimeSeriesStub):
 
             # Warn about negative flows (physically invalid in hydrology)
             if (data < 0).any():
-                import warnings
                 warnings.warn(
                     f"Column '{col}' contains negative values, which may be invalid for flow data",
                     UserWarning
@@ -346,7 +346,6 @@ class Hydrological(_TimeSeriesStub):
         # by NaN values that happen to coincide with negative entries.
         raw = self[column].values
         if np.any(raw[~np.isnan(raw)] < 0):
-            import warnings
             warnings.warn(
                 f"Column '{column}' contains negative values, which may be invalid for flow data",
                 UserWarning

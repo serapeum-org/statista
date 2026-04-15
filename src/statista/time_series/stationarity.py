@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -285,8 +286,6 @@ def _adf_test_single(
     data: np.ndarray, regression: str = "c", max_lag: int = None
 ) -> dict:
     """Run ADF test on a single series."""
-    import warnings
-    
     n = len(data)
     if n < 7:
         raise ValueError(f"ADF test requires at least 7 observations, got {n}.")
@@ -419,8 +418,6 @@ def _kpss_test_single(
     data: np.ndarray, regression: str = "c", n_lags: int = None
 ) -> dict:
     """Run KPSS test on a single series."""
-    import warnings
-    
     n = len(data)
     if n < 5:
         raise ValueError(f"KPSS test requires at least 5 observations, got {n}.")

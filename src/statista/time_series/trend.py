@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
@@ -315,7 +316,6 @@ class Trend(_TimeSeriesStub):
         
         # Handle odd-length series
         if n % 2 != 0:
-            import warnings
             data = data[:-1]
             n = len(data)
             warnings.warn(
