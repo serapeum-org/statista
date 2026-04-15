@@ -52,8 +52,9 @@ theme:
 plugins:
   - search
   - mkdocs-jupyter:
-      execute: true
+      execute: cache
       allow_errors: false
+      cache_path: .jupyter_cache
   - autorefs
   - mkdocstrings:
       default_handler: python

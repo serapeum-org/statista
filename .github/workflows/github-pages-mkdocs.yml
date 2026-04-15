@@ -27,6 +27,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache Jupyter notebook outputs
+        uses: actions/cache@v4
+        with:
+          path: .jupyter_cache
+          key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb') }}
+          restore-keys: jupyter-cache-
+
       - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
         with:
           trigger: 'pull_request'
@@ -42,6 +49,14 @@ jobs:
     - uses: actions/checkout@v5
       with:
         fetch-depth: 0
+
+    - name: Cache Jupyter notebook outputs
+      uses: actions/cache@v4
+      with:
+        path: .jupyter_cache
+        key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb') }}
+        restore-keys: jupyter-cache-
+
     - uses: serapeum-org/github-actions/actions/mkdocs-deploy@main
       with:
         trigger: 'main'
@@ -57,6 +72,14 @@ jobs:
     - uses: actions/checkout@v5
       with:
         fetch-depth: 0
+
+    - name: Cache Jupyter notebook outputs
+      uses: actions/cache@v4
+      with:
+        path: .jupyter_cache
+        key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb') }}
+        restore-keys: jupyter-cache-
+
     - uses: serapeum-org/github-actions/actions/mkdocs-deploy@main
       with:
         trigger: 'release'
