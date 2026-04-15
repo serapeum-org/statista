@@ -51,7 +51,9 @@ theme:
 
 plugins:
   - search
-  - mkdocs-jupyter
+  - mkdocs-jupyter:
+      execute: true
+      allow_errors: false
   - autorefs
   - mkdocstrings:
       default_handler: python
@@ -112,6 +114,7 @@ nav:
       - GEV: reference/distributions/gev.md
       - Exponential: reference/distributions/exponential.md
       - Normal: reference/distributions/normal.md
+      - All Distributions: reference/distributions-class.md
     - Parameters:
       - L-moments: reference/parameters/lmoments.md
       - Extreme Value: reference/parameters/extreme-value.md
@@ -119,6 +122,7 @@ nav:
       - Other: reference/parameters/other.md
     - Time Series:
       - Overview: reference/time-series/index.md
+      - Developer Reference: reference/time_series/overview.md
       - Descriptive: reference/time-series/descriptive.md
       - Visualization: reference/time-series/visualization.md
       - Missing Data: reference/time-series/missing.md
