@@ -22,10 +22,8 @@ more conservative thresholds like ``alpha=0.01`` or ``alpha=0.10`` depending on 
 https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.plot.html
 """
 
-# Default significance level for hypothesis tests
-DEFAULT_ALPHA = 0.05  # Consider 0.01 for conservative analyses in safety-critical applications
-
 from statista.time_series.base import BOX_MEAN_PROP, VIOLIN_PROP, TimeSeriesBase
+from statista.time_series.constants import DEFAULT_ALPHA
 from statista.time_series.changepoint import ChangePoint
 from statista.time_series.comparison import Comparison
 from statista.time_series.correlation import Correlation

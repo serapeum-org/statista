@@ -6,7 +6,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 
-from statista.time_series import TimeSeries
+from statista.time_series import DEFAULT_ALPHA, TimeSeries
 
 
 @pytest.fixture
@@ -920,3 +920,34 @@ class TestSummary:
         assert summary.loc["L-kurtosis", "Series1"] == pytest.approx(
             float(lmom.loc["t4", "Series1"])
         ), "L-kurtosis should match l_moments().loc['t4']"
+
+
+class TestDefaultAlpha:
+    """Verify that DEFAULT_ALPHA is wired through method signatures."""
+
+    def test_default_alpha_value(self):
+        """DEFAULT_ALPHA constant should equal 0.05."""
+        assert DEFAULT_ALPHA == 0.05
+
+    def test_methods_use_default_alpha(self):
+        """All hypothesis-test methods that accept alpha should default to DEFAULT_ALPHA."""
+        import inspect
+
+        ts = TimeSeries(np.random.randn(100))
+        methods_with_alpha = [
+            "mann_kendall",
+            "sens_slope",
+            "pettitt_test",
+            "snht_test",
+            "buishand_range_test",
+            "homogeneity_summary",
+            "stationarity_summary",
+            "normality_test",
+        ]
+        for name in methods_with_alpha:
+            sig = inspect.signature(getattr(ts, name))
+            assert "alpha" in sig.parameters, f"{name} missing alpha parameter"
+            default = sig.parameters["alpha"].default
+            assert default == DEFAULT_ALPHA, (
+                f"{name}.alpha default is {default}, expected DEFAULT_ALPHA={DEFAULT_ALPHA}"
+            )

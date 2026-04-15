@@ -11,6 +11,8 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 from scipy.stats import rankdata
 
+from statista.time_series.constants import DEFAULT_ALPHA
+
 if TYPE_CHECKING:
     from statista.time_series.stubs import _TimeSeriesStub
 else:
@@ -27,7 +29,7 @@ class ChangePoint(_TimeSeriesStub):
 
     def pettitt_test(
         self,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         column: str = None,
     ) -> DataFrame:
         """Pettitt non-parametric change point test.
@@ -122,7 +124,7 @@ class ChangePoint(_TimeSeriesStub):
 
     def snht_test(
         self,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         column: str = None,
     ) -> DataFrame:
         """Standard Normal Homogeneity Test (SNHT).
@@ -223,7 +225,7 @@ class ChangePoint(_TimeSeriesStub):
 
     def buishand_range_test(
         self,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         column: str = None,
     ) -> DataFrame:
         """Buishand range test for change point detection.
@@ -427,7 +429,7 @@ class ChangePoint(_TimeSeriesStub):
 
     def homogeneity_summary(
         self,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
     ) -> DataFrame:
         """Run Pettitt + SNHT + Buishand and combine into a diagnosis.
 

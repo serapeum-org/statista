@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING
 import numpy as np
 from pandas import DataFrame
 
+from statista.time_series.constants import DEFAULT_ALPHA
+
 if TYPE_CHECKING:
     from statista.time_series.stubs import _TimeSeriesStub
 else:
@@ -172,7 +174,7 @@ class Stationarity(_TimeSeriesStub):
         result_df = DataFrame(rows).set_index("column")
         return result_df
 
-    def stationarity_summary(self, alpha: float = 0.05) -> DataFrame:
+    def stationarity_summary(self, alpha: float = DEFAULT_ALPHA) -> DataFrame:
         """Combined ADF + KPSS stationarity diagnosis.
 
         Runs both ADF and KPSS tests and produces an interpretation:

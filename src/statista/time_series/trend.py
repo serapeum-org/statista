@@ -12,6 +12,7 @@ from pandas import DataFrame
 from scipy.signal import detrend as scipy_detrend
 from scipy.stats import norm, theilslopes
 
+from statista.time_series.constants import DEFAULT_ALPHA
 from statista.time_series.correlation import _compute_acf
 
 if TYPE_CHECKING:
@@ -25,7 +26,7 @@ class Trend(_TimeSeriesStub):
 
     def mann_kendall(
         self,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         method: str = "original",
         lag: int = None,
         column: str = None,
@@ -111,7 +112,7 @@ class Trend(_TimeSeriesStub):
 
     def sens_slope(
         self,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         column: str = None,
     ) -> DataFrame:
         """Sen's slope estimator — robust non-parametric trend magnitude.
@@ -406,7 +407,7 @@ class Trend(_TimeSeriesStub):
 
 def _mann_kendall_single(
     data: np.ndarray,
-    alpha: float = 0.05,
+    alpha: float = DEFAULT_ALPHA,
     method: str = "original",
     lag: int = None,
 ) -> dict:

@@ -12,6 +12,8 @@ from pandas import DataFrame
 from scipy.signal import periodogram as scipy_periodogram
 from scipy.signal import welch as scipy_welch
 
+from statista.time_series.constants import DEFAULT_ALPHA
+
 if TYPE_CHECKING:
     from statista.time_series.stubs import _TimeSeriesStub
 else:
@@ -346,7 +348,7 @@ class Seasonal(_TimeSeriesStub):
     def seasonal_mann_kendall(
         self,
         period: int = 12,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         column: str = None,
     ) -> DataFrame:
         """Seasonal Mann-Kendall trend test.

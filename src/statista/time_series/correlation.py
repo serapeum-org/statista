@@ -11,6 +11,8 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 from scipy.stats import chi2, kendalltau, norm, pearsonr, spearmanr
 
+from statista.time_series.constants import DEFAULT_ALPHA
+
 if TYPE_CHECKING:
     from statista.time_series.stubs import _TimeSeriesStub
 else:
@@ -23,7 +25,7 @@ class Correlation(_TimeSeriesStub):
     def acf(
         self,
         nlags: int = 40,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         fft: bool = True,
         column: str = None,
         plot: bool = True,
@@ -96,7 +98,7 @@ class Correlation(_TimeSeriesStub):
     def pacf(
         self,
         nlags: int = 40,
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
         column: str = None,
         plot: bool = True,
         **kwargs: Any,

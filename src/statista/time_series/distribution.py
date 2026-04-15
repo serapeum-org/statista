@@ -11,6 +11,8 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 from scipy import stats as scipy_stats
 
+from statista.time_series.constants import DEFAULT_ALPHA
+
 if TYPE_CHECKING:
     from statista.time_series.stubs import _TimeSeriesStub
 else:
@@ -182,7 +184,7 @@ class Distribution(_TimeSeriesStub):
     def normality_test(
         self,
         method: str = "auto",
-        alpha: float = 0.05,
+        alpha: float = DEFAULT_ALPHA,
     ) -> DataFrame:
         """Test each column for normality.
 
