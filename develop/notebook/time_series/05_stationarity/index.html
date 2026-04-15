@@ -3893,7 +3893,7 @@ Series1  Non-stationary
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="what-this-means">What this means<a class="anchor-link" href="#what-this-means">¶</a></h3><ul>
-<li>White noise: p-value at the upper limit (0.10) -&gt; <strong>fail to reject</strong> -&gt; the KPSS test also calls it stationary.</li>
+<li>White noise: p-value at the upper limit (0.10 — note: the KPSS p-value is <em>truncated</em> at 0.10 by the tabulated critical values; a value of 0.10 means "no evidence against stationarity" rather than a precise estimate) -&gt; <strong>fail to reject</strong> -&gt; the KPSS test also calls it stationary.</li>
 <li>Random walk: p-value at 0.01 -&gt; <strong>reject</strong> -&gt; non-stationary.</li>
 </ul>
 <p>Both tests agree on both series — a clean diagnosis.</p>
