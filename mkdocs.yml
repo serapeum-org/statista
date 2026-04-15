@@ -52,7 +52,11 @@ theme:
 plugins:
   - search
   - mkdocs-jupyter:
-      execute: false  # notebooks are pre-executed and committed with outputs
+      # Committed notebooks have outputs stripped (nbstripout pre-commit hook);
+      # CI populates outputs via scripts/prep_notebooks.py before the build,
+      # using a GitHub Actions cache keyed on notebook + source + pyproject hash.
+      # See .github/workflows/github-pages-mkdocs.yml.
+      execute: false
       allow_errors: false
   - autorefs
   - mkdocstrings:

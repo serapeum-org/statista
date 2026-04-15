@@ -53,6 +53,7 @@ dev = [
     "pytest-xdist>=3.8.0",
     "mypy>=1.19.0",
     "types-PyYAML>=6.0.12",
+    "nbstripout>=0.7.1",
 ]
 
 docs = [
