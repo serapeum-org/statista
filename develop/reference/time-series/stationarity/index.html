@@ -3137,7 +3137,20 @@
 <span class="normal"><a href="#__codelineno-0-252">252</a></span>
 <span class="normal"><a href="#__codelineno-0-253">253</a></span>
 <span class="normal"><a href="#__codelineno-0-254">254</a></span>
-<span class="normal"><a href="#__codelineno-0-255">255</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">Stationarity</span><span class="p">(</span><span class="n">_TimeSeriesStub</span><span class="p">):</span>
+<span class="normal"><a href="#__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#__codelineno-0-256">256</a></span>
+<span class="normal"><a href="#__codelineno-0-257">257</a></span>
+<span class="normal"><a href="#__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#__codelineno-0-259">259</a></span>
+<span class="normal"><a href="#__codelineno-0-260">260</a></span>
+<span class="normal"><a href="#__codelineno-0-261">261</a></span>
+<span class="normal"><a href="#__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#__codelineno-0-268">268</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="k">class</span><span class="w"> </span><span class="nc">Stationarity</span><span class="p">(</span><span class="n">_TimeSeriesStub</span><span class="p">):</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Stationarity tests for TimeSeries.&quot;&quot;&quot;</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20"></a>
 <a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">adf_test</span><span class="p">(</span>
@@ -3313,68 +3326,81 @@
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">        | No            | No             | Inconclusive                              |</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="sd">        +---------------+----------------+-------------------------------------------+</span>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">            alpha: Significance level for both tests. Default 0.05.</span>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">        Returns:</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">            pandas.DataFrame: One row per column with: adf_stat, adf_pvalue,</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">                kpss_stat, kpss_pvalue, diagnosis.</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">        Constant series (std=0) are treated as a special case and diagnosed as</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">        ``&quot;Stationary (constant)&quot;``, since they are trivially stationary by</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">        definition (constant mean, zero variance, constant autocorrelation).</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">            alpha: Significance level for both tests. Default 0.05.</span>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        Examples:</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">            &gt;&gt;&gt; import numpy as np</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">            &gt;&gt;&gt; from statista.time_series import TimeSeries</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        Returns:</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">            pandas.DataFrame: One row per column with: adf_stat, adf_pvalue,</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">                kpss_stat, kpss_pvalue, diagnosis.</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">            Stationary white noise (ADF rejects, KPSS does not):</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">            &gt;&gt;&gt; np.random.seed(42)</span>
-<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">            &gt;&gt;&gt; ts = TimeSeries(np.random.randn(200))</span>
-<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">            &gt;&gt;&gt; result = ts.stationarity_summary()</span>
-<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">            &gt;&gt;&gt; result.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">            &#39;Stationary&#39;</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">            &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;adf_stat&quot;]), 4)</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">            -3.309</span>
-<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">            &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;kpss_stat&quot;]), 4)</span>
-<a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">            0.1974</span>
-<a id="__codelineno-0-216" name="__codelineno-0-216"></a>
-<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">            Non-stationary random walk (ADF fails to reject, KPSS rejects):</span>
-<a id="__codelineno-0-218" name="__codelineno-0-218"></a>
-<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">            &gt;&gt;&gt; np.random.seed(10)</span>
-<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">            &gt;&gt;&gt; rw = np.cumsum(np.random.randn(200))</span>
-<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">            &gt;&gt;&gt; ts_rw = TimeSeries(rw)</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">            &gt;&gt;&gt; result_rw = ts_rw.stationarity_summary()</span>
-<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">            &gt;&gt;&gt; result_rw.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
-<a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">            &#39;Non-stationary (unit root)&#39;</span>
-<a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-226" name="__codelineno-0-226"></a>        <span class="n">adf_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adf_test</span><span class="p">()</span>
-<a id="__codelineno-0-227" name="__codelineno-0-227"></a>        <span class="n">kpss_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpss_test</span><span class="p">()</span>
-<a id="__codelineno-0-228" name="__codelineno-0-228"></a>
-<a id="__codelineno-0-229" name="__codelineno-0-229"></a>        <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-230" name="__codelineno-0-230"></a>        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-<a id="__codelineno-0-231" name="__codelineno-0-231"></a>            <span class="n">adf_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a>            <span class="n">kpss_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
-<a id="__codelineno-0-233" name="__codelineno-0-233"></a>
-<a id="__codelineno-0-234" name="__codelineno-0-234"></a>            <span class="k">if</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kpss_reject</span><span class="p">:</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Stationary&quot;</span>
-<a id="__codelineno-0-236" name="__codelineno-0-236"></a>            <span class="k">elif</span> <span class="ow">not</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
-<a id="__codelineno-0-237" name="__codelineno-0-237"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Non-stationary (unit root)&quot;</span>
-<a id="__codelineno-0-238" name="__codelineno-0-238"></a>            <span class="k">elif</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
-<a id="__codelineno-0-239" name="__codelineno-0-239"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Trend-stationary&quot;</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a>            <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Inconclusive&quot;</span>
-<a id="__codelineno-0-242" name="__codelineno-0-242"></a>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a>            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a>                <span class="p">{</span>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a>                    <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">,</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a>                    <span class="s2">&quot;adf_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a>                    <span class="s2">&quot;adf_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a>                    <span class="s2">&quot;kpss_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a>                    <span class="s2">&quot;kpss_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-250" name="__codelineno-0-250"></a>                    <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="n">diagnosis</span><span class="p">,</span>
-<a id="__codelineno-0-251" name="__codelineno-0-251"></a>                <span class="p">}</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>            <span class="p">)</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>        <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">        Examples:</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">            &gt;&gt;&gt; import numpy as np</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">            &gt;&gt;&gt; from statista.time_series import TimeSeries</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">            Stationary white noise (ADF rejects, KPSS does not):</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">            &gt;&gt;&gt; np.random.seed(42)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">            &gt;&gt;&gt; ts = TimeSeries(np.random.randn(200))</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">            &gt;&gt;&gt; result = ts.stationarity_summary()</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">            &gt;&gt;&gt; result.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">            &#39;Stationary&#39;</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">            &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;adf_stat&quot;]), 4)</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">            -3.309</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">            &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;kpss_stat&quot;]), 4)</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">            0.1974</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">            Non-stationary random walk (ADF fails to reject, KPSS rejects):</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">            &gt;&gt;&gt; np.random.seed(10)</span>
+<a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">            &gt;&gt;&gt; rw = np.cumsum(np.random.randn(200))</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">            &gt;&gt;&gt; ts_rw = TimeSeries(rw)</span>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">            &gt;&gt;&gt; result_rw = ts_rw.stationarity_summary()</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">            &gt;&gt;&gt; result_rw.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">            &#39;Non-stationary (unit root)&#39;</span>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a>        <span class="n">adf_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adf_test</span><span class="p">()</span>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a>        <span class="n">kpss_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpss_test</span><span class="p">()</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a>        <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-234" name="__codelineno-0-234"></a>        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a>            <span class="c1"># A constant series is trivially stationary: bypass the p-value</span>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a>            <span class="c1"># logic, which would otherwise report &quot;Inconclusive&quot; because neither</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a>            <span class="c1"># test rejects its null for degenerate input.</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a>            <span class="n">col_data</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">col_data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Stationary (constant)&quot;</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a>                <span class="n">adf_reject</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a>                <span class="n">kpss_reject</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a>            <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a>                <span class="n">adf_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>                <span class="n">kpss_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a>                <span class="k">if</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kpss_reject</span><span class="p">:</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>                    <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Stationary&quot;</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a>                <span class="k">elif</span> <span class="ow">not</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
+<a id="__codelineno-0-250" name="__codelineno-0-250"></a>                    <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Non-stationary (unit root)&quot;</span>
+<a id="__codelineno-0-251" name="__codelineno-0-251"></a>                <span class="k">elif</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>                    <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Trend-stationary&quot;</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>                <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>                    <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Inconclusive&quot;</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a>                <span class="p">{</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>                    <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">,</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a>                    <span class="s2">&quot;adf_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a>                    <span class="s2">&quot;adf_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a>                    <span class="s2">&quot;kpss_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>                    <span class="s2">&quot;kpss_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a>                    <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="n">diagnosis</span><span class="p">,</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a>                <span class="p">}</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>            <span class="p">)</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a>        <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -4036,6 +4062,9 @@ a unit root. Journal of Econometrics, 54(1-3), 159-178.</p>
 +---------------+----------------+-------------------------------------------+
 | No            | No             | Inconclusive                              |
 +---------------+----------------+-------------------------------------------+</p>
+<p>Constant series (std=0) are treated as a special case and diagnosed as
+<code>"Stationary (constant)"</code>, since they are trivially stationary by
+definition (constant mean, zero variance, constant autocorrelation).</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -4198,7 +4227,20 @@ kpss_stat, kpss_pvalue, diagnosis.</p>
 <span class="normal"><a href="#__codelineno-0-252">252</a></span>
 <span class="normal"><a href="#__codelineno-0-253">253</a></span>
 <span class="normal"><a href="#__codelineno-0-254">254</a></span>
-<span class="normal"><a href="#__codelineno-0-255">255</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="k">def</span><span class="w"> </span><span class="nf">stationarity_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_ALPHA</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-255">255</a></span>
+<span class="normal"><a href="#__codelineno-0-256">256</a></span>
+<span class="normal"><a href="#__codelineno-0-257">257</a></span>
+<span class="normal"><a href="#__codelineno-0-258">258</a></span>
+<span class="normal"><a href="#__codelineno-0-259">259</a></span>
+<span class="normal"><a href="#__codelineno-0-260">260</a></span>
+<span class="normal"><a href="#__codelineno-0-261">261</a></span>
+<span class="normal"><a href="#__codelineno-0-262">262</a></span>
+<span class="normal"><a href="#__codelineno-0-263">263</a></span>
+<span class="normal"><a href="#__codelineno-0-264">264</a></span>
+<span class="normal"><a href="#__codelineno-0-265">265</a></span>
+<span class="normal"><a href="#__codelineno-0-266">266</a></span>
+<span class="normal"><a href="#__codelineno-0-267">267</a></span>
+<span class="normal"><a href="#__codelineno-0-268">268</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="k">def</span><span class="w"> </span><span class="nf">stationarity_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_ALPHA</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span><span class="p">:</span>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Combined ADF + KPSS stationarity diagnosis.</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    Runs both ADF and KPSS tests and produces an interpretation:</span>
@@ -4215,68 +4257,81 @@ kpss_stat, kpss_pvalue, diagnosis.</p>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">    | No            | No             | Inconclusive                              |</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="sd">    +---------------+----------------+-------------------------------------------+</span>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">        alpha: Significance level for both tests. Default 0.05.</span>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">        pandas.DataFrame: One row per column with: adf_stat, adf_pvalue,</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">            kpss_stat, kpss_pvalue, diagnosis.</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    Constant series (std=0) are treated as a special case and diagnosed as</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">    ``&quot;Stationary (constant)&quot;``, since they are trivially stationary by</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    definition (constant mean, zero variance, constant autocorrelation).</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">        alpha: Significance level for both tests. Default 0.05.</span>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    Examples:</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">        &gt;&gt;&gt; import numpy as np</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">        &gt;&gt;&gt; from statista.time_series import TimeSeries</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">        pandas.DataFrame: One row per column with: adf_stat, adf_pvalue,</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">            kpss_stat, kpss_pvalue, diagnosis.</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">        Stationary white noise (ADF rejects, KPSS does not):</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">        &gt;&gt;&gt; np.random.seed(42)</span>
-<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">        &gt;&gt;&gt; ts = TimeSeries(np.random.randn(200))</span>
-<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">        &gt;&gt;&gt; result = ts.stationarity_summary()</span>
-<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">        &gt;&gt;&gt; result.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">        &#39;Stationary&#39;</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">        &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;adf_stat&quot;]), 4)</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">        -3.309</span>
-<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">        &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;kpss_stat&quot;]), 4)</span>
-<a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">        0.1974</span>
-<a id="__codelineno-0-216" name="__codelineno-0-216"></a>
-<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">        Non-stationary random walk (ADF fails to reject, KPSS rejects):</span>
-<a id="__codelineno-0-218" name="__codelineno-0-218"></a>
-<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">        &gt;&gt;&gt; np.random.seed(10)</span>
-<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">        &gt;&gt;&gt; rw = np.cumsum(np.random.randn(200))</span>
-<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">        &gt;&gt;&gt; ts_rw = TimeSeries(rw)</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">        &gt;&gt;&gt; result_rw = ts_rw.stationarity_summary()</span>
-<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">        &gt;&gt;&gt; result_rw.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
-<a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">        &#39;Non-stationary (unit root)&#39;</span>
-<a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-226" name="__codelineno-0-226"></a>    <span class="n">adf_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adf_test</span><span class="p">()</span>
-<a id="__codelineno-0-227" name="__codelineno-0-227"></a>    <span class="n">kpss_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpss_test</span><span class="p">()</span>
-<a id="__codelineno-0-228" name="__codelineno-0-228"></a>
-<a id="__codelineno-0-229" name="__codelineno-0-229"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-<a id="__codelineno-0-231" name="__codelineno-0-231"></a>        <span class="n">adf_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a>        <span class="n">kpss_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
-<a id="__codelineno-0-233" name="__codelineno-0-233"></a>
-<a id="__codelineno-0-234" name="__codelineno-0-234"></a>        <span class="k">if</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kpss_reject</span><span class="p">:</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a>            <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Stationary&quot;</span>
-<a id="__codelineno-0-236" name="__codelineno-0-236"></a>        <span class="k">elif</span> <span class="ow">not</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
-<a id="__codelineno-0-237" name="__codelineno-0-237"></a>            <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Non-stationary (unit root)&quot;</span>
-<a id="__codelineno-0-238" name="__codelineno-0-238"></a>        <span class="k">elif</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
-<a id="__codelineno-0-239" name="__codelineno-0-239"></a>            <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Trend-stationary&quot;</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a>            <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Inconclusive&quot;</span>
-<a id="__codelineno-0-242" name="__codelineno-0-242"></a>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a>        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a>            <span class="p">{</span>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a>                <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">,</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a>                <span class="s2">&quot;adf_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a>                <span class="s2">&quot;adf_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a>                <span class="s2">&quot;kpss_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a>                <span class="s2">&quot;kpss_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
-<a id="__codelineno-0-250" name="__codelineno-0-250"></a>                <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="n">diagnosis</span><span class="p">,</span>
-<a id="__codelineno-0-251" name="__codelineno-0-251"></a>            <span class="p">}</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>        <span class="p">)</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    Examples:</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">        &gt;&gt;&gt; from statista.time_series import TimeSeries</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">        Stationary white noise (ADF rejects, KPSS does not):</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">        &gt;&gt;&gt; np.random.seed(42)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">        &gt;&gt;&gt; ts = TimeSeries(np.random.randn(200))</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">        &gt;&gt;&gt; result = ts.stationarity_summary()</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">        &gt;&gt;&gt; result.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">        &#39;Stationary&#39;</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">        &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;adf_stat&quot;]), 4)</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">        -3.309</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="sd">        &gt;&gt;&gt; round(float(result.loc[&quot;Series1&quot;, &quot;kpss_stat&quot;]), 4)</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">        0.1974</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">        Non-stationary random walk (ADF fails to reject, KPSS rejects):</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">        &gt;&gt;&gt; np.random.seed(10)</span>
+<a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">        &gt;&gt;&gt; rw = np.cumsum(np.random.randn(200))</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">        &gt;&gt;&gt; ts_rw = TimeSeries(rw)</span>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">        &gt;&gt;&gt; result_rw = ts_rw.stationarity_summary()</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">        &gt;&gt;&gt; result_rw.loc[&quot;Series1&quot;, &quot;diagnosis&quot;]</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="sd">        &#39;Non-stationary (unit root)&#39;</span>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">adf_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adf_test</span><span class="p">()</span>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="n">kpss_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpss_test</span><span class="p">()</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a>        <span class="c1"># A constant series is trivially stationary: bypass the p-value</span>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a>        <span class="c1"># logic, which would otherwise report &quot;Inconclusive&quot; because neither</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a>        <span class="c1"># test rejects its null for degenerate input.</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a>        <span class="n">col_data</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">col_data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>            <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Stationary (constant)&quot;</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a>            <span class="n">adf_reject</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a>            <span class="n">kpss_reject</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a>            <span class="n">adf_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>            <span class="n">kpss_reject</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">alpha</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a>            <span class="k">if</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kpss_reject</span><span class="p">:</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Stationary&quot;</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a>            <span class="k">elif</span> <span class="ow">not</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
+<a id="__codelineno-0-250" name="__codelineno-0-250"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Non-stationary (unit root)&quot;</span>
+<a id="__codelineno-0-251" name="__codelineno-0-251"></a>            <span class="k">elif</span> <span class="n">adf_reject</span> <span class="ow">and</span> <span class="n">kpss_reject</span><span class="p">:</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Trend-stationary&quot;</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>            <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>                <span class="n">diagnosis</span> <span class="o">=</span> <span class="s2">&quot;Inconclusive&quot;</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a>            <span class="p">{</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>                <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">,</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a>                <span class="s2">&quot;adf_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a>                <span class="s2">&quot;adf_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">adf_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a>                <span class="s2">&quot;kpss_stat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;statistic&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>                <span class="s2">&quot;kpss_pvalue&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">kpss_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">]),</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a>                <span class="s2">&quot;diagnosis&quot;</span><span class="p">:</span> <span class="n">diagnosis</span><span class="p">,</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a>            <span class="p">}</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>        <span class="p">)</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
