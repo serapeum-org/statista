@@ -342,16 +342,18 @@ class Hydrological(_TimeSeriesStub):
         if column is None:
             column = self.columns[0]
 
-        q = self[column].dropna().values.astype(float)
-        idx = self[column].dropna().index
-
-        # Warn about negative flows (physically invalid in hydrology)
-        if (q < 0).any():
+        # Check raw input for negative values BEFORE dropna so the warning is not silenced
+        # by NaN values that happen to coincide with negative entries.
+        raw = self[column].values
+        if np.any(raw[~np.isnan(raw)] < 0):
             import warnings
             warnings.warn(
                 f"Column '{column}' contains negative values, which may be invalid for flow data",
                 UserWarning
             )
+
+        q = self[column].dropna().values.astype(float)
+        idx = self[column].dropna().index
 
         if method == "lyne_hollick":
             baseflow = _lyne_hollick(q, alpha)
