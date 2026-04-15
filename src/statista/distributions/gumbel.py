@@ -19,6 +19,7 @@ from statista.distributions.base import (
     PlottingPosition,
 )
 from statista.distributions.parameters import Parameters
+from statista.distributions.goodness_of_fit import GoodnessOfFitResult
 from statista.parameters import Lmoments
 from statista.plot import Plot
 
@@ -909,7 +910,7 @@ class Gumbel(AbstractDistribution):
 
         return qth
 
-    def ks(self) -> tuple:
+    def ks(self) -> GoodnessOfFitResult:
         """Perform the Kolmogorov-Smirnov (KS) test for goodness of fit.
 
         This method tests whether the data follows the fitted Gumbel distribution using
@@ -974,7 +975,7 @@ class Gumbel(AbstractDistribution):
         """
         return super().ks()
 
-    def chisquare(self) -> tuple:
+    def chisquare(self) -> GoodnessOfFitResult:
         """Perform the Chi-square test for goodness of fit.
 
         This method tests whether the data follows the fitted Gumbel distribution using the Chi-square test. The test

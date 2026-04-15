@@ -16,6 +16,7 @@ from statista.distributions.base import (
     AbstractDistribution,
 )
 from statista.distributions.parameters import Parameters
+from statista.distributions.goodness_of_fit import GoodnessOfFitResult
 from statista.parameters import Lmoments
 
 
@@ -305,20 +306,22 @@ class Normal(AbstractDistribution):
         q_th = norm.ppf(cdf, loc=loc, scale=scale)
         return q_th
 
-    def ks(self):
+    def ks(self) -> GoodnessOfFitResult:
         """Kolmogorov-Smirnov (KS) test.
 
-        The smaller the D static, the more likely that the two samples are drawn from the same distribution
-        IF Pvalue < significance level ------ reject
+        The smaller the D statistic, the more likely that the two samples are drawn from the
+        same distribution. If ``p_value < alpha`` — reject the null hypothesis.
 
         Returns:
-            Dstatic (numeric):
-                The smaller the D static the more likely that the two samples are drawn from the same distribution
-            Pvalue (numeric):
-                IF Pvalue < significance level ------ reject the null hypothesis
+            GoodnessOfFitResult with ``statistic`` (D) and ``p_value``. Supports tuple unpacking
+            ``stat, p = dist.ks()`` for backward compatibility.
         """
         return super().ks()
 
-    def chisquare(self) -> tuple:
-        """chisquare test"""
+    def chisquare(self) -> GoodnessOfFitResult:
+        """Chi-square goodness-of-fit test.
+
+        Returns:
+            GoodnessOfFitResult with ``statistic`` and ``p_value``. Supports tuple unpacking.
+        """
         return super().chisquare()

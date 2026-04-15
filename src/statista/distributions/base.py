@@ -13,6 +13,7 @@ from numpy import ndarray
 from scipy.stats import chisquare, ks_2samp
 
 from statista.distributions.parameters import Parameters
+from statista.distributions.goodness_of_fit import GoodnessOfFitResult
 from statista.exceptions import ParameterError
 from statista.plot import Plot
 from statista.utils import merge_small_bins
@@ -520,7 +521,7 @@ class AbstractDistribution(ABC):
         pass
 
     @abstractmethod
-    def ks(self) -> tuple:
+    def ks(self) -> GoodnessOfFitResult:
         """Perform the Kolmogorov-Smirnov (KS) test for goodness of fit.
 
         This method tests whether the data follows the fitted distribution using
@@ -528,12 +529,18 @@ class AbstractDistribution(ABC):
         with the theoretical CDF of the fitted distribution.
 
         Returns:
-            Tuple containing:
-            - D statistic: The maximum absolute difference between the empirical and theoretical CDFs.
-              The smaller the D statistic, the more likely the data follows the distribution.
-            - p-value: The probability of observing a D statistic as extreme as the one calculated,
-              assuming the null hypothesis is true (data follows the distribution).
-              If p-value < significance level (typically 0.05), reject the null hypothesis.
+            GoodnessOfFitResult with:
+            - ``statistic``: The maximum absolute difference between the empirical and
+              theoretical CDFs. The smaller the D statistic, the more likely the data
+              follows the distribution.
+            - ``p_value``: The probability of observing a D statistic as extreme as the
+              one calculated, assuming the null hypothesis is true (data follows the
+              distribution). If ``p_value < alpha`` (typically 0.05), reject the null.
+            - ``conclusion``: "Accept Hypothesis" or "Reject Hypothesis" based on the
+              tabulated critical value.
+
+            Tuple unpacking ``stat, p = dist.ks()`` continues to work for backward
+            compatibility.
 
         Raises:
             ValueError: If the distribution parameters have not been estimated.
@@ -546,17 +553,24 @@ class AbstractDistribution(ABC):
 
         test = ks_2samp(self.data, qth)
 
+        accept = test.statistic < self.kstable
+        conclusion = "Accept Hypothesis" if accept else "Reject Hypothesis"
+
         print("-----KS Test--------")
         print(f"Statistic = {test.statistic}")
-        if test.statistic < self.kstable:
-            print("Accept Hypothesis")
-        else:
-            print("reject Hypothesis")
+        print(conclusion.replace("Reject", "reject"))
         print(f"P value = {test.pvalue}")
-        return test.statistic, test.pvalue
+
+        return GoodnessOfFitResult(
+            test_name="Kolmogorov-Smirnov",
+            statistic=float(test.statistic),
+            p_value=float(test.pvalue),
+            conclusion=conclusion,
+            details={"kstable": float(self.kstable)},
+        )
 
     @abstractmethod
-    def chisquare(self) -> tuple[float, float]:
+    def chisquare(self) -> GoodnessOfFitResult:
         """Perform the Chi-square test for goodness of fit.
 
         - `chisquare test` refers to Pearson's chi square goodness of fit test. It is designed for
@@ -568,17 +582,18 @@ class AbstractDistribution(ABC):
         expected frequencies under the fitted distribution.
 
         Returns:
-            Tuple containing:
-            - Chi-square statistic: The test statistic measuring the difference between
-              observed and expected frequencies.
-              The χ² statistic is simply a measure of how far your observed counts deviate from the counts you would
-              expect if the fitted distribution were correct. For each bin 𝑖 we compute the squared difference
-              between the observed count 𝑂𝑖 and the expected count 𝐸𝑖, scaled by 𝐸𝑖, and then sum over all bins:
+            GoodnessOfFitResult with:
+            - ``statistic``: The Chi-square statistic measuring the difference between
+              observed and expected frequencies. For each bin ``i`` we compute the squared
+              difference between the observed count ``O_i`` and the expected count ``E_i``,
+              scaled by ``E_i``, and sum over all bins.
+            - ``p_value``: The probability of observing a Chi-square statistic as extreme
+              as the one calculated, assuming the null hypothesis is true (data follows
+              the distribution). If ``p_value < alpha`` (typically 0.05), reject the null.
+            - ``details``: ``{"ddof": int}`` — degrees of freedom used.
 
-            - p-value: The probability of observing a Chi-square statistic as extreme as the one calculated,
-              assuming the null hypothesis is true (data follows the distribution).
-              If p-value < significance level (typically 0.05), reject the null hypothesis.
-            Returns None if the test fails due to an exception.
+            Tuple unpacking ``stat, p = dist.chisquare()`` continues to work for backward
+            compatibility.
 
         Raises:
             ValueError: If the distribution parameters have not been estimated.
@@ -599,8 +614,14 @@ class AbstractDistribution(ABC):
             obs_counts.tolist(), expected_counts.tolist()  # type: ignore[arg-type]
         )
 
-        test = chisquare(merged_obs, f_exp=merged_exp, ddof=len(self.parameters))
-        return test.statistic, test.pvalue
+        ddof = len(self.parameters)
+        test = chisquare(merged_obs, f_exp=merged_exp, ddof=ddof)
+        return GoodnessOfFitResult(
+            test_name="Chi-square",
+            statistic=float(test.statistic),
+            p_value=float(test.pvalue),
+            details={"ddof": ddof},
+        )
 
     def confidence_interval(  # type: ignore[empty-body]
         self,
