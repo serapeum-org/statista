@@ -276,14 +276,15 @@ def _adf_test_single(
     if n < 7:
         raise ValueError(f"ADF test requires at least 7 observations, got {n}.")
 
+    crit = _ADF_CRITICAL_VALUES.get(regression, _ADF_CRITICAL_VALUES["c"])
+
     if np.std(data) == 0:
         warnings.warn(
             "Series is constant (std=0). Stationarity tests may produce undefined results. "
             "Returning default non-stationary result.",
             UserWarning
         )
-        crit = _ADF_CRITICAL_VALUES.get(regression, _ADF_CRITICAL_VALUES["c"])
-        return {
+        result = {
             "statistic": 0.0,
             "p_value": 1.0,
             "used_lag": 0,
@@ -293,68 +294,67 @@ def _adf_test_single(
             "crit_10%": crit["10%"],
             "conclusion": "Non-stationary",
         }
+    else:
+        if max_lag is None:
+            max_lag = int(12.0 * (n / 100.0) ** 0.25)
 
-    if max_lag is None:
-        max_lag = int(12.0 * (n / 100.0) ** 0.25)
+        # First difference
+        dy = np.diff(data)
+        y_lag = data[:-1]
 
-    # First difference
-    dy = np.diff(data)
-    y_lag = data[:-1]
+        # Determine number of deterministic terms
+        n_det = 1 if regression == "c" else 2 if regression == "ct" else 0
 
-    # Determine number of deterministic terms
-    n_det = 1 if regression == "c" else 2 if regression == "ct" else 0
+        # Reduce lag until the system is sufficiently overdetermined
+        used_lag = min(max_lag, len(dy) - 2)
+        while used_lag > 0 and (len(dy) - used_lag) <= (used_lag + 1 + n_det + 2):
+            used_lag -= 1
 
-    # Reduce lag until the system is sufficiently overdetermined
-    used_lag = min(max_lag, len(dy) - 2)
-    while used_lag > 0 and (len(dy) - used_lag) <= (used_lag + 1 + n_det + 2):
-        used_lag -= 1
+        # Build regression matrix: dy_t = rho * y_{t-1} + sum(gamma_i * dy_{t-i}) + deterministic + e_t
+        nobs = len(dy) - used_lag
+        y = dy[used_lag:]
 
-    # Build regression matrix: dy_t = rho * y_{t-1} + sum(gamma_i * dy_{t-i}) + deterministic + e_t
-    nobs = len(dy) - used_lag
-    y = dy[used_lag:]
+        # Lagged level
+        x_cols = [y_lag[used_lag:].reshape(-1, 1)]
 
-    # Lagged level
-    x_cols = [y_lag[used_lag:].reshape(-1, 1)]
+        # Lagged differences
+        for lag in range(1, used_lag + 1):
+            x_cols.append(dy[used_lag - lag : -lag].reshape(-1, 1))
 
-    # Lagged differences
-    for lag in range(1, used_lag + 1):
-        x_cols.append(dy[used_lag - lag : -lag].reshape(-1, 1))
+        # Deterministic terms
+        if regression == "c":
+            x_cols.append(np.ones((nobs, 1)))
+        elif regression == "ct":
+            x_cols.append(np.ones((nobs, 1)))
+            x_cols.append(np.arange(used_lag, used_lag + nobs).reshape(-1, 1))
 
-    # Deterministic terms
-    if regression == "c":
-        x_cols.append(np.ones((nobs, 1)))
-    elif regression == "ct":
-        x_cols.append(np.ones((nobs, 1)))
-        x_cols.append(np.arange(used_lag, used_lag + nobs).reshape(-1, 1))
+        x = np.hstack(x_cols)
 
-    x = np.hstack(x_cols)
+        # OLS regression via lstsq (numerically stable)
+        beta, residuals, _, _ = np.linalg.lstsq(x, y, rcond=None)
 
-    # OLS regression via lstsq (numerically stable)
-    beta, residuals, _, _ = np.linalg.lstsq(x, y, rcond=None)
+        # t-statistic for the coefficient on y_{t-1} (first coefficient)
+        e = y - x @ beta
+        sigma2 = np.sum(e**2) / max(nobs - x.shape[1], 1)
+        var_beta = sigma2 * np.linalg.pinv(x.T @ x)
+        se_rho = np.sqrt(max(var_beta[0, 0], 1e-30))
+        t_stat = beta[0] / se_rho
 
-    # t-statistic for the coefficient on y_{t-1} (first coefficient)
-    e = y - x @ beta
-    sigma2 = np.sum(e**2) / max(nobs - x.shape[1], 1)
-    var_beta = sigma2 * np.linalg.pinv(x.T @ x)
-    se_rho = np.sqrt(max(var_beta[0, 0], 1e-30))
-    t_stat = beta[0] / se_rho
+        # Approximate p-value using MacKinnon (1994) regression surface
+        p_value = _mackinnon_pvalue(t_stat, regression, n)
 
-    # Approximate p-value using MacKinnon (1994) regression surface
-    p_value = _mackinnon_pvalue(t_stat, regression, n)
+        conclusion = "Stationary" if p_value < 0.05 else "Non-stationary"
 
-    crit = _ADF_CRITICAL_VALUES.get(regression, _ADF_CRITICAL_VALUES["c"])
-    conclusion = "Stationary" if p_value < 0.05 else "Non-stationary"
-
-    result = {
-        "statistic": float(t_stat),
-        "p_value": float(p_value),
-        "used_lag": used_lag,
-        "n_obs": nobs,
-        "crit_1%": crit["1%"],
-        "crit_5%": crit["5%"],
-        "crit_10%": crit["10%"],
-        "conclusion": conclusion,
-    }
+        result = {
+            "statistic": float(t_stat),
+            "p_value": float(p_value),
+            "used_lag": used_lag,
+            "n_obs": nobs,
+            "crit_1%": crit["1%"],
+            "crit_5%": crit["5%"],
+            "crit_10%": crit["10%"],
+            "conclusion": conclusion,
+        }
     return result
 
 
@@ -410,14 +410,15 @@ def _kpss_test_single(
     if n < 5:
         raise ValueError(f"KPSS test requires at least 5 observations, got {n}.")
 
+    crit = _KPSS_CRITICAL_VALUES.get(regression, _KPSS_CRITICAL_VALUES["c"])
+
     if np.std(data) == 0:
         warnings.warn(
             "Series is constant (std=0). Stationarity tests may produce undefined results. "
             "Returning default stationary result.",
             UserWarning
         )
-        crit = _KPSS_CRITICAL_VALUES.get(regression, _KPSS_CRITICAL_VALUES["c"])
-        return {
+        result = {
             "statistic": 0.0,
             "p_value": 0.10,
             "lags": 0,
@@ -427,50 +428,49 @@ def _kpss_test_single(
             "crit_1%": crit["1%"],
             "conclusion": "Stationary",
         }
-
-    if n_lags is None:
-        n_lags = int(np.sqrt(12.0 * n / 100.0))
-
-    # Residuals from regression on deterministic terms
-    if regression == "c":
-        residuals = data - np.mean(data)
-    elif regression == "ct":
-        t = np.arange(1, n + 1, dtype=float)
-        x = np.column_stack([np.ones(n), t])
-        beta = np.linalg.lstsq(x, data, rcond=None)[0]
-        residuals = data - x @ beta
     else:
-        raise ValueError(f"regression must be 'c' or 'ct', got '{regression}'")
+        if n_lags is None:
+            n_lags = int(np.sqrt(12.0 * n / 100.0))
 
-    # Partial sum process
-    s = np.cumsum(residuals)
+        # Residuals from regression on deterministic terms
+        if regression == "c":
+            residuals = data - np.mean(data)
+        elif regression == "ct":
+            t = np.arange(1, n + 1, dtype=float)
+            x = np.column_stack([np.ones(n), t])
+            beta = np.linalg.lstsq(x, data, rcond=None)[0]
+            residuals = data - x @ beta
+        else:
+            raise ValueError(f"regression must be 'c' or 'ct', got '{regression}'")
 
-    # Newey-West long-run variance estimator
-    sigma2 = np.sum(residuals**2) / n
-    for lag in range(1, n_lags + 1):
-        weight = 1.0 - lag / (n_lags + 1.0)  # Bartlett kernel
-        gamma = np.sum(residuals[lag:] * residuals[:-lag]) / n
-        sigma2 += 2.0 * weight * gamma
+        # Partial sum process
+        s = np.cumsum(residuals)
 
-    # KPSS statistic: eta = sum(S_t^2) / (n^2 * sigma2)
-    eta = np.sum(s**2) / (n**2 * sigma2)
+        # Newey-West long-run variance estimator
+        sigma2 = np.sum(residuals**2) / n
+        for lag in range(1, n_lags + 1):
+            weight = 1.0 - lag / (n_lags + 1.0)  # Bartlett kernel
+            gamma = np.sum(residuals[lag:] * residuals[:-lag]) / n
+            sigma2 += 2.0 * weight * gamma
 
-    # P-value by interpolation from critical value table
-    crit = _KPSS_CRITICAL_VALUES.get(regression, _KPSS_CRITICAL_VALUES["c"])
-    p_value = _kpss_pvalue(eta, crit)
+        # KPSS statistic: eta = sum(S_t^2) / (n^2 * sigma2)
+        eta = np.sum(s**2) / (n**2 * sigma2)
 
-    conclusion = "Stationary" if p_value > 0.05 else "Non-stationary"
+        # P-value by interpolation from critical value table
+        p_value = _kpss_pvalue(eta, crit)
 
-    result = {
-        "statistic": float(eta),
-        "p_value": float(p_value),
-        "lags": n_lags,
-        "crit_10%": crit["10%"],
-        "crit_5%": crit["5%"],
-        "crit_2.5%": crit["2.5%"],
-        "crit_1%": crit["1%"],
-        "conclusion": conclusion,
-    }
+        conclusion = "Stationary" if p_value > 0.05 else "Non-stationary"
+
+        result = {
+            "statistic": float(eta),
+            "p_value": float(p_value),
+            "lags": n_lags,
+            "crit_10%": crit["10%"],
+            "crit_5%": crit["5%"],
+            "crit_2.5%": crit["2.5%"],
+            "crit_1%": crit["1%"],
+            "conclusion": conclusion,
+        }
     return result
 
 
