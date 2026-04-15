@@ -235,3 +235,30 @@ class TestStationaritySummary:
         ts = TimeSeries(np.ones(100) * 5.0)
         with pytest.warns(UserWarning, match="Series is constant"):
             ts.kpss_test()
+
+    def test_constant_series_adf_conclusion_is_stationary(self):
+        """A constant series is trivially stationary — ADF must not invert that."""
+        ts = TimeSeries(np.ones(100) * 5.0)
+        import warnings as _w
+        with _w.catch_warnings():
+            _w.simplefilter("ignore", UserWarning)
+            result = ts.adf_test()
+        assert result.loc["Series1", "conclusion"] == "Stationary (constant)"
+
+    def test_constant_series_kpss_conclusion_is_stationary(self):
+        """A constant series is trivially stationary — KPSS must reflect that."""
+        ts = TimeSeries(np.ones(100) * 5.0)
+        import warnings as _w
+        with _w.catch_warnings():
+            _w.simplefilter("ignore", UserWarning)
+            result = ts.kpss_test()
+        assert result.loc["Series1", "conclusion"] == "Stationary (constant)"
+
+    def test_constant_series_summary_is_stationary(self):
+        """stationarity_summary must not label a constant series Inconclusive."""
+        ts = TimeSeries(np.ones(100) * 5.0)
+        import warnings as _w
+        with _w.catch_warnings():
+            _w.simplefilter("ignore", UserWarning)
+            result = ts.stationarity_summary()
+        assert result.loc["Series1", "diagnosis"] == "Stationary (constant)"

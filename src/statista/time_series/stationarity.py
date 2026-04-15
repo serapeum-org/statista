@@ -191,6 +191,10 @@ class Stationarity(_TimeSeriesStub):
         | No            | No             | Inconclusive                              |
         +---------------+----------------+-------------------------------------------+
 
+        Constant series (std=0) are treated as a special case and diagnosed as
+        ``"Stationary (constant)"``, since they are trivially stationary by
+        definition (constant mean, zero variance, constant autocorrelation).
+
         Args:
             alpha: Significance level for both tests. Default 0.05.
 
@@ -228,17 +232,26 @@ class Stationarity(_TimeSeriesStub):
 
         rows = []
         for col in self.columns:
-            adf_reject = float(adf_df.loc[col, "p_value"]) < alpha
-            kpss_reject = float(kpss_df.loc[col, "p_value"]) < alpha
-
-            if adf_reject and not kpss_reject:
-                diagnosis = "Stationary"
-            elif not adf_reject and kpss_reject:
-                diagnosis = "Non-stationary (unit root)"
-            elif adf_reject and kpss_reject:
-                diagnosis = "Trend-stationary"
+            # A constant series is trivially stationary: bypass the p-value
+            # logic, which would otherwise report "Inconclusive" because neither
+            # test rejects its null for degenerate input.
+            col_data = self[col].dropna().values
+            if len(col_data) > 0 and np.std(col_data) == 0:
+                diagnosis = "Stationary (constant)"
+                adf_reject = False
+                kpss_reject = False
             else:
-                diagnosis = "Inconclusive"
+                adf_reject = float(adf_df.loc[col, "p_value"]) < alpha
+                kpss_reject = float(kpss_df.loc[col, "p_value"]) < alpha
+
+                if adf_reject and not kpss_reject:
+                    diagnosis = "Stationary"
+                elif not adf_reject and kpss_reject:
+                    diagnosis = "Non-stationary (unit root)"
+                elif adf_reject and kpss_reject:
+                    diagnosis = "Trend-stationary"
+                else:
+                    diagnosis = "Inconclusive"
 
             rows.append(
                 {
@@ -282,8 +295,8 @@ def _adf_test_single(
 
     if np.std(data) == 0:
         warnings.warn(
-            "Series is constant (std=0). Stationarity tests may produce undefined results. "
-            "Returning default non-stationary result.",
+            "Series is constant (std=0). A constant series is trivially stationary "
+            "(constant mean, zero variance). Returning conclusion='Stationary (constant)'.",
             UserWarning
         )
         result = {
@@ -294,7 +307,7 @@ def _adf_test_single(
             "crit_1%": crit["1%"],
             "crit_5%": crit["5%"],
             "crit_10%": crit["10%"],
-            "conclusion": "Non-stationary",
+            "conclusion": "Stationary (constant)",
         }
     else:
         if max_lag is None:
@@ -416,8 +429,8 @@ def _kpss_test_single(
 
     if np.std(data) == 0:
         warnings.warn(
-            "Series is constant (std=0). Stationarity tests may produce undefined results. "
-            "Returning default stationary result.",
+            "Series is constant (std=0). A constant series is trivially stationary "
+            "(constant mean, zero variance). Returning conclusion='Stationary (constant)'.",
             UserWarning
         )
         result = {
@@ -428,7 +441,7 @@ def _kpss_test_single(
             "crit_5%": crit["5%"],
             "crit_2.5%": crit["2.5%"],
             "crit_1%": crit["1%"],
-            "conclusion": "Stationary",
+            "conclusion": "Stationary (constant)",
         }
     else:
         if n_lags is None:
