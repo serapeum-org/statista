@@ -52,7 +52,7 @@ theme:
 plugins:
   - search
   - mkdocs-jupyter:
-      execute: cache
+      execute: true
       allow_errors: false
       cache_path: .jupyter_cache
   - autorefs
