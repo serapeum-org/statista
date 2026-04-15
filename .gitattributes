@@ -1,0 +1,16 @@
+# Normalize line endings across platforms.
+# Git auto-detects text files and stores them with LF internally; on checkout,
+# LF is preserved (no CRLF conversion). This silences the recurring
+# "LF will be replaced by CRLF" warnings on Windows.
+* text=auto eol=lf
+
+# Binary files — never convert.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.whl binary
