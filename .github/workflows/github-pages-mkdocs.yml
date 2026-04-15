@@ -91,7 +91,7 @@ jobs:
         pip install -e . jupyter nbconvert ipykernel
         python scripts/prep_notebooks.py
 
-    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@v1
+    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
       with:
         trigger: 'main'
         package-manager: 'uv'
@@ -124,7 +124,7 @@ jobs:
         pip install -e . jupyter nbconvert ipykernel
         python scripts/prep_notebooks.py
 
-    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@v1
+    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
       with:
         trigger: 'release'
         package-manager: 'uv'
