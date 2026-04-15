@@ -122,7 +122,6 @@ nav:
       - Other: reference/parameters/other.md
     - Time Series:
       - Overview: reference/time-series/index.md
-      - Developer Reference: reference/time_series/overview.md
       - Descriptive: reference/time-series/descriptive.md
       - Visualization: reference/time-series/visualization.md
       - Missing Data: reference/time-series/missing.md
