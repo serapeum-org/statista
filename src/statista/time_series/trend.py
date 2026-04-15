@@ -271,6 +271,11 @@ class Trend(_TimeSeriesStub):
         the second half (y-axis). Points above the 1:1 line indicate an increasing trend,
         points below indicate a decreasing trend.
 
+        A minimum of 20 observations is required so that each half has at least 10 points
+        for a meaningful distribution comparison. This threshold reflects common practice
+        for ITA; it is not prescribed by Sen (2012) but is widely used in the literature
+        (e.g., Serinaldi et al., 2020).
+
         Args:
             column: Column to analyze. If None, uses first column.
             **kwargs: Passed to ``_adjust_axes_labels`` (title, xlabel, ylabel, etc.).
@@ -278,6 +283,9 @@ class Trend(_TimeSeriesStub):
         Returns:
             tuple: (results_df, (fig, ax)).
                 results_df has columns: column, trend_indicator (positive = increasing).
+
+        Raises:
+            ValueError: If the series has fewer than 20 observations after dropping NaN.
 
         Examples:
             >>> import numpy as np  # doctest: +SKIP
@@ -288,6 +296,9 @@ class Trend(_TimeSeriesStub):
         References:
             Sen, Z. (2012). Innovative Trend Analysis Methodology. Journal of Hydrologic
             Engineering, 17(9), 1042-1046.
+
+            Serinaldi, F., Chebana, F., Kilsby, C.G. (2020). Dissecting innovative trend
+            analysis. Stochastic Environmental Research and Risk Assessment, 34, 733-754.
         """
         if column is None:
             column = self.columns[0]
