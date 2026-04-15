@@ -34,7 +34,7 @@ def rmse(obs: Union[list, np.ndarray], sim: Union[list, np.ndarray]) -> float:
             >>> simulated = [1.1, 2.1, 2.9, 4.2, 5.2]
             >>> rmse_value = rmse(observed, simulated)
             >>> print(f"RMSE: {rmse_value:.4f}")
-            RMSE: 0.1483
+            RMSE: 0.1732
 
             ```
         - Using numpy arrays:

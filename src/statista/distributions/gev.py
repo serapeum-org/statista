@@ -246,9 +246,9 @@ class GEV(AbstractDistribution):
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
 
-        loc = parameters.loc
-        scale = parameters.scale
-        shape = parameters.shape
+        loc = parameters.loc  # type: ignore[union-attr]
+        scale = parameters.scale  # type: ignore[union-attr]
+        shape = parameters.shape  # type: ignore[union-attr]
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
@@ -664,7 +664,7 @@ class GEV(AbstractDistribution):
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
 
-        scale = parameters.scale
+        scale = parameters.scale  # type: ignore[union-attr]
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -691,7 +691,7 @@ class GEV(AbstractDistribution):
         q_upper = ci["ub"]
 
         if plot_figure:
-            qth = self._inv_cdf(prob_non_exceed, parameters)
+            qth = self._inv_cdf(prob_non_exceed, parameters)  # type: ignore[arg-type]
             fig, ax = Plot.confidence_level(
                 qth, self.data, q_lower, q_upper, alpha=alpha, **kwargs  # type: ignore[arg-type]
             )
@@ -765,7 +765,7 @@ class GEV(AbstractDistribution):
             parameters = self.parameters
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
-        scale = parameters.scale
+        scale = parameters.scale  # type: ignore[union-attr]
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)

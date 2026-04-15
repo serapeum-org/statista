@@ -53,6 +53,7 @@ dev = [
     "pytest-xdist>=3.8.0",
     "mypy>=1.19.0",
     "types-PyYAML>=6.0.12",
+    "nbstripout>=0.7.1",
 ]
 
 docs = [
@@ -91,6 +92,7 @@ tag_format = "$version"
 changelog_file = "docs/change-log.md"
 changelog_incremental = true
 changelog_merge_prerelease = true
+update_changelog_on_bump = true
 
 [tool.commitizen.customize]
 message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"

@@ -51,7 +51,13 @@ theme:
 
 plugins:
   - search
-  - mkdocs-jupyter
+  - mkdocs-jupyter:
+      # Committed notebooks have outputs stripped (nbstripout pre-commit hook);
+      # CI populates outputs via scripts/prep_notebooks.py before the build,
+      # using a GitHub Actions cache keyed on notebook + source + pyproject hash.
+      # See .github/workflows/github-pages-mkdocs.yml.
+      execute: false
+      allow_errors: false
   - autorefs
   - mkdocstrings:
       default_handler: python
@@ -112,11 +118,26 @@ nav:
       - GEV: reference/distributions/gev.md
       - Exponential: reference/distributions/exponential.md
       - Normal: reference/distributions/normal.md
+      - All Distributions: reference/distributions-class.md
     - Parameters:
       - L-moments: reference/parameters/lmoments.md
       - Extreme Value: reference/parameters/extreme-value.md
       - Normal Family: reference/parameters/normal-family.md
       - Other: reference/parameters/other.md
+    - Time Series:
+      - Overview: reference/time-series/index.md
+      - Descriptive: reference/time-series/descriptive.md
+      - Visualization: reference/time-series/visualization.md
+      - Missing Data: reference/time-series/missing.md
+      - Correlation: reference/time-series/correlation.md
+      - Stationarity: reference/time-series/stationarity.md
+      - Trend: reference/time-series/trend.md
+      - Distribution: reference/time-series/distribution.md
+      - Change Point: reference/time-series/changepoint.md
+      - Decomposition: reference/time-series/decomposition.md
+      - Seasonal: reference/time-series/seasonal.md
+      - Hydrological: reference/time-series/hydrological.md
+      - Comparison: reference/time-series/comparison.md
     - Extreme Value Analysis: reference/eva-class.md
     - Confidence Interval: reference/confidence-interval.md
     - Descriptors: reference/descriptors-module.md
@@ -130,6 +151,19 @@ nav:
     - Extreme Value Analysis:
       - Extreme Value Analysis: notebook/extreme-value-analysis/extreme-value-analysis.ipynb
       - Rhine Catchment: notebook/extreme-value-analysis/rhine_discharge_analysis.ipynb
+    - Time Series:
+      - Descriptive Statistics: notebook/time_series/01_descriptive_statistics.ipynb
+      - Visualization: notebook/time_series/02_visualization.ipynb
+      - Missing Data: notebook/time_series/03_missing_data.ipynb
+      - Correlation & Autocorrelation: notebook/time_series/04_correlation_autocorrelation.ipynb
+      - Stationarity: notebook/time_series/05_stationarity.ipynb
+      - Trend Detection: notebook/time_series/06_trend_detection.ipynb
+      - Distribution Fitting: notebook/time_series/07_distribution_fitting.ipynb
+      - Change Point Detection: notebook/time_series/08_change_point_detection.ipynb
+      - Decomposition & Smoothing: notebook/time_series/09_decomposition_smoothing.ipynb
+      - Seasonal Analysis: notebook/time_series/10_seasonal_analysis.ipynb
+      - Hydrological Analysis: notebook/time_series/11_hydrological_analysis.ipynb
+      - Comparison & Anomaly: notebook/time_series/12_comparison_anomaly.ipynb
   - Guides:
     - Commitizen: guides/commitizen.md
     - Mypy: guides/mypy.md

@@ -10,13 +10,27 @@ on:
       - main
   pull_request:
     branches:
-      - '**'  # Match all branches for pull requests
+      - '**'
   release:
       types:
         - published
   workflow_run:
     workflows: ['github-release']
     types: [completed]
+
+# Each job restores the .jupyter_cache/ content-addressed store from
+# actions/cache and runs scripts/prep_notebooks.py to populate working-tree
+# notebooks with outputs (executing only those missing from the cache), then
+# hands off to the shared mkdocs-deploy composite action which builds with
+# mkdocs-jupyter execute: false — reading the populated outputs directly.
+#
+# The cache key pins on all notebook inputs + library source + pyproject.toml.
+# Any change to library code a notebook imports invalidates the cache and
+# forces re-execution, keeping rendered outputs correct.
+#
+# The prep step uses the runner's default Python with a light pip install
+# (statista + jupyter + nbconvert) — it does NOT install uv; the composite
+# action does that itself for the mkdocs build.
 
 jobs:
   deploy-pr:
@@ -26,6 +40,23 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restore jupyter notebook cache
+        uses: actions/cache@v4
+        with:
+          path: .jupyter_cache
+          key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb', 'src/statista/**/*.py', 'pyproject.toml') }}
+          restore-keys: |
+            jupyter-cache-
+
+      - name: Prepare notebook outputs (execute uncached, merge cached)
+        run: |
+          pip install -e . jupyter nbconvert ipykernel
+          python scripts/prep_notebooks.py
 
       - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
         with:
@@ -42,7 +73,25 @@ jobs:
     - uses: actions/checkout@v5
       with:
         fetch-depth: 0
-    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@main
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Restore jupyter notebook cache
+      uses: actions/cache@v4
+      with:
+        path: .jupyter_cache
+        key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb', 'src/statista/**/*.py', 'pyproject.toml') }}
+        restore-keys: |
+          jupyter-cache-
+
+    - name: Prepare notebook outputs (execute uncached, merge cached)
+      run: |
+        pip install -e . jupyter nbconvert ipykernel
+        python scripts/prep_notebooks.py
+
+    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@v1
       with:
         trigger: 'main'
         package-manager: 'uv'
@@ -57,7 +106,25 @@ jobs:
     - uses: actions/checkout@v5
       with:
         fetch-depth: 0
-    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@main
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Restore jupyter notebook cache
+      uses: actions/cache@v4
+      with:
+        path: .jupyter_cache
+        key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb', 'src/statista/**/*.py', 'pyproject.toml') }}
+        restore-keys: |
+          jupyter-cache-
+
+    - name: Prepare notebook outputs (execute uncached, merge cached)
+      run: |
+        pip install -e . jupyter nbconvert ipykernel
+        python scripts/prep_notebooks.py
+
+    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@v1
       with:
         trigger: 'release'
         package-manager: 'uv'

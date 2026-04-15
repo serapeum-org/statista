@@ -76,6 +76,20 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
+
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
+        name: "[nb   - format] strip notebook outputs"
+        files: \.ipynb$
+
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
+        name: "[nb   - format] strip notebook outputs"
+        files: \.ipynb$
   - repo: https://github.com/lovesegfault/beautysh
     rev: v6.2.1
     hooks:

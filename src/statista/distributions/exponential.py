@@ -205,8 +205,8 @@ class Exponential(AbstractDistribution):
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
 
-        loc = parameters.loc
-        scale = parameters.scale
+        loc = parameters.loc  # type: ignore[union-attr]
+        scale = parameters.scale  # type: ignore[union-attr]
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)
 
@@ -458,8 +458,8 @@ class Exponential(AbstractDistribution):
         elif isinstance(parameters, dict):
             parameters = Parameters(**parameters)
 
-        loc = parameters.loc
-        scale = parameters.scale
+        loc = parameters.loc  # type: ignore[union-attr]
+        scale = parameters.scale  # type: ignore[union-attr]
 
         if scale is None or scale <= 0:
             raise ValueError(SCALE_PARAMETER_ERROR)

@@ -1,5 +1,6 @@
-""" "Statistical tools"""
+"""Statistical tools"""
 
+from decimal import ROUND_HALF_UP, Decimal
 from typing import List, Union
 
 import numpy as np
@@ -451,4 +452,9 @@ class Tools:
             This method is useful for rounding to specific increments rather than
             decimal places. For example, rounding to the nearest 0.25, 0.5, or 5.
         """
-        return round(number / precision) * precision
+        value = Decimal(f"{number}")
+        precision = Decimal(f"{precision}")  # type: ignore[assignment]
+        rounded = (value / precision).to_integral_value(  # type: ignore[operator]
+            rounding=ROUND_HALF_UP
+        ) * precision
+        return float(rounded)

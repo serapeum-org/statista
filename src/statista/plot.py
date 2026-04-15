@@ -8,6 +8,7 @@ from matplotlib import gridspec
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
+XLABEL = "Actual data"
 
 class Plot:
     """Visualization utilities for statistical distributions and analyses.
@@ -61,7 +62,7 @@ class Plot:
         pdf_fitted: np.ndarray | list,
         data_sorted: np.ndarray,
         fig_size: tuple = (6, 5),
-        xlabel: str = "Actual data",
+        xlabel: str = XLABEL,
         ylabel: str = "pdf",
         fontsize: int = 11,
     ) -> tuple[Figure, Axes]:
@@ -158,7 +159,7 @@ class Plot:
         data_sorted: np.ndarray,
         cdf_weibul: np.ndarray,
         fig_size: tuple[float, float] = (6, 5),
-        xlabel: str = "Actual data",
+        xlabel: str = XLABEL,
         ylabel: str = "cdf",
         fontsize: int = 11,
     ) -> tuple[Figure, Axes]:
@@ -263,7 +264,7 @@ class Plot:
         cdf_fitted: np.ndarray | list,
         cdf: np.ndarray | list,
         fig_size: tuple[float, float] = (10, 5),
-        xlabel: str = "Actual data",
+        xlabel: str = XLABEL,
         ylabel: str = "cdf",
         fontsize: int = 11,
     ) -> tuple[Figure, tuple[Axes, Axes]]:
