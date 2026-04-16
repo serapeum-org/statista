@@ -21,7 +21,7 @@ from statista.distributions.base import (
 from statista.distributions.parameters import Parameters
 from statista.distributions.goodness_of_fit import GoodnessOfFitResult
 from statista.parameters import Lmoments
-from statista.plot import Plot
+from statista.distributions.plot import DistributionPlot
 
 
 class Gumbel(AbstractDistribution):
@@ -1135,7 +1135,7 @@ class Gumbel(AbstractDistribution):
             if len(prob_non_exceed) != len(self.data):
                 raise ValueError(PROB_NON_EXCEEDENCE_ERROR)
 
-            fig, ax = Plot.confidence_level(
+            fig, ax = DistributionPlot.confidence_level(
                 qth, self.data, q_lower, q_upper, alpha=alpha, **kwargs  # type: ignore[arg-type]
             )
             return q_upper, q_lower, fig, ax
@@ -1229,7 +1229,7 @@ class Gumbel(AbstractDistribution):
         pdf_fitted: Any = self.pdf(parameters=parameters, data=q_x)
         cdf_fitted: Any = self.cdf(parameters=parameters, data=q_x)
 
-        fig, ax = Plot.details(
+        fig, ax = DistributionPlot.details(
             q_x,
             self.data,
             pdf_fitted,

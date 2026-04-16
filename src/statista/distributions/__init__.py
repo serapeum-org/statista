@@ -8,6 +8,7 @@ from statista.distributions.gumbel import Gumbel
 from statista.distributions.normal import Normal
 from statista.distributions.parameters import Parameters
 from statista.distributions.goodness_of_fit import GoodnessOfFitResult
+from statista.distributions.plot import DistributionPlot
 
 __all__ = [
     "AbstractDistribution",
@@ -19,4 +20,5 @@ __all__ = [
     "Distributions",
     "Parameters",
     "GoodnessOfFitResult",
+    "DistributionPlot",
 ]
