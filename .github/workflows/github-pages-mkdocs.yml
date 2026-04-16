@@ -103,9 +103,17 @@ jobs:
     if: github.event_name == 'release' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
+    # When triggered by workflow_run, GitHub loads this workflow file from the
+    # default branch but the checkout would default to that branch's HEAD too.
+    # We instead pin checkout to the branch where `github-release` actually ran
+    # (e.g. release/0.8.0) so the docs build sees the version-bump + lockfile
+    # commits and tag that github-release just pushed onto that branch.
+    # (Don't use head_sha here — that's the pre-bump SHA that triggered
+    # github-release, not the post-bump HEAD we want to publish.)
     - uses: actions/checkout@v5
       with:
         fetch-depth: 0
+        ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || '' }}
 
     - uses: actions/setup-python@v5
       with:
