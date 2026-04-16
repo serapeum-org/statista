@@ -4,6 +4,11 @@ name: pypi-release
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag, branch, or SHA to publish to PyPI (e.g. v0.8.0)"
+        required: true
+        type: string
   workflow_run:
     workflows: ['github-release']
     types: [completed]
@@ -17,9 +22,15 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
+      # For workflow_dispatch: check out the user-supplied ref (tag/branch/SHA).
+      # For workflow_run: check out the HEAD of the branch where github-release ran,
+      # so we pick up the version-bump commit + lockfile sync commit that
+      # github-release pushed AFTER its triggering SHA. Using the default checkout
+      # (or head_sha) would publish the pre-bump source to PyPI.
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.event.workflow_run.head_branch }}
 
       - name: Build and publish to PyPI
         uses: serapeum-org/github-actions/actions/release/pypi@pypi-release/v1

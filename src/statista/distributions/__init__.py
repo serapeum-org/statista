@@ -7,6 +7,7 @@ from statista.distributions.gev import GEV
 from statista.distributions.gumbel import Gumbel
 from statista.distributions.normal import Normal
 from statista.distributions.parameters import Parameters
+from statista.distributions.goodness_of_fit import GoodnessOfFitResult
 
 __all__ = [
     "AbstractDistribution",
@@ -17,4 +18,5 @@ __all__ = [
     "Normal",
     "Distributions",
     "Parameters",
+    "GoodnessOfFitResult",
 ]
