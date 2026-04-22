@@ -18,125 +18,76 @@ on:
     workflows: ['github-release']
     types: [completed]
 
-# Each job restores the .jupyter_cache/ content-addressed store from
-# actions/cache and runs scripts/prep_notebooks.py to populate working-tree
-# notebooks with outputs (executing only those missing from the cache), then
-# hands off to the shared mkdocs-deploy composite action which builds with
-# mkdocs-jupyter execute: false — reading the populated outputs directly.
+# Notebook execution + caching is handled inside the mkdocs-deploy composite
+# action via the `notebooks-path` input. The action restores .jupyter_cache
+# keyed on notebook contents + src/**/*.py + pyproject.toml, preflights that
+# jupyter/nbconvert/ipykernel are importable from the docs env, and runs its
+# vendored prep_notebooks.py (copies cached executed notebooks back where
+# available, nbconverts the rest). mkdocs-jupyter then reads populated
+# outputs with execute: false.
 #
-# The cache key pins on all notebook inputs + library source + pyproject.toml.
-# Any change to library code a notebook imports invalidates the cache and
-# forces re-execution, keeping rendered outputs correct.
-#
-# The prep step uses the runner's default Python with a light pip install
-# (statista + jupyter + nbconvert) — it does NOT install uv; the composite
-# action does that itself for the mkdocs build.
+# Pinned to SHA 303db24 on feat/run-notebooks-part-of-mkdocs-deploy while the
+# feature is still under review in serapeum-org/github-actions#6. Once that
+# PR merges and `mkdocs/v1` is fast-forwarded, move the pins back to
+# @mkdocs/v1 in all three jobs.
 
 jobs:
   deploy-pr:
-      if: github.event_name == 'pull_request'
-      runs-on: ubuntu-latest
-      steps:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Restore jupyter notebook cache
-        uses: actions/cache@v4
-        with:
-          path: .jupyter_cache
-          key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb', 'src/statista/**/*.py', 'pyproject.toml') }}
-          restore-keys: |
-            jupyter-cache-
-
-      - name: Prepare notebook outputs (execute uncached, merge cached)
-        run: |
-          pip install -e . jupyter nbconvert ipykernel
-          python scripts/prep_notebooks.py
-
-      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
+      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@303db24293c2575533c9851f529a1b6d90851e35
         with:
           trigger: 'pull_request'
           package-manager: 'uv'
           python-version: '3.12'
           install-groups: 'groups: docs'
           deploy-token: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
+          notebooks-path: 'docs/notebook'
 
   deploy-main:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-
-    - name: Restore jupyter notebook cache
-      uses: actions/cache@v4
-      with:
-        path: .jupyter_cache
-        key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb', 'src/statista/**/*.py', 'pyproject.toml') }}
-        restore-keys: |
-          jupyter-cache-
-
-    - name: Prepare notebook outputs (execute uncached, merge cached)
-      run: |
-        pip install -e . jupyter nbconvert ipykernel
-        python scripts/prep_notebooks.py
-
-    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
-      with:
-        trigger: 'main'
-        package-manager: 'uv'
-        python-version: '3.12'
-        install-groups: 'groups: docs'
-        deploy-token: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
+      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@303db24293c2575533c9851f529a1b6d90851e35
+        with:
+          trigger: 'main'
+          package-manager: 'uv'
+          python-version: '3.12'
+          install-groups: 'groups: docs'
+          deploy-token: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
+          notebooks-path: 'docs/notebook'
 
   deploy-release:
     if: github.event_name == 'release' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
-    # When triggered by workflow_run, GitHub loads this workflow file from the
-    # default branch but the checkout would default to that branch's HEAD too.
-    # We instead pin checkout to the branch where `github-release` actually ran
-    # (e.g. release/0.8.0) so the docs build sees the version-bump + lockfile
-    # commits and tag that github-release just pushed onto that branch.
-    # (Don't use head_sha here — that's the pre-bump SHA that triggered
-    # github-release, not the post-bump HEAD we want to publish.)
-    - uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
-        ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || '' }}
+      # When triggered by workflow_run, GitHub loads this workflow file from the
+      # default branch but the checkout would default to that branch's HEAD too.
+      # We instead pin checkout to the branch where `github-release` actually ran
+      # (e.g. release/0.8.0) so the docs build sees the version-bump + lockfile
+      # commits and tag that github-release just pushed onto that branch.
+      # (Don't use head_sha here — that's the pre-bump SHA that triggered
+      # github-release, not the post-bump HEAD we want to publish.)
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || '' }}
 
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-
-    - name: Restore jupyter notebook cache
-      uses: actions/cache@v4
-      with:
-        path: .jupyter_cache
-        key: jupyter-cache-${{ hashFiles('docs/notebook/**/*.ipynb', 'src/statista/**/*.py', 'pyproject.toml') }}
-        restore-keys: |
-          jupyter-cache-
-
-    - name: Prepare notebook outputs (execute uncached, merge cached)
-      run: |
-        pip install -e . jupyter nbconvert ipykernel
-        python scripts/prep_notebooks.py
-
-    - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
-      with:
-        trigger: 'release'
-        package-manager: 'uv'
-        python-version: '3.12'
-        install-groups: 'groups: docs'
-        deploy-token: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
-        mike-alias: 'latest'
+      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@303db24293c2575533c9851f529a1b6d90851e35
+        with:
+          trigger: 'release'
+          package-manager: 'uv'
+          python-version: '3.12'
+          install-groups: 'groups: docs'
+          deploy-token: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
+          notebooks-path: 'docs/notebook'
+          mike-alias: 'latest'
