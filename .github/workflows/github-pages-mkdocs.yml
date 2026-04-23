@@ -18,18 +18,6 @@ on:
     workflows: ['github-release']
     types: [completed]
 
-# Notebook execution + caching is handled inside the mkdocs-deploy composite
-# action via the `notebooks-path` input. The action restores .jupyter_cache
-# keyed on notebook contents + src/**/*.py + pyproject.toml, preflights that
-# jupyter/nbconvert/ipykernel are importable from the docs env, and runs its
-# vendored prep_notebooks.py (copies cached executed notebooks back where
-# available, nbconverts the rest). mkdocs-jupyter then reads populated
-# outputs with execute: false.
-#
-# Pinned to SHA 303db24 on feat/run-notebooks-part-of-mkdocs-deploy while the
-# feature is still under review in serapeum-org/github-actions#6. Once that
-# PR merges and `mkdocs/v1` is fast-forwarded, move the pins back to
-# @mkdocs/v1 in all three jobs.
 
 jobs:
   deploy-pr:
@@ -70,13 +58,6 @@ jobs:
     if: github.event_name == 'release' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     steps:
-      # When triggered by workflow_run, GitHub loads this workflow file from the
-      # default branch but the checkout would default to that branch's HEAD too.
-      # We instead pin checkout to the branch where `github-release` actually ran
-      # (e.g. release/0.8.0) so the docs build sees the version-bump + lockfile
-      # commits and tag that github-release just pushed onto that branch.
-      # (Don't use head_sha here — that's the pre-bump SHA that triggered
-      # github-release, not the post-bump HEAD we want to publish.)
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
