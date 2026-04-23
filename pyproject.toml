@@ -72,6 +72,8 @@ docs = [
     "notebook<7.0",
     "jupyter",
     "commitizen (>=4.8.3,<5.0.0)",
+    "nbconvert",
+    "ipykernel"
 ]
 
 
