@@ -15,7 +15,7 @@ from scipy.stats import chisquare, ks_2samp
 from statista.distributions.parameters import Parameters
 from statista.distributions.goodness_of_fit import GoodnessOfFitResult
 from statista.exceptions import ParameterError
-from statista.plot import Plot
+from statista.distributions.plot import DistributionPlot
 from statista.utils import merge_small_bins
 
 ninf = 1e-5
@@ -341,7 +341,7 @@ class AbstractDistribution(ABC):
             qx = np.linspace(float(data_sorted[0]), 1.5 * float(data_sorted[-1]), 10000)
             pdf_fitted = self.pdf(parameters=parameters, data=qx)
 
-            fig, ax = Plot.pdf(
+            fig, ax = DistributionPlot.pdf(
                 qx,
                 pdf_fitted,  # type: ignore[arg-type]
                 data_sorted,
@@ -434,7 +434,7 @@ class AbstractDistribution(ABC):
 
             cdf_weibul = PlottingPosition.weibul(data_sorted)
 
-            fig, ax = Plot.cdf(
+            fig, ax = DistributionPlot.cdf(
                 qx,
                 cdf_fitted,  # type: ignore[arg-type]
                 data_sorted,
