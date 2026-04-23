@@ -40,7 +40,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@303db24293c2575533c9851f529a1b6d90851e35
+      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
         with:
           trigger: 'pull_request'
           package-manager: 'uv'
@@ -57,7 +57,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@303db24293c2575533c9851f529a1b6d90851e35
+      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
         with:
           trigger: 'main'
           package-manager: 'uv'
@@ -82,7 +82,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_branch || '' }}
 
-      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@303db24293c2575533c9851f529a1b6d90851e35
+      - uses: serapeum-org/github-actions/actions/mkdocs-deploy@mkdocs/v1
         with:
           trigger: 'release'
           package-manager: 'uv'
