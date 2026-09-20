@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "statista"
+abstract: "statistics package"
+authors:
+  - family-names: Farrag
+    given-names: Mostafa
+    email: moah.farag@gmail.com
+version: "0.8.0"
+date-released: 2026-04-15
+license: MIT
+repository-code: "https://github.com/serapeum-org/statista"
+url: "https://serapeum-org.github.io/statista/"
+keywords:
+  - "statistics"
+  - "distributions"
+  - "extreme-value-analysis"
+  - "probability"
+  - "sensitivity-analysis"
